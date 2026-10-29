@@ -1,19 +1,22 @@
 {
-    "name": "Your Name",
-    "tagline": "Your one-line introduction",
-    "bio": "Write 2 or 3 sentences about yourself.",
+    "name": "Sreerang P",
+    "tagline": "software developer",
+    "bio": "I am a software developer with a passion for creating innovative solutions.",
     "skills": [
         "Git",
-        "HTML"
+        "Python"
+        "JavaScript"
+        "CSS"
     ],
     "projects": [
         {
-            "title": "My first project",
-            "desc": "What it does.",
-            "link": "https://github.com/yourname"
+            "title": "modulr",
+            "desc": "A tool for last day exam revision",
+            "link": "https://github.com/cosmiccoder200x-sys/modulrr.vercel.app"
         }
     ],
     "links": {
-        "github": "https://github.com/yourname"
+        "github": "https://github.com/cosmiccoder200x-sys"
     }
+
 }
