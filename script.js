@@ -29,7 +29,12 @@
           currentObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: "0px 0px -35px 0px" });
+    }, {
+      // A zero threshold also reveals tall sections/forms that can never reach
+      // a percentage-based visibility threshold on smaller screens.
+      threshold: 0,
+      rootMargin: "0px 0px -10px 0px"
+    });
     revealItems.forEach((item) => observer.observe(item));
   }
 
