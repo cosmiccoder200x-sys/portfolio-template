@@ -26,3 +26,10 @@
 .project-card>a{margin-top:0}
 .contact-actions{gap:18px}
 @media(max-width:620px){.education-grid{grid-template-columns:1fr}.education-item{min-height:190px;padding:25px}.education-item h3{margin-top:25px}.intro-links,.contact-actions{gap:14px}}
+
+.certifications-section{background:#0d0d0d}
+.certifications-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.certification-item{min-height:210px;padding:30px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.certification-item h3{font-size:clamp(1.3rem,2.3vw,2rem);line-height:1.2;letter-spacing:-.045em;margin:32px 0 10px}
+.certification-item p{color:#999;margin:0}
+@media(max-width:620px){.certifications-grid{grid-template-columns:1fr}.certification-item{min-height:180px;padding:25px}.certification-item h3{margin-top:24px}}
