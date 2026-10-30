@@ -33,3 +33,28 @@
 .certification-item h3{font-size:clamp(1.3rem,2.3vw,2rem);line-height:1.2;letter-spacing:-.045em;margin:32px 0 10px}
 .certification-item p{color:#999;margin:0}
 @media(max-width:620px){.certifications-grid{grid-template-columns:1fr}.certification-item{min-height:180px;padding:25px}.certification-item h3{margin-top:24px}}
+
+
+/* Contact form — matching the original portfolio's message box */
+.contact-form-wrap{max-width:760px;margin:78px auto 0;padding:clamp(24px,4vw,42px);border:1px solid var(--line);background:#090909}
+.contact-form-heading{margin-bottom:32px}
+.contact-form-heading h3{font-size:clamp(2rem,4vw,3.4rem);letter-spacing:-.07em;line-height:1.05;margin:18px 0 8px}
+.contact-form-heading h3 span{color:#777}
+.contact-form-heading p{color:#888;margin:0;max-width:480px}
+#portfolio-contact-form{display:grid;gap:20px}
+.form-group{display:grid;gap:9px}
+.form-group label{font: .65rem var(--mono);letter-spacing:.09em;text-transform:uppercase;color:#aaa}
+.form-group label span{color:#fff}
+.form-control{width:100%;min-height:50px;padding:14px 15px;border:1px solid rgba(255,255,255,.17);border-radius:0;background:#101010;color:#eee;font: .9rem var(--sans);outline:none;transition:border-color .2s,background .2s}
+.form-control::placeholder{color:#666}
+.form-control:focus{border-color:#ddd;background:#141414}
+textarea.form-control{min-height:150px;resize:vertical}
+.send-message-btn{width:100%;min-height:54px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#ededed;color:#090909;font:600 .72rem var(--mono);letter-spacing:.09em;text-transform:uppercase;border:1px solid #ededed;cursor:pointer;transition:background .2s,color .2s}
+.send-message-btn:hover{background:transparent;color:#ededed}
+.send-message-btn:disabled{opacity:.6;cursor:wait}
+.form-status{display:none;padding:14px 16px;border:1px solid rgba(255,255,255,.25);color:#ddd;font-size:.88rem}
+.form-status.success,.form-status.error{display:block}
+.form-status.success{border-color:rgba(150,210,170,.5);color:#b9e3c5}
+.form-status.error{border-color:rgba(255,150,150,.5);color:#ffc2c2}
+.contact-form-iframe{display:none}
+@media(max-width:620px){.contact-form-wrap{margin-top:52px;padding:22px 18px}.form-control{font-size:16px}.contact-form-heading{margin-bottom:26px}}
