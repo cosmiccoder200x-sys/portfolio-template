@@ -1,22 +1,48 @@
 {
-    "name": "Sreerang P",
-    "tagline": "software developer",
-    "bio": "I am a software developer with a passion for creating innovative solutions.",
-    "skills": [
-        "Git",
-        "Python"
-        "JavaScript"
-        "CSS"
-    ],
-    "projects": [
-        {
-            "title": "modulr",
-            "desc": "A tool for last day exam revision",
-            "link": "https://github.com/cosmiccoder200x-sys/modulrr.vercel.app"
-        }
-    ],
-    "links": {
-        "github": "https://github.com/cosmiccoder200x-sys"
+  "name": "Sreerang P",
+  "tagline": "AI Engineer & Full-Stack Developer",
+  "bio": "I'm an ER student in my second year who enjoys building software, exploring AI-powered tools, and turning practical problems into thoughtful digital products. I learn by building, testing ideas, and iterating on real projects.",
+  "skills": [
+    "Python",
+    "JavaScript",
+    "HTML",
+    "CSS",
+    "Git",
+    "GitHub",
+    "Full-Stack Development",
+    "AI Tools"
+  ],
+  "projects": [
+    {
+      "title": "Modulr",
+      "type": "LEARNING TOOL",
+      "desc": "A project focused on making last-minute exam revision more structured and approachable.",
+      "stack": "Web · Learning",
+      "link": "https://github.com/cosmiccoder200x-sys/Modulr"
+    },
+    {
+      "title": "Local Brain MCP",
+      "type": "AI / DEVELOPER TOOLING",
+      "desc": "An open-source project exploring local-first context and developer workflows through MCP.",
+      "stack": "AI · MCP",
+      "link": "https://github.com/cosmiccoder200x-sys/local-brain-mcp"
+    },
+    {
+      "title": "FinSight",
+      "type": "DATA / FINANCE",
+      "desc": "A project exploring financial information and data-oriented product experiences.",
+      "stack": "Data · Product",
+      "link": "https://github.com/cosmiccoder200x-sys/FinSight"
+    },
+    {
+      "title": "WallpaperX",
+      "type": "CREATIVE TOOL",
+      "desc": "A project exploring a more polished experience around wallpapers and visual customization.",
+      "stack": "Web · UI",
+      "link": "https://github.com/cosmiccoder200x-sys/wallpaperX"
     }
-
+  ],
+  "links": {
+    "GitHub": "https://github.com/cosmiccoder200x-sys"
+  }
 }
