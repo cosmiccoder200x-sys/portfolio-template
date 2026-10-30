@@ -1,22 +1,17 @@
 {
-    "name": "Sreerang P",
-    "tagline": "software developer",
-    "bio": "I am a software developer with a passion for creating innovative solutions.",
-    "skills": [
-        "Git",
-        "Python"
-        "JavaScript"
-        "CSS"
-    ],
-    "projects": [
-        {
-            "title": "modulr",
-            "desc": "A tool for last day exam revision",
-            "link": "https://github.com/cosmiccoder200x-sys/modulrr.vercel.app"
-        }
-    ],
-    "links": {
-        "github": "https://github.com/cosmiccoder200x-sys"
+  "name": "Sreerang P",
+  "tagline": "AI Engineer & Full-Stack Developer",
+  "bio": "Electrical & Computer Engineering student and IIT Madras BS Data Science scholar building AI-powered systems, developer tools, and practical full-stack products.",
+  "skills": ["Git", "Python", "JavaScript", "HTML", "CSS", "Full-Stack Development", "AI & Data Science"],
+  "projects": [
+    {
+      "title": "Modulr",
+      "desc": "A tool for last-day exam revision.",
+      "link": "https://github.com/cosmiccoder200x-sys/modulrr.vercel.app"
     }
-
+  ],
+  "links": {
+    "GitHub": "https://github.com/cosmiccoder200x-sys",
+    "LinkedIn": "https://www.linkedin.com/in/sreerang-p"
+  }
 }
