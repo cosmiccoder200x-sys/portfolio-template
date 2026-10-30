@@ -1,48 +1,90 @@
 {
   "name": "Sreerang P",
-  "tagline": "AI Engineer & Full-Stack Developer",
-  "bio": "I'm an ER student in my second year who enjoys building software, exploring AI-powered tools, and turning practical problems into thoughtful digital products. I learn by building, testing ideas, and iterating on real projects.",
+  "tagline": "Software, Data & AI Builder",
+  "bio": "I'm Sreerang P, an Electrical & Computer Engineering student at TKM College of Engineering (KTU 2024 Scheme, expected graduation 2029) and a BS Data Science & Applications student at IIT Madras. I build software, developer tools, and data-driven products, and I'm especially interested in AI, machine learning, and solving practical problems through code. I learn by shipping projects, testing ideas, and iterating in the open.",
+  "education": [
+    {
+      "degree": "B.Tech in Electrical & Computer Engineering",
+      "institution": "TKM College of Engineering",
+      "period": "2024–2029",
+      "details": "KTU · 2024 Scheme"
+    },
+    {
+      "degree": "BS in Data Science & Applications",
+      "institution": "IIT Madras",
+      "period": "Ongoing",
+      "details": "Online degree programme"
+    }
+  ],
   "skills": [
     "Python",
+    "C",
+    "C++",
     "JavaScript",
+    "TypeScript",
+    "Data Structures & Algorithms",
+    "React",
+    "Next.js",
+    "Vite",
+    "Flask",
     "HTML",
     "CSS",
     "Git",
     "GitHub",
-    "Full-Stack Development",
-    "AI Tools"
+    "Data Science",
+    "NumPy",
+    "Pandas",
+    "Machine Learning",
+    "Computer Vision",
+    "Supabase",
+    "SQL",
+    "PostgreSQL",
+    "REST APIs",
+    "Model Context Protocol (MCP)"
   ],
   "projects": [
     {
       "title": "Modulr",
-      "type": "LEARNING TOOL",
-      "desc": "A project focused on making last-minute exam revision more structured and approachable.",
-      "stack": "Web · Learning",
-      "link": "https://github.com/cosmiccoder200x-sys/Modulr"
+      "type": "EDTECH / LEARNING PRODUCT",
+      "desc": "An adaptive exam-learning platform for KTU students that connects syllabus topics, previous-year questions, mastery, and mistakes into focused, high-yield study sessions.",
+      "stack": "Next.js · TypeScript · Tailwind CSS · Vitest",
+      "link": "https://github.com/cosmiccoder200x-sys/Modulr",
+      "demo": "https://tkm-notes.vercel.app/"
     },
     {
       "title": "Local Brain MCP",
       "type": "AI / DEVELOPER TOOLING",
-      "desc": "An open-source project exploring local-first context and developer workflows through MCP.",
-      "stack": "AI · MCP",
-      "link": "https://github.com/cosmiccoder200x-sys/local-brain-mcp"
+      "desc": "A local-first memory layer for AI coding agents. It indexes repository history and engineering context into an embedded SQLite vector store for fast, private retrieval. Published on npm.",
+      "stack": "TypeScript · Node.js · MCP · SQLite · Vector Search",
+      "link": "https://github.com/cosmiccoder200x-sys/local-brain-mcp",
+      "demo": "https://local-brain-mcp.vercel.app"
     },
     {
-      "title": "FinSight",
-      "type": "DATA / FINANCE",
-      "desc": "A project exploring financial information and data-oriented product experiences.",
-      "stack": "Data · Product",
-      "link": "https://github.com/cosmiccoder200x-sys/FinSight"
+      "title": "FocusFlow",
+      "type": "PRODUCTIVITY / BROWSER EXTENSION",
+      "desc": "A Chrome productivity extension combining website usage tracking, distraction blocking, Pomodoro sessions, tasks, notes, statistics, and reports.",
+      "stack": "JavaScript · HTML · CSS · Chrome Extension APIs",
+      "link": "https://github.com/cosmiccoder200x-sys/Focusflow"
     },
     {
-      "title": "WallpaperX",
-      "type": "CREATIVE TOOL",
-      "desc": "A project exploring a more polished experience around wallpapers and visual customization.",
-      "stack": "Web · UI",
-      "link": "https://github.com/cosmiccoder200x-sys/wallpaperX"
+      "title": "E-Learning Platform",
+      "type": "FULL-STACK WEB APPLICATION",
+      "desc": "A learning platform with class management, live sessions, course materials, assignments, submissions, and grading, backed by a Flask API and Supabase.",
+      "stack": "React · TypeScript · Vite · Flask · Supabase",
+      "link": "https://github.com/cosmiccoder200x-sys/E--learning"
+    },
+    {
+      "title": "Gullylabs",
+      "type": "E-COMMERCE / FULL-STACK",
+      "desc": "An e-commerce platform for physical and digital products, with storefront discovery, cart, coupons, Razorpay checkout, order tracking, returns, support chat, and admin tools.",
+      "stack": "React · TanStack Start · Tailwind CSS · Supabase · Razorpay",
+      "link": "https://github.com/cosmiccoder200x-sys/Gullylabs",
+      "demo": "https://gullylab.vercel.app"
     }
   ],
   "links": {
-    "GitHub": "https://github.com/cosmiccoder200x-sys"
+    "GitHub": "https://github.com/cosmiccoder200x-sys",
+    "LinkedIn": "https://www.linkedin.com/in/sreerang-p/",
+    "Email": "mailto:sreerangp.official@gmail.com"
   }
 }
