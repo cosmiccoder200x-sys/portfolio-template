@@ -6,7 +6,7 @@
     {
       "degree": "B.Tech in Electrical & Computer Engineering",
       "institution": "TKM College of Engineering",
-      "period": "2024–2029",
+      "period": "2025–2029",
       "details": "KTU · 2024 Scheme"
     },
     {
@@ -84,7 +84,20 @@
   ],
   "links": {
     "GitHub": "https://github.com/cosmiccoder200x-sys",
-    "LinkedIn": "https://www.linkedin.com/in/sreerang-p/",
+    "LinkedIn": "https://in.linkedin.com/in/sreerang-p",
     "Email": "mailto:sreerangp.official@gmail.com"
-  }
+  },
+  "certifications": [
+    {
+      "name": "5-Day AI Agents: Intensive Vibe Coding Course With Google",
+      "issuer": "Google",
+      "issued": "June 2026"
+    },
+    {
+      "name": "Gemini Certified University Student",
+      "issuer": "Google for Education",
+      "issued": "April 2026",
+      "expires": "April 2029"
+    }
+  ]
 }
