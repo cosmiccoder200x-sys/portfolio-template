@@ -55,4 +55,49 @@
       }
     })
     .catch(() => { /* The page has useful static content as a fallback. */ });
+
+  // Contact form posts to the same Google Form used by the original portfolio.
+  const contactForm = document.getElementById("portfolio-contact-form");
+  const formStatus = document.getElementById("form-status");
+  const submitBtn = document.getElementById("form-submit-btn");
+  const hiddenFrame = document.getElementById("hidden_iframe");
+  let formSubmitted = false;
+  let submissionFallback = null;
+
+  const completeSubmission = () => {
+    if (!formSubmitted) return;
+    formSubmitted = false;
+    if (submissionFallback) window.clearTimeout(submissionFallback);
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>Send Message</span><span aria-hidden="true">↗</span>';
+    }
+    if (formStatus) {
+      formStatus.className = "form-status success";
+      formStatus.textContent = "Thank you! Your message has been sent.";
+    }
+    if (contactForm) contactForm.reset();
+  };
+
+  if (hiddenFrame) {
+    hiddenFrame.addEventListener("load", () => {
+      if (formSubmitted) completeSubmission();
+    });
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener("submit", () => {
+      formSubmitted = true;
+      if (formStatus) {
+        formStatus.className = "form-status";
+        formStatus.textContent = "";
+      }
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>Sending message...</span>';
+      }
+      submissionFallback = window.setTimeout(completeSubmission, 2500);
+    });
+  }
+
 })();
