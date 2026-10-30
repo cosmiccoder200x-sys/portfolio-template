@@ -1,239 +1,96 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sreerang P | Software, Data & AI Builder</title>
-  <meta name="description" content="Portfolio of Sreerang P — ER student & IIT Madras BS Data Science scholar building AI systems, developer tooling, and scalable full-stack applications.">
-  
-  <!-- Modern Typography: Geist & JetBrains Mono -->
+  <meta name="theme-color" content="#070910">
+  <meta name="description" content="Sreerang P — AI Engineer and Full-Stack Developer building useful software, AI-powered tools, and thoughtful digital experiences.">
+  <title>Sreerang P — AI Engineer &amp; Full-Stack Developer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <!-- Ambient Background Backlit Glow -->
-  <div class="ambient-glow top-glow" aria-hidden="true"></div>
-  <div class="ambient-glow bottom-glow" aria-hidden="true"></div>
+  <div class="ambient ambient-a" aria-hidden="true"></div>
+  <div class="ambient ambient-b" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
 
-  <!-- Floating Navigation Bar -->
-  <header class="top-nav">
-    <div class="nav-container">
-      <a href="#" class="nav-brand" aria-label="Home">
-        <span class="brand-badge">&lt;/&gt;</span>
-        <span class="brand-text">Sreerang P <span class="brand-sub">/dev</span></span>
-      </a>
-
-      <nav class="nav-menu" aria-label="Main Navigation">
-        <a href="#about">About</a>
-        <a href="#skills-section">Skills</a>
-        <a href="#projects-section">Projects</a>
-        <a href="#contact">Contact</a>
-      </nav>
-
-      <div class="nav-actions">
-        <div class="status-pill" title="Open to opportunities">
-          <span class="status-dot"></span>
-          <span class="status-text">Available for roles</span>
-        </div>
-        <button id="theme-toggle" class="theme-btn" aria-label="Toggle color theme" title="Toggle theme">
-          <span class="theme-icon">🌙</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Hero Header Section -->
-  <header class="hero">
-    <div class="hero-container">
-      <div class="hero-content">
-        <div class="hero-tag">
-          <span class="terminal-prompt">&gt;</span>
-          <span>HELLO_WORLD // ER · IIT MADRAS BS DS · BUILDER</span>
-        </div>
-        <h1 id="name">Sreerang P</h1>
-        <p id="tagline" class="tagline">Software Developer &amp; Systems Builder</p>
-        <p class="hero-subtext">
-          Electrical & Computer Engineering student and IIT Madras BS Data Science scholar. Building AI-powered systems, developer tooling, and scalable full-stack architectures that solve real problems.
-        </p>
-
-        <!-- Social Links injected by script.js -->
-        <nav id="links" class="social-links" aria-label="Social Profiles"></nav>
-
-        <!-- Metric Ticker Bento Modules -->
-        <div class="metric-row">
-          <div class="metric-card">
-            <span class="metric-value">22+</span>
-            <span class="metric-label">GitHub Repos</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-value highlight">4</span>
-            <span class="metric-label">Shipped Products</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-value emerald">IIT-M</span>
-            <span class="metric-label">BS Data Science</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Hero Terminal Card (Interactive Code View) -->
-      <div class="hero-terminal" aria-hidden="true">
-        <div class="terminal-bar">
-          <div class="terminal-dots">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
-          </div>
-          <span class="terminal-title">engineer.ts</span>
-          <span class="terminal-lang">TypeScript</span>
-        </div>
-        <div class="terminal-body">
-          <pre><code><span class="t-keyword">const</span> <span class="t-entity">engineer</span> = {
-  <span class="t-prop">name</span>: <span class="t-string">'Sreerang P'</span>,
-  <span class="t-prop">role</span>: <span class="t-string">'Software, Data & AI Builder'</span>,
-  <span class="t-prop">education</span>: [
-    <span class="t-string">'ECE @ TKMCE'</span>,
-    <span class="t-string">'BS Data Science @ IIT Madras'</span>
-  ],
-  <span class="t-prop">shipped</span>: <span class="t-string">'Modulr · LocalBrainMCP · WallpaperX · FinSight'</span>,
-  <span class="t-prop">status</span>: <span class="t-string">'Building AI-powered tools 🚀'</span>
-};
-
-<span class="t-comment">// gitfolio status --inspect</span>
-<span class="t-entity">console</span>.<span class="t-func">log</span>(<span class="t-string">'Ready to build impactful software.'</span>);</code></pre>
-        </div>
-        <div class="terminal-footer">
-          <span class="status-indicator">✔ Systems Operational</span>
-          <span>UTF-8</span>
-        </div>
-      </div>
-    </div>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Sreerang P home">
+      <span class="brand-mark">&lt;/&gt;</span><span>SREERANG<span class="brand-muted">.DEV</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#about">About</a><a href="#skills">Stack</a><a href="#projects">Projects</a><a href="#contact">Contact</a>
+    </nav>
+    <a class="header-cta" href="#contact"><span class="online-dot"></span> Let's connect <span aria-hidden="true">↗</span></a>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
   </header>
 
   <main>
-    <!-- About Section -->
-    <section id="about" class="section">
-      <div class="section-header">
-        <div>
-          <span class="section-tag">// 01 ABOUT</span>
-          <h2>About Me</h2>
+    <section class="hero section-wrap" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="eyebrow-line"></span> INDEPENDENT BUILDER <span class="eyebrow-sep">/</span> ER · YEAR 2</div>
+        <h1>Ideas into<br><span class="gradient-text">intelligent</span><br>experiences<span class="accent-dot">.</span></h1>
+        <p class="hero-description">Hey, I'm <strong>Sreerang</strong> — an AI and full-stack developer exploring the space between useful software, intelligent systems, and delightful user experiences.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#projects">Explore my work <span aria-hidden="true">↘</span></a>
+          <a class="button button-ghost" href="#about">A little about me <span aria-hidden="true">→</span></a>
         </div>
-        <span class="section-hint">Philosophy &amp; Background</span>
+        <div class="hero-meta"><span class="meta-pulse"></span><span>BUILDING IN PUBLIC</span><span class="meta-divider">·</span><span>ALWAYS LEARNING</span></div>
       </div>
 
-      <div class="bento-row">
-        <div class="bento-main">
-          <h3 class="bento-headline">Building AI systems, developer tools, and products that solve real problems.</h3>
-          <p id="bio" class="bio-text">
-            Electrical & Computer Engineering student and IIT Madras BS Data Science scholar, passionate about building AI-powered systems, developer tooling, and scalable full-stack applications. Driven by developer experience (DX), clean architecture, and shipping products that solve real problems.
-          </p>
-          <div class="bio-details">
-            <div class="bio-pill">
-              <span class="bio-pill-label">Education</span>
-              <span class="bio-pill-val">ER · IIT Madras BS DS</span>
-            </div>
-            <div class="bio-pill">
-              <span class="bio-pill-label">Focus</span>
-              <span class="bio-pill-val">AI · Full-Stack · Data</span>
-            </div>
-            <div class="bio-pill">
-              <span class="bio-pill-label">Shipped</span>
-              <span class="bio-pill-val">4 Live Products</span>
-            </div>
-          </div>
-        </div>
+      <div class="visual-stage" aria-label="Animated abstract neural network illustration">
+        <div class="stage-grid" aria-hidden="true"></div>
+        <div class="stage-orbit orbit-one" aria-hidden="true"></div>
+        <div class="stage-orbit orbit-two" aria-hidden="true"></div>
+        <canvas id="neural-canvas" aria-hidden="true"></canvas>
+        <div class="core-label core-label-top"><span class="tiny-square"></span> NEURAL / CORE <span class="label-line"></span></div>
+        <div class="core-label core-label-bottom"><span class="signal-bars"><i></i><i></i><i></i></span> SYSTEMS THINKING <span class="label-index">01—04</span></div>
+        <div class="float-card float-card-top"><span class="float-icon">✳</span><span><b>AI + SOFTWARE</b><small>Ideas → prototypes</small></span></div>
+        <div class="float-card float-card-bottom"><span class="float-icon violet">⌘</span><span><b>FULL-STACK</b><small>Design → deployment</small></span></div>
+        <div class="stage-coordinate">9.93° N&nbsp; / &nbsp;76.26° E</div>
+      </div>
+      <a class="scroll-cue" href="#about"><span class="scroll-line"></span> SCROLL TO EXPLORE</a>
+    </section>
 
-        <div class="bento-side">
-          <h3 class="bento-title">Core Principles</h3>
-          <ul class="principles-list">
-            <li>
-              <div class="p-icon">🤖</div>
-              <div>
-                <strong>AI-First Thinking</strong>
-                <p>Building intelligent systems with LLMs, MCP, and agentic workflows.</p>
-              </div>
-            </li>
-            <li>
-              <div class="p-icon">📊</div>
-              <div>
-                <strong>Data-Driven Decisions</strong>
-                <p>IIT Madras DS training applied to real analytics, visualization & ML.</p>
-              </div>
-            </li>
-            <li>
-              <div class="p-icon">🚀</div>
-              <div>
-                <strong>Ship & Iterate</strong>
-                <p>4 live products deployed on Vercel — build fast, measure, improve.</p>
-              </div>
-            </li>
-          </ul>
-        </div>
+    <section class="section-wrap section-block" id="about">
+      <div class="section-heading"><div><p class="section-kicker">01 / THE PERSON</p><h2>Curious by nature.<br><span class="muted-heading">Builder by choice.</span></h2></div><p class="section-aside">A little context about how I think and what I like to build.</p></div>
+      <div class="about-grid">
+        <article class="about-card glass-card">
+          <div class="card-topline"><span class="card-index">ABOUT.SYS</span><span class="live-indicator">● ONLINE</span></div>
+          <p id="bio">I enjoy turning complicated problems into approachable products. My interests span AI-powered tools, full-stack applications, and interfaces that feel as good as they work.</p>
+          <div class="about-tags"><span>Problem solving</span><span>Rapid prototyping</span><span>Continuous learning</span></div>
+        </article>
+        <article class="principle-card glass-card"><span class="principle-number">01</span><div><h3>Make it useful</h3><p>Start with a real problem and build for the person experiencing it.</p></div><span class="principle-arrow">↗</span></article>
+        <article class="principle-card glass-card"><span class="principle-number">02</span><div><h3>Think in systems</h3><p>Care about the details, the architecture, and the whole experience.</p></div><span class="principle-arrow">↗</span></article>
+        <article class="principle-card glass-card"><span class="principle-number">03</span><div><h3>Learn by shipping</h3><p>Build, get feedback, improve, and repeat.</p></div><span class="principle-arrow">↗</span></article>
       </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills-section" class="section">
-      <div class="section-header">
-        <div>
-          <span class="section-tag">// 02 TECH ARSENAL</span>
-          <h2>Skills &amp; Technologies</h2>
-        </div>
-        <span class="section-hint">Languages, runtimes, and engineering tools</span>
-      </div>
-
-      <ul id="skills" class="chips"></ul>
+    <section class="section-wrap section-block" id="skills">
+      <div class="section-heading"><div><p class="section-kicker">02 / THE TOOLKIT</p><h2>Tools I work <span class="gradient-text">with.</span></h2></div><p class="section-aside">A living toolkit — always growing as I build.</p></div>
+      <div class="skills-panel glass-card"><div class="skills-panel-head"><span class="card-index">CURRENT_STACK.JSON</span><span class="mono-note">SELECTED TECHNOLOGIES</span></div><ul id="skills" class="skill-list"></ul></div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects-section" class="section">
-      <div class="section-header">
-        <div>
-          <span class="section-tag">// 03 FEATURED WORK</span>
-          <h2>Projects</h2>
-        </div>
-        <span class="section-hint">Production software &amp; open source developer tools</span>
-      </div>
-
-      <div id="projects" class="grid"></div>
+    <section class="section-wrap section-block" id="projects">
+      <div class="section-heading"><div><p class="section-kicker">03 / SELECTED WORK</p><h2>Made with intent<span class="accent-dot">.</span></h2></div><p class="section-aside">Experiments, tools, and projects from the build log.</p></div>
+      <div id="projects-grid" class="projects-grid"></div>
     </section>
 
-    <!-- Collaboration / Contact Section -->
-    <section id="contact" class="section contact-section">
-      <div class="contact-card">
-        <span class="section-tag">// 04 GET IN TOUCH</span>
-        <h3>Let's build something extraordinary together.</h3>
-        <p>I'm always excited to collaborate on AI-powered products, open source developer tools, data systems, and full-stack software. Currently open to internships and project collaborations.</p>
-        <div class="contact-actions">
-          <a href="https://github.com/cosmiccoder200x-sys" target="_blank" rel="noopener" class="btn btn-primary">
-            Explore GitHub
-          </a>
-          <a href="https://www.linkedin.com/in/sreerang-p" target="_blank" rel="noopener" class="btn btn-secondary">
-            Connect on LinkedIn
-          </a>
-        </div>
+    <section class="section-wrap contact-section" id="contact">
+      <div class="contact-panel">
+        <div class="contact-orb" aria-hidden="true"></div>
+        <p class="section-kicker">04 / OPEN CHANNEL</p>
+        <h2>Have a good problem?<br><span class="gradient-text">Let's build something.</span></h2>
+        <p class="contact-copy">I'm interested in thoughtful collaborations, interesting engineering challenges, and products that make a difference.</p>
+        <div id="links" class="contact-links"></div>
+        <a class="email-fallback" href="https://github.com/cosmiccoder200x-sys">Or find me on GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </section>
   </main>
 
-  <footer id="footer"></footer>
-
+  <footer class="site-footer"><a class="brand footer-brand" href="#home"><span class="brand-mark">&lt;/&gt;</span><span>SREERANG<span class="brand-muted">.DEV</span></span></a><span>Designed to keep evolving <span class="footer-spark">✳</span></span><span id="footer-year">© 2026 Sreerang P</span></footer>
   <script src="script.js"></script>
-  <script>
-    const themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn) {
-      themeBtn.addEventListener('click', () => {
-        document.documentElement.classList.toggle('light');
-        const isLight = document.documentElement.classList.contains('light');
-        themeBtn.querySelector('.theme-icon').textContent = isLight ? '☀️' : '🌙';
-      });
-    }
-  </script>
 </body>
-
 </html>
