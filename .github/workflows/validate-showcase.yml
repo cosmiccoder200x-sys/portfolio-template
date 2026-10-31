@@ -2,6 +2,8 @@ name: Validate showcase PR
 on:
   pull_request_target:
     types: [opened, synchronize, reopened]
+    paths:
+      - 'showcase/**'
 permissions:
   contents: write
   pull-requests: write
