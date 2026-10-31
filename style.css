@@ -38,10 +38,10 @@
   display: block;
   position: relative;
   left: -10px;
-  width: 180%;
-  height: 200%;
-  max-width: 250%;
-  max-height: 250%;
+  width: 280%;
+  height: 300%;
+  max-width: 350%;
+  max-height: 350%;
   object-fit: contain;
   object-position: center bottom;
   transform: none !important;
