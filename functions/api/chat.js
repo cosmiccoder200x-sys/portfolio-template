@@ -78,12 +78,17 @@ export async function onRequestPost({ request, env }) {
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
   if (rateLimited(ip)) return json({ error: "Too many requests. Please wait a minute and try again." }, 429);
 
-  const contentLength = Number(request.headers.get("Content-Length") || 0);
-  if (contentLength > 16_384) return json({ error: "Your message is too large." }, 413);
+  let rawBody;
+  try {
+    rawBody = await request.text();
+  } catch (_) {
+    return json({ error: "Could not read the request body." }, 400);
+  }
+  if (rawBody.length > 16_384) return json({ error: "Your message is too large." }, 413);
 
   let body;
   try {
-    body = await request.json();
+    body = JSON.parse(rawBody);
   } catch (_) {
     return json({ error: "Invalid request body." }, 400);
   }
