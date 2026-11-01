@@ -226,5 +226,46 @@
     </section>
   </main>
   <footer class="site-footer mono"><span>© 2026 SREERANG P</span><span>BUILT WITH CURIOSITY <span class="footer-dot">●</span></span><a href="analytics/">GITHUB ANALYTICS ↗</a><a href="#home">BACK TO TOP ↑</a></footer>
+
+  <section class="ai-assistant" id="portfolio-ai-assistant" aria-label="Ask Sreerang AI assistant">
+    <button class="ai-launcher" id="ai-launcher" type="button" aria-expanded="false" aria-controls="ai-panel">
+      <span class="ai-launcher-mark" aria-hidden="true">✳</span><span>ASK AI</span><span class="ai-launcher-dot" aria-hidden="true"></span>
+    </button>
+    <div class="ai-panel" id="ai-panel" role="dialog" aria-modal="false" aria-labelledby="ai-title" hidden>
+      <div class="ai-panel-head">
+        <div class="ai-brand-mark" aria-hidden="true">SP</div>
+        <div class="ai-panel-title"><h2 id="ai-title">Ask Sreerang</h2><p>PORTFOLIO INTELLIGENCE / GEMINI</p></div>
+        <button class="ai-close" id="ai-close" type="button" aria-label="Close assistant">×</button>
+      </div>
+      <div class="ai-mode-row">
+        <label class="ai-search-toggle" for="ai-web-search">
+          <input id="ai-web-search" type="checkbox" checked>
+          <span class="ai-toggle-track" aria-hidden="true"></span>
+          <span>LIVE WEB SEARCH</span>
+        </label>
+        <span class="ai-mode-hint" id="ai-mode-hint">AUTO</span>
+      </div>
+      <div class="ai-messages" id="ai-messages" aria-live="polite" aria-relevant="additions">
+        <div class="ai-welcome">
+          <span class="ai-eyebrow">A PERSONAL AI ASSISTANT</span>
+          <h3>Curious about<br>what I build?</h3>
+          <p>Ask about my projects, skills, education, or explore a general topic. Turn on live search for current information.</p>
+          <div class="ai-suggestions">
+            <button type="button" data-prompt="Tell me about Sreerang and his technical interests.">ABOUT SREERANG <span>↗</span></button>
+            <button type="button" data-prompt="Explain the Local Brain MCP project and its architecture.">LOCAL BRAIN MCP <span>↗</span></button>
+            <button type="button" data-prompt="What are the latest developments in AI agents?">LATEST IN AI <span>↗</span></button>
+          </div>
+        </div>
+      </div>
+      <form class="ai-composer" id="ai-form">
+        <label class="visually-hidden" for="ai-input">Ask a question</label>
+        <textarea id="ai-input" rows="1" maxlength="2000" placeholder="Ask anything..." required></textarea>
+        <button class="ai-send" id="ai-send" type="submit" aria-label="Send message"><span aria-hidden="true">↗</span></button>
+      </form>
+      <div class="ai-panel-foot"><span id="ai-status">READY WHEN YOU ARE</span><button id="ai-clear" type="button">CLEAR CHAT</button></div>
+    </div>
+  </section>
+  <script src="assistant.js" defer></script>
+
 </body>
 </html>
