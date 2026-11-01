@@ -29,6 +29,20 @@
     messages.scrollTop = messages.scrollHeight;
   }
 
+  // Render bold Markdown using DOM nodes, never injecting model output as HTML.
+  function renderMessageText(element, content) {
+    const parts = String(content).split(/(\*\*[^*]+\*\*)/g);
+    parts.forEach((part) => {
+      if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+        const strong = document.createElement("strong");
+        strong.textContent = part.slice(2, -2);
+        element.appendChild(strong);
+      } else {
+        element.appendChild(document.createTextNode(part));
+      }
+    });
+  }
+
   function addMessage(role, content, sources = [], error = false) {
     const wrapper = document.createElement("article");
     wrapper.className = "ai-message " + role + (error ? " error" : "");
@@ -40,7 +54,8 @@
 
     const bubble = document.createElement("div");
     bubble.className = "ai-message-bubble";
-    bubble.textContent = content;
+    if (role === "assistant" && !error) renderMessageText(bubble, content);
+    else bubble.textContent = content;
     wrapper.appendChild(bubble);
 
     if (sources.length) {
