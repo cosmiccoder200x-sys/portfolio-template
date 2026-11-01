@@ -43,6 +43,38 @@
     window.setTimeout(() => item.classList.add("is-visible"), 100 + index * 120);
   });
 
+  // Initialize Rive Hero Orb
+  const initRiveOrb = () => {
+    const orbCanvas = document.getElementById("hero-orb-canvas");
+    if (!orbCanvas) return;
+
+    if (typeof rive === "undefined") {
+      window.setTimeout(initRiveOrb, 80);
+      return;
+    }
+
+    try {
+      const orb = new rive.Rive({
+        src: "assets/rive/hero-orb.riv",
+        canvas: orbCanvas,
+        artboard: "PortfolioOrb",
+        stateMachine: "State Machine 1",
+        autoplay: !reduceMotion,
+        onLoad: () => {
+          orb.resizeDrawingSurfaceToCanvas();
+        },
+      });
+
+      window.addEventListener("resize", () => {
+        orb.resizeDrawingSurfaceToCanvas();
+      });
+    } catch (e) {
+      console.warn("Rive orb initialization notice:", e);
+    }
+  };
+
+  initRiveOrb();
+
   // Load profile data progressively; static project cards remain available if it fails.
   fetch("profile.json")
     .then((response) => { if (!response.ok) throw new Error("Profile unavailable"); return response.json(); })

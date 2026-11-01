@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@rive-app/webgl2@2.49.0/rive.js" defer></script>
   <script src="script.js" defer></script>
 </head>
 <body>
@@ -35,6 +36,9 @@
       </div>
       <p class="hero-statement reveal">Building intelligent systems<br>and thoughtful digital experiences.</p>
       <div class="hero-bottom mono"><a href="#about" class="scroll-cue"><span class="scroll-line"></span> SCROLL TO EXPLORE <span class="down-arrow">↓</span></a><span class="page-count">01 <i>/</i> 04</span></div>
+      <div class="hero-orb-wrap reveal" aria-hidden="true">
+        <canvas id="hero-orb-canvas" class="hero-orb-canvas" width="500" height="500"></canvas>
+      </div>
       <div class="hero-photo reveal" aria-label="Portrait of Sreerang">
         <img src="assets/sreerang-portrait.png" alt="Sreerang P in a dark blazer, monochrome portrait" fetchpriority="high">
       </div>
