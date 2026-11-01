@@ -157,12 +157,47 @@ export async function onRequestPost({ request, env }) {
   }
 
   if (!upstream.ok) {
-    const status = upstream.status === 429 ? 503 : 502;
+    let upstreamError = {};
+    try {
+      const errorPayload = await upstream.json();
+      upstreamError = errorPayload?.error || {};
+    } catch (_) {
+      // Some upstream failures do not include a JSON response body.
+    }
+
+    // Keep the detailed cause in Worker logs, never expose request credentials.
+    console.error("Gemini API request failed", {
+      status: upstream.status,
+      code: String(upstreamError.code || "unknown"),
+      message: String(upstreamError.message || "No upstream error message").slice(0, 500)
+    });
+
+    const code = String(upstreamError.code || "");
+    if (upstream.status === 429) {
+      if (code === "quota_exceeded") {
+        return json({
+          error: "The Gemini daily quota for this project has been reached. Check your Google AI Studio usage and quota."
+        }, 429);
+      }
+      if (code === "rate_limit_exceeded" || code === "too_many_requests") {
+        return json({
+          error: "The Gemini request limit has been reached. Wait a little and try again."
+        }, 429);
+      }
+      return json({
+        error: "Gemini temporarily rate-limited this request. Check Google AI Studio usage and try again shortly."
+      }, 429);
+    }
+
+    if (upstream.status === 503) {
+      return json({
+        error: "Gemini is temporarily unavailable. Please try again shortly."
+      }, 503);
+    }
+
     return json({
-      error: upstream.status === 429
-        ? "The AI service is busy right now. Please try again in a moment."
-        : "The AI service returned an error. Please try again later."
-    }, status);
+      error: "Gemini rejected the request. Check the Worker logs for the upstream error code."
+    }, 502);
   }
 
   let result;
