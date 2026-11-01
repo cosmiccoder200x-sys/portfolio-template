@@ -1,0 +1,23 @@
+name: Repair stuck GitHub Pages deployment
+
+on:
+  push:
+    paths:
+      - '.github/workflows/repair-pages-deployment.yml'
+
+permissions:
+  contents: read
+  pages: write
+
+jobs:
+  cancel-stale-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel stale Pages deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/deployments/cf44e068045960a30fd723356964d709bc66d507/cancel"
+          echo "Cancelled stale GitHub Pages deployment."
