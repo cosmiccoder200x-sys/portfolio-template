@@ -112,35 +112,6 @@
   });
 
   /* ==========================================================================
-     3A. ABOUT SECTION MASK + STAGGERED REVEAL
-     ========================================================================== */
-  const aboutSection = document.getElementById("about");
-  const aboutRevealItems = aboutSection
-    ? aboutSection.querySelectorAll(".about-reveal")
-    : [];
-
-  if (aboutSection && aboutRevealItems.length) {
-    if (reduceMotion || !("IntersectionObserver" in window)) {
-      aboutRevealItems.forEach((item) => item.classList.add("is-visible"));
-    } else {
-      aboutSection.classList.add("about-motion-ready");
-      const aboutObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      }, {
-        threshold: 0.12,
-        rootMargin: "0px 0px -35px 0px"
-      });
-
-      aboutRevealItems.forEach((item) => aboutObserver.observe(item));
-    }
-  }
-
-  /* ==========================================================================
      4. HERO ROLE ROTATOR
      ========================================================================== */
   const roleRotator = document.getElementById("role-rotator");

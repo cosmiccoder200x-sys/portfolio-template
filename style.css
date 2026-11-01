@@ -1145,60 +1145,6 @@ textarea.form-control {
 }
 
 /* ==========================================================================
-   ABOUT: MASK + STAGGERED REVEAL
-   ========================================================================== */
-#about.about-motion-ready .about-reveal {
-  opacity: 0;
-  transition:
-    opacity 650ms var(--ease-standard),
-    transform 850ms var(--ease-out-expo),
-    clip-path 950ms var(--ease-out-expo);
-  will-change: opacity, transform, clip-path;
-}
-
-#about.about-motion-ready .about-reveal-kicker {
-  transform: translateY(14px);
-}
-
-#about.about-motion-ready .about-reveal-heading {
-  clip-path: inset(0 0 100% 0);
-  transform: translateY(24px);
-}
-
-#about.about-motion-ready .about-reveal-copy {
-  transform: translateY(22px);
-}
-
-#about .about-reveal-kicker.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0ms;
-}
-
-#about .about-reveal-heading.is-visible {
-  opacity: 1;
-  clip-path: inset(0 0 0 0);
-  transform: translateY(0);
-  transition-delay: 150ms;
-}
-
-#about .about-reveal-copy.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 320ms;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  #about.about-motion-ready .about-reveal {
-    opacity: 1;
-    clip-path: none;
-    transform: none;
-    transition: none;
-    will-change: auto;
-  }
-}
-
-/* ==========================================================================
    MOTION REVEAL SYSTEM
    ========================================================================== */
 .reveal {
