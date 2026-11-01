@@ -4,12 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script>
-    if (location.hostname === "github.io" || location.hostname.endsWith(".github.io")) {
-      document.documentElement.classList.add("github-pages");
+    const host = location.hostname;
+    if (
+      host === "github.io" ||
+      host.endsWith(".github.io") ||
+      host === "pages.dev" ||
+      host.endsWith(".pages.dev")
+    ) {
+      document.documentElement.classList.add("hide-ai-assistant");
     }
   </script>
   <style>
-    html.github-pages #portfolio-ai-assistant { display: none !important; }
+    html.hide-ai-assistant #portfolio-ai-assistant { display: none !important; }
   </style>
   <meta name="theme-color" content="#090909">
   <meta name="description" content="Sreerang P — Software, Data & AI Builder studying Electrical & Computer Engineering at TKM and Data Science at IIT Madras.">
