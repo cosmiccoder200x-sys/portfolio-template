@@ -30,23 +30,35 @@ This project is a high-performance, single-page portfolio built for **Sreerang P
 - **Hero**:
   - Name reveal with smooth upward trajectory and subtle character cadence.
   - Dynamic rotating role transition (`Software Developer` · `AI Builder` · `Forward-Deployed Engineer`).
-  - Interactive "SP" monochrome Rive orb in the top-right quadrant with canvas WebGL2 rendering and CSS fallback.
-  - Interactive **Virtual Joystick Gimbal** (integrated directly into the orb without visual HUD clutter):
-    - Embedded Rive `Joystick` architecture linking `PoseX` and `PoseY` timeline controls.
-    - Automatic cursor tracking (simulating Rive `handleSource` bound to cursor position across the hero).
-    - Direct touch/drag interactivity on the orb itself acting as a virtual trackball/joystick.
-    - 3D spatial parallax and deflection of the orb and its concentric rings.
-    - Harmonic spring physics with natural bounce back to center on release.
+  - Interactive "SP" monochrome identity orb positioned in the top-right quadrant matching the closing section visual:
+    - Central bold "SP" typography in heavy sans-serif.
+    - Outer specular silver gradient rim with high-contrast reflection.
+    - Deep dark inner plate for maximum optical contrast.
+    - Concentric dashed orbital rings with counter-rotating cycles and satellite dots.
+    - Convergence dashed crosshair axis lines.
+    - Ambient radial glow.
+    - Interactive 3D spatial gimbal deflection and perspective tilt (`perspective(900px) rotateY/rotateX`).
+    - Direct pointer drag interaction with harmonic spring physics (`spring: 0.14`, `damping: 0.76`).
+    - Passive cursor tracking across the hero section.
   - Subtle architectural dot/grid background canvas and optional mouse spotlight on desktop.
 - **About**:
-  - Editorial section heading with staggered reveal (`Curious by nature. Builder by practice.`).
-  - Pure brutalist/editorial typography without portrait photograph for maximal focus on craftsmanship.
-  - Bio copy with high legibility and links with animated arrow indicators.
+  - Two-column editorial layout: Left column features bold section heading and `about-visual.svg` technical architecture schematic; Right column contains narrative bio and links.
+  - Hardware/software pipeline visual displaying data contracts, vector retrieval engine, and zero-copy IPC telemetry.
 - **Skills**:
-  - Categorized or structured grid presentation with staggered card entrances and subtle hover illumination.
+  - Constellation network visual (`skills-visual.svg`) displaying 6 core interconnected domains (Python, C++, DSA, AI, Data Science, Web Platform) with live topology telemetry.
+  - Detailed 24-skill pill grid with hover translation and arrow micro-interactions.
 - **Projects**:
-  - Card lift with border glow on hover, micro 3D tilt on desktop, animated arrows on links.
-  - Fully preserving actual project repos, demos, and descriptions.
+  - 5 dedicated technical SVG mockups with bespoke schematics:
+    - `modulr.svg`: Adaptive exam platform, topic syllabus graph, mastery retention metrics.
+    - `local-brain-mcp.svg`: Local SQLite vector store, MCP JSON-RPC protocol panel, embedding projection.
+    - `focusflow.svg`: Pomodoro timer dial, distraction shielding histogram, session telemetry.
+    - `e-learning.svg`: Course schedule timeline, relational database schema matrix, grading pipeline.
+    - `gullylabs.svg`: Storefront transaction pipeline, coupon logic, inventory state machine.
+  - Interactive card lift, 3D desktop micro-tilt, and animated arrow links.
+- **Contact**:
+  - `Have an idea? Let's build it.` oversized typography.
+  - Closing SP identity visual (`contact-visual.svg`) matching the hero orb.
+  - Fully functional asynchronous contact form submitted to Google Forms with instant validation and status feedback.
 - **Experience / Education / Certifications**:
   - Timeline styling with animated vertical line drawn on scroll, distinct achievement markers.
 - **Contact & Footer**:
