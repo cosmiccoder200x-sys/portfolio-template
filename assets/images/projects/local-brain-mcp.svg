@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 320" width="100%" height="100%" fill="none" aria-label="Local Brain MCP Agentic Vector Memory Layer Schematic">
+  <defs>
+    <radialGradient id="lbGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#666666" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#111111" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="540" height="320" fill="#090909" rx="4"/>
+  <rect x="16" y="16" width="508" height="288" stroke="#222222" stroke-width="1" rx="2"/>
+
+  <!-- Header -->
+  <line x1="16" y1="52" x2="524" y2="52" stroke="#1f1f1f" stroke-width="1"/>
+  <text x="32" y="38" font-family="'DM Mono', monospace" font-size="9" fill="#EDEDED" font-weight="600" letter-spacing="0.1em">LOCAL BRAIN MCP // EMBEDDED MEMORY</text>
+  <text x="508" y="38" text-anchor="end" font-family="'DM Mono', monospace" font-size="8" fill="#777777">NPM · TYPESCRIPT · SQLITE-VEC</text>
+
+  <!-- Left: MCP Protocol Handshake & Chunking -->
+  <g transform="translate(32, 70)">
+    <rect width="180" height="135" fill="#111111" stroke="#2a2a2a" stroke-width="0.8" rx="2"/>
+    <text x="14" y="22" font-family="'DM Mono', monospace" font-size="8" fill="#EDEDED">MCP JSON-RPC PROTOCOL</text>
+    <line x1="14" y1="32" x2="166" y2="32" stroke="#222" stroke-width="1"/>
+    
+    <text x="14" y="50" font-family="'DM Mono', monospace" font-size="7" fill="#777">&gt; tools/list</text>
+    <text x="14" y="66" font-family="'DM Mono', monospace" font-size="7" fill="#AAA">&gt; memory/query_vector</text>
+    <text x="14" y="82" font-family="'DM Mono', monospace" font-size="7" fill="#777">&gt; repo/index_git_diff</text>
+    <text x="14" y="98" font-family="'DM Mono', monospace" font-size="7" fill="#AAA">&gt; context/hydrate_chunks</text>
+    
+    <rect x="14" y="112" width="152" height="12" fill="#1a1a1a" rx="1"/>
+    <text x="20" y="121" font-family="'DM Mono', monospace" font-size="6.5" fill="#EDEDED">IPC: STDIO STREAM · LOCAL-ONLY</text>
+  </g>
+
+  <!-- Middle: Vector Space Coordinate Graph -->
+  <g transform="translate(228, 70)">
+    <rect width="280" height="135" fill="#111111" stroke="#333333" stroke-width="0.8" rx="2"/>
+    <text x="16" y="22" font-family="'DM Mono', monospace" font-size="8" fill="#EDEDED">EMBEDDED VECTOR PROJECTION</text>
+    <text x="264" y="22" text-anchor="end" font-family="'DM Mono', monospace" font-size="7" fill="#777">COSINE SIMILARITY</text>
+    
+    <!-- Vector Graph Grid -->
+    <g transform="translate(20, 36)">
+      <line x1="0" y1="80" x2="240" y2="80" stroke="#222" stroke-width="1"/>
+      <line x1="120" y1="0" x2="120" y2="80" stroke="#222" stroke-width="1"/>
+      
+      <!-- Clustered Memory Chunks -->
+      <circle cx="65" cy="30" r="3" fill="#ffffff" filter="url(#lbGlow)"/>
+      <circle cx="78" cy="22" r="2.5" fill="#cccccc"/>
+      <circle cx="52" cy="40" r="2.5" fill="#888888"/>
+      <line x1="65" y1="30" x2="78" y2="22" stroke="#555" stroke-width="0.75"/>
+      <line x1="65" y1="30" x2="52" y2="40" stroke="#555" stroke-width="0.75"/>
+      <text x="40" y="16" font-family="'DM Mono', monospace" font-size="6.5" fill="#aaa">CLUSTER: AST_PARSE</text>
+
+      <circle cx="180" cy="50" r="3" fill="#ffffff" filter="url(#lbGlow)"/>
+      <circle cx="195" cy="42" r="2.5" fill="#cccccc"/>
+      <circle cx="170" cy="62" r="2.5" fill="#888888"/>
+      <line x1="180" y1="50" x2="195" y2="42" stroke="#555" stroke-width="0.75"/>
+      <line x1="180" y1="50" x2="170" y2="62" stroke="#555" stroke-width="0.75"/>
+      <text x="150" y="75" font-family="'DM Mono', monospace" font-size="6.5" fill="#aaa">CLUSTER: COMMIT_LOG</text>
+    </g>
+  </g>
+
+  <!-- Bottom Metric Bar -->
+  <g transform="translate(32, 222)">
+    <rect width="476" height="62" fill="#111111" stroke="#222222" stroke-width="0.8" rx="2"/>
+    <text x="20" y="24" font-family="'DM Mono', monospace" font-size="7.5" fill="#777777">EMBEDDING LATENCY</text>
+    <text x="20" y="46" font-family="'DM Mono', monospace" font-size="13" font-weight="700" fill="#EDEDED">3.2ms RETRIEVAL</text>
+    
+    <line x1="165" y1="12" x2="165" y2="50" stroke="#222222" stroke-width="1"/>
+    <text x="185" y="24" font-family="'DM Mono', monospace" font-size="7.5" fill="#777777">STORAGE ENGINE</text>
+    <text x="185" y="46" font-family="'DM Mono', monospace" font-size="13" font-weight="700" fill="#EDEDED">SQLITE-VEC ZERO-DEP</text>
+    
+    <line x1="350" y1="12" x2="350" y2="50" stroke="#222222" stroke-width="1"/>
+    <text x="370" y="24" font-family="'DM Mono', monospace" font-size="7.5" fill="#777777">REGISTRY</text>
+    <text x="370" y="46" font-family="'DM Mono', monospace" font-size="13" font-weight="700" fill="#ffffff">NPM OFFICIAL</text>
+  </g>
+</svg>
+

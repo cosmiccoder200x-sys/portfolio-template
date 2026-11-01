@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 320" width="100%" height="100%" fill="none" aria-label="Gullylabs Modern Full-Stack E-Commerce Architecture Schematic">
+  <defs>
+    <linearGradient id="glBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#666666"/>
+    </linearGradient>
+  </defs>
+  <rect width="540" height="320" fill="#090909" rx="4"/>
+  <rect x="16" y="16" width="508" height="288" stroke="#222222" stroke-width="1" rx="2"/>
+
+  <!-- Header -->
+  <line x1="16" y1="52" x2="524" y2="52" stroke="#1f1f1f" stroke-width="1"/>
+  <text x="32" y="38" font-family="'DM Mono', monospace" font-size="9" fill="#EDEDED" font-weight="600" letter-spacing="0.1em">GULLYLABS // FULL-STACK COMMERCE</text>
+  <text x="508" y="38" text-anchor="end" font-family="'DM Mono', monospace" font-size="8" fill="#777777">TANSTACK START · TAILWIND · RAZORPAY</text>
+
+  <!-- Left: Checkout & Cart State Machine Flow -->
+  <g transform="translate(32, 70)">
+    <rect width="230" height="135" fill="#111111" stroke="#2a2a2a" stroke-width="0.8" rx="2"/>
+    <text x="16" y="24" font-family="'DM Mono', monospace" font-size="8" fill="#EDEDED">TRANSACTION PIPELINE FLOW</text>
+    
+    <!-- Flow steps -->
+    <g transform="translate(16, 42)">
+      <rect y="0" width="198" height="22" fill="#161616" stroke="#222" stroke-width="0.6" rx="1"/>
+      <text x="10" y="15" font-family="'DM Mono', monospace" font-size="7" fill="#EDEDED">01 // STOREFRONT DISCOVERY &amp; CART</text>
+
+      <rect y="28" width="198" height="22" fill="#161616" stroke="#333" stroke-width="0.6" rx="1"/>
+      <text x="10" y="43" font-family="'DM Mono', monospace" font-size="7" fill="#EDEDED">02 // RAZORPAY WEBHOOK VERIFICATION</text>
+
+      <rect y="56" width="198" height="22" fill="#161616" stroke="#222" stroke-width="0.6" rx="1"/>
+      <text x="10" y="71" font-family="'DM Mono', monospace" font-size="7" fill="#EDEDED">03 // REAL-TIME DISPATCH TELEMETRY</text>
+    </g>
+  </g>
+
+  <!-- Right: Inventory & Order Status Gauge -->
+  <g transform="translate(278, 70)">
+    <rect width="230" height="135" fill="#111111" stroke="#333333" stroke-width="0.8" rx="2"/>
+    <text x="16" y="24" font-family="'DM Mono', monospace" font-size="8" fill="#EDEDED">INVENTORY &amp; RETURNS TELEMETRY</text>
+    <text x="214" y="24" text-anchor="end" font-family="'DM Mono', monospace" font-size="7" fill="#777">ZERO OVERSOLD</text>
+
+    <!-- Inventory bars -->
+    <g transform="translate(16, 46)">
+      <text x="0" y="10" font-family="'DM Mono', monospace" font-size="7.5" fill="#888">PHYSICAL APPAREL &amp; GEAR</text>
+      <rect y="16" width="198" height="4" fill="#1f1f1f" rx="1"/>
+      <rect y="16" width="170" height="4" fill="url(#glBar)" rx="1"/>
+
+      <text x="0" y="38" font-family="'DM Mono', monospace" font-size="7.5" fill="#888">DIGITAL DOWNLOAD ASSETS</text>
+      <rect y="44" width="198" height="4" fill="#1f1f1f" rx="1"/>
+      <rect y="44" width="190" height="4" fill="url(#glBar)" rx="1"/>
+
+      <text x="0" y="66" font-family="'DM Mono', monospace" font-size="7.5" fill="#888">REAL-TIME SUPPORT SOCKET</text>
+      <rect y="72" width="198" height="4" fill="#1f1f1f" rx="1"/>
+      <rect y="72" width="154" height="4" fill="url(#glBar)" rx="1"/>
+    </g>
+  </g>
+
+  <!-- Bottom Metric Bar -->
+  <g transform="translate(32, 222)">
+    <rect width="476" height="62" fill="#111111" stroke="#222222" stroke-width="0.8" rx="2"/>
+    <text x="20" y="24" font-family="'DM Mono', monospace" font-size="7.5" fill="#777777">PAYMENT GATEWAY</text>
+    <text x="20" y="46" font-family="'DM Mono', monospace" font-size="13" font-weight="700" fill="#EDEDED">RAZORPAY SECURE</text>
+    
+    <line x1="165" y1="12" x2="165" y2="50" stroke="#222222" stroke-width="1"/>
+    <text x="185" y="24" font-family="'DM Mono', monospace" font-size="7.5" fill="#777777">SSR ARCHITECTURE</text>
+    <text x="185" y="46" font-family="'DM Mono', monospace" font-size="13" font-weight="700" fill="#EDEDED">TANSTACK START</text>
+    
+    <line x1="350" y1="12" x2="350" y2="50" stroke="#222222" stroke-width="1"/>
+    <text x="370" y="24" font-family="'DM Mono', monospace" font-size="7.5" fill="#777777">PERSISTENCE</text>
+    <text x="370" y="46" font-family="'DM Mono', monospace" font-size="13" font-weight="700" fill="#ffffff">SUPABASE POSTGRES</text>
+  </g>
+</svg>
+

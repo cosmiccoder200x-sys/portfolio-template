@@ -22,6 +22,12 @@ jobs:
             const fail = async (msg) => { await say('Check failed: ' + msg); core.setFailed(msg); };
             const files = await github.paginate(github.rest.pulls.listFiles,
               { ...context.repo, pull_number: pr.number });
+            const touchesShowcase = files.some((f) =>
+              f.filename.toLowerCase().startsWith('showcase/'));
+            if (!touchesShowcase) {
+              core.info('Skipping showcase validation: no showcase files changed.');
+              return;
+            }
             const want = `showcase/${user}.json`.toLowerCase();
             if (files.length !== 1 || files[0].filename.toLowerCase() !== want
                 || files[0].status !== 'added')

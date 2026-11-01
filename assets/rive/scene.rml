@@ -1,0 +1,144 @@
+<Rive version="1" kind="fragment">
+    <Artboard defaultStateMachineId="0:7" styleId="0:5" width="500" height="500" name="PortfolioOrb" id="0:2">
+        <LayoutComponentStyle name="Artboard Style" id="0:5"/>
+
+        <Node x="250" y="250" name="Orb" id="0:10">
+            <!-- Outer Ring & Highlight Group (rotates 360 degrees) -->
+            <Node name="OuterRingGroup" id="0:20">
+                <!-- Highlight (on outer ring, top-right at radius 130) -->
+                <Shape x="91.92" y="-91.92" name="HighlightGlow" blendModeValue="screen" id="0:21">
+                    <Ellipse width="28" height="28" originX="0.5" originY="0.5" name="GlowPath"/>
+                    <Fill name="GlowFill">
+                        <SolidColor colorValue="44EDEDED" name="GlowColor"/>
+                    </Fill>
+                </Shape>
+                <Shape x="91.92" y="-91.92" name="HighlightDot" id="0:22">
+                    <Ellipse width="10" height="10" originX="0.5" originY="0.5" name="DotPath"/>
+                    <Fill name="DotFill">
+                        <SolidColor colorValue="FFFFFFFF" name="DotColor"/>
+                    </Fill>
+                </Shape>
+                <Shape name="OuterRing" id="0:23">
+                    <Ellipse width="260" height="260" originX="0.5" originY="0.5" name="OuterRingPath"/>
+                    <Stroke thickness="1.5" name="OuterRingStroke">
+                        <SolidColor colorValue="FFEDEDED" name="OuterStrokeColor"/>
+                    </Stroke>
+                </Shape>
+            </Node>
+
+            <!-- Middle Concentric Ring -->
+            <Shape name="MiddleRing" id="0:30">
+                <Ellipse width="180" height="180" originX="0.5" originY="0.5" name="MiddleRingPath"/>
+                <Stroke thickness="1.0" name="MiddleRingStroke">
+                    <SolidColor colorValue="FF777777" name="MiddleStrokeColor"/>
+                </Stroke>
+            </Shape>
+
+            <!-- Inner Ring (animated opacity 70% -> 100% -> 70%) -->
+            <Shape opacity="0.7" name="InnerRing" id="0:40">
+                <Ellipse width="110" height="110" originX="0.5" originY="0.5" name="InnerRingPath"/>
+                <Stroke thickness="1.0" name="InnerRingStroke">
+                    <SolidColor colorValue="FFEDEDED" name="InnerStrokeColor"/>
+                </Stroke>
+                <Fill name="InnerRingFill">
+                    <SolidColor colorValue="33111111" name="InnerFillColor"/>
+                </Fill>
+            </Shape>
+
+            <!-- Central SP Monogram -->
+            <Text x="-26" y="-12" name="SPText" id="0:60">
+                <TextStylePaint fontSize="38" fontAssetId="0:70" name="SPTextStyle" id="0:61">
+                    <Fill name="SPTextFill">
+                        <SolidColor colorValue="FFEDEDED" name="SPTextColor"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="0:61" text="SP" name="SPRun"/>
+            </Text>
+        </Node>
+
+        <StateMachine name="State Machine 1" id="0:7">
+            <StateMachineLayer name="Layer 1" id="0:8">
+                <AnyState x="200" y="-120"/>
+                <ExitState x="400" y="-120"/>
+                <EntryState>
+                    <StateTransition stateToId="0:12"/>
+                </EntryState>
+                <AnimationState x="200" animationId="0:6" id="0:12"/>
+            </StateMachineLayer>
+        </StateMachine>
+
+        <!-- OrbIdle Animation: loop, 240 frames (4s at 60fps), seamless breathing + rotation -->
+        <LinearAnimation loopValue="loop" fps="60" duration="240" name="OrbIdle" id="0:6">
+            <!-- Orb Scale: 100% at 0s, 106% at 2s (frame 120), 100% at 4s (frame 240) -->
+            <KeyedObject objectId="0:10">
+                <KeyedProperty propertyKey="16">
+                    <KeyFrameDouble value="1.0" frame="0" interpolationType="cubic">
+                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/>
+                    </KeyFrameDouble>
+                    <KeyFrameDouble value="1.06" frame="120" interpolationType="cubic">
+                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/>
+                    </KeyFrameDouble>
+                    <KeyFrameDouble value="1.0" frame="240" interpolationType="linear"/>
+                </KeyedProperty>
+                <KeyedProperty propertyKey="17">
+                    <KeyFrameDouble value="1.0" frame="0" interpolationType="cubic">
+                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/>
+                    </KeyFrameDouble>
+                    <KeyFrameDouble value="1.06" frame="120" interpolationType="cubic">
+                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/>
+                    </KeyFrameDouble>
+                    <KeyFrameDouble value="1.0" frame="240" interpolationType="linear"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <!-- Outer Ring Rotation: 0 rad at 0s, pi (180 deg) at 2s, 2*pi (360 deg) at 4s -->
+            <KeyedObject objectId="0:20">
+                <KeyedProperty propertyKey="15">
+                    <KeyFrameDouble value="0" frame="0" interpolationType="linear"/>
+                    <KeyFrameDouble value="3.14159265" frame="120" interpolationType="linear"/>
+                    <KeyFrameDouble value="6.2831853" frame="240" interpolationType="linear"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <!-- Inner Ring Opacity: 70% at 0s, 100% at 2s, 70% at 4s -->
+            <KeyedObject objectId="0:40">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble value="0.70" frame="0" interpolationType="cubic">
+                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/>
+                    </KeyFrameDouble>
+                    <KeyFrameDouble value="1.0" frame="120" interpolationType="cubic">
+                        <CubicEaseInterpolator x1="0.42" y1="0" x2="0.58" y2="1"/>
+                    </KeyFrameDouble>
+                    <KeyFrameDouble value="0.70" frame="240" interpolationType="linear"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Joystick Pose X: frame 0 = left (-1), frame 30 = center (0), frame 60 = right (+1) -->
+        <LinearAnimation loopValue="oneShot" fps="60" duration="60" name="PoseX" id="0:80">
+            <KeyedObject objectId="0:10">
+                <KeyedProperty propertyKey="13">
+                    <KeyFrameDouble value="210" frame="0" interpolationType="linear"/>
+                    <KeyFrameDouble value="250" frame="30" interpolationType="linear"/>
+                    <KeyFrameDouble value="290" frame="60" interpolationType="linear"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Joystick Pose Y: frame 0 = top (-1), frame 30 = center (0), frame 60 = bottom (+1) -->
+        <LinearAnimation loopValue="oneShot" fps="60" duration="60" name="PoseY" id="0:81">
+            <KeyedObject objectId="0:10">
+                <KeyedProperty propertyKey="14">
+                    <KeyFrameDouble value="210" frame="0" interpolationType="linear"/>
+                    <KeyFrameDouble value="250" frame="30" interpolationType="linear"/>
+                    <KeyFrameDouble value="290" frame="60" interpolationType="linear"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Rive Native Joystick: controls the PoseX and PoseY timelines -->
+        <Joystick posX="250" posY="250" width="100" height="100" xId="0:80" yId="0:81" name="OrbJoystick" id="0:85"/>
+    </Artboard>
+
+    <FontAsset file="Montserrat.ttf" name="Montserrat" id="0:70"/>
+</Rive>

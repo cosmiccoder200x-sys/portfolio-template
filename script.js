@@ -1,205 +1,497 @@
 (() => {
   "use strict";
-  const byId = (id) => document.getElementById(id);
-  const escapeHTML = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-  })[char]);
-  const safeURL = (value) => {
-    try {
-      const url = new URL(String(value), window.location.href);
-      return ["https:", "http:"].includes(url.protocol) ? url.href : "";
-    } catch { return ""; }
-  };
-  const labelFor = (key) => key.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function renderProfile(profile) {
-    if (!profile || typeof profile !== "object") throw new Error("Profile data is missing.");
-    const name = String(profile.name || "Sreerang P");
-    document.title = name + " — AI Engineer & Full-Stack Developer";
-    const bio = byId("bio");
-    if (bio && profile.bio) bio.textContent = profile.bio;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-    const skills = byId("skills");
-    if (skills) {
-      skills.replaceChildren();
-      (Array.isArray(profile.skills) ? profile.skills : []).forEach((skill) => {
-        const item = document.createElement("li");
-        item.textContent = String(skill);
-        skills.appendChild(item);
+  /* ==========================================================================
+     1. NAVIGATION & MOBILE DRAWER
+     ========================================================================== */
+  const menuToggle = document.getElementById("menu-toggle");
+  const nav = document.getElementById("main-nav");
+  const siteHeader = document.querySelector(".site-header");
+
+  if (menuToggle && nav) {
+    menuToggle.addEventListener("click", () => {
+      const isOpen = nav.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+      menuToggle.textContent = isOpen ? "×" : "☰";
+    });
+
+    nav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        nav.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Open navigation");
+        menuToggle.textContent = "☰";
       });
-    }
+    });
+  }
 
-    const projects = byId("projects-grid");
-    if (projects) {
-      projects.replaceChildren();
-      (Array.isArray(profile.projects) ? profile.projects : []).forEach((project, index) => {
-        const card = document.createElement("article");
-        card.className = "project-card reveal";
-        const title = String(project.title || "Untitled project");
-        const description = String(project.desc || "");
-        const link = safeURL(project.link);
-        const stack = Array.isArray(project.stack) ? project.stack.join(" · ") : String(project.stack || "Software project");
-        card.innerHTML = `
-          <div>
-            <div class="project-top"><span class="project-type">${escapeHTML(project.type || "SELECTED PROJECT")}</span><span class="project-number">0${index + 1}</span></div>
-            <h3>${escapeHTML(title)}</h3>
-            <p>${escapeHTML(description)}</p>
-          </div>
-          <div class="project-bottom"><span class="project-stack">${escapeHTML(stack)}</span>${link ? `<a class="project-link" href="${escapeHTML(link)}" target="_blank" rel="noopener noreferrer">View project <span aria-hidden="true">↗</span></a>` : ""}</div>`;
-        projects.appendChild(card);
-      });
-      if (!projects.children.length) {
-        projects.innerHTML = '<p class="empty-project">Projects will appear here as they are added to the profile.</p>';
+  /* ==========================================================================
+     2. SCROLL PROGRESS & HEADER STATE
+     ========================================================================== */
+  const scrollProgressBar = document.getElementById("scroll-progress");
+
+  const updateScrollMetrics = () => {
+    const scrollY = window.scrollY || window.pageYOffset;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    
+    // Header glassmorphism toggle
+    if (siteHeader) {
+      if (scrollY > 30) {
+        siteHeader.classList.add("is-scrolled");
+      } else {
+        siteHeader.classList.remove("is-scrolled");
       }
     }
 
-    const links = byId("links");
-    if (links) {
-      links.replaceChildren();
-      Object.entries(profile.links || {}).forEach(([key, value]) => {
-        const url = safeURL(value);
-        if (!url) return;
-        const anchor = document.createElement("a");
-        anchor.href = url;
-        anchor.target = "_blank";
-        anchor.rel = "noopener noreferrer";
-        anchor.textContent = labelFor(key);
-        links.appendChild(anchor);
-      });
+    // Scroll progress bar
+    if (scrollProgressBar && docHeight > 0) {
+      const progress = Math.min(100, Math.max(0, (scrollY / docHeight) * 100));
+      scrollProgressBar.style.setProperty("--scroll-progress", `${progress.toFixed(2)}%`);
     }
+  };
 
-    const footer = byId("footer-year");
-    if (footer) footer.textContent = "© " + new Date().getFullYear() + " " + name;
-    setupReveal();
-  }
+  window.addEventListener("scroll", updateScrollMetrics, { passive: true });
+  updateScrollMetrics();
 
-  async function loadProfile() {
-    try {
-      const response = await fetch("profile.json", { cache: "no-cache" });
-      if (!response.ok) throw new Error("Could not load profile.json (HTTP " + response.status + ").");
-      renderProfile(await response.json());
-    } catch (error) {
-      console.error(error);
-      const projects = byId("projects-grid");
-      if (projects) projects.innerHTML = '<p class="empty-project">Profile data could not be loaded. Please refresh in a moment.</p>';
-    }
-  }
+  /* ==========================================================================
+     3. UNIFIED SCROLL REVEALS & ACTIVE SECTION OBSERVER
+     ========================================================================== */
+  const revealItems = document.querySelectorAll(".reveal");
+  const navLinks = document.querySelectorAll("#main-nav a");
+  const sections = document.querySelectorAll("main > section[id]");
 
-  function setupReveal() {
-    const elements = document.querySelectorAll(".section-heading, .glass-card, .project-card, .skills-panel, .contact-panel");
-    if (reducedMotion || !("IntersectionObserver" in window)) {
-      elements.forEach((el) => el.classList.add("is-visible"));
-      return;
-    }
-    const observer = new IntersectionObserver((entries) => {
+  if (reduceMotion || !("IntersectionObserver" in window)) {
+    revealItems.forEach((item) => item.classList.add("is-visible"));
+  } else {
+    // Reveal Observer
+    const revealObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("is-visible");
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
-    elements.forEach((el) => { el.classList.add("reveal"); observer.observe(el); });
-  }
-
-  function setupMobileMenu() {
-    const toggle = byId("menu-toggle");
-    const nav = document.querySelector(".main-nav");
-    if (!toggle || !nav) return;
-    toggle.addEventListener("click", () => {
-      const open = nav.classList.toggle("is-open");
-      toggle.setAttribute("aria-expanded", String(open));
-      toggle.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
-      toggle.textContent = open ? "×" : "☰";
+    }, {
+      threshold: 0.05,
+      rootMargin: "0px 0px -40px 0px"
     });
-    nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
-      nav.classList.remove("is-open");
-      toggle.setAttribute("aria-expanded", "false");
-      toggle.setAttribute("aria-label", "Open navigation");
-      toggle.textContent = "☰";
-    }));
+
+    revealItems.forEach((item) => revealObserver.observe(item));
+
+    // Active Section Observer for Nav
+    if (sections.length && navLinks.length) {
+      const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute("id");
+            navLinks.forEach((link) => {
+              if (link.getAttribute("href") === `#${id}`) {
+                link.classList.add("is-active");
+              } else {
+                link.classList.remove("is-active");
+              }
+            });
+          }
+        });
+      }, {
+        threshold: 0.35,
+        rootMargin: "-20% 0px -40% 0px"
+      });
+
+      sections.forEach((sec) => sectionObserver.observe(sec));
+    }
   }
 
-  function setupNeuralCanvas() {
-    const canvas = byId("neural-canvas");
-    const stage = canvas?.parentElement;
-    if (!canvas || !stage) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    let width = 0, height = 0, frame = 0, points = [], raf = 0;
-    let pointer = { x: 0, y: 0, active: false };
-    const palette = { cyan: [102, 242, 229], blue: [110, 139, 255], violet: [178, 139, 255] };
-    const resize = () => {
-      const rect = stage.getBoundingClientRect();
-      width = Math.max(1, rect.width);
-      height = Math.max(1, rect.height);
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.7);
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      points = [];
-      const count = Math.max(58, Math.min(105, Math.floor(width * height / 2900)));
-      for (let i = 0; i < count; i++) {
-        const theta = Math.random() * Math.PI * 2;
-        const z = Math.random() * 2 - 1;
-        const radius = Math.sqrt(1 - z * z);
-        points.push({ x: Math.cos(theta) * radius, y: z, z: Math.sin(theta) * radius, phase: Math.random() * Math.PI * 2, size: .6 + Math.random() * 1.5 });
+  // Hero immediate entrance to prevent layout hesitation
+  document.querySelectorAll(".hero .reveal").forEach((item, index) => {
+    window.setTimeout(() => item.classList.add("is-visible"), 80 + index * 100);
+  });
+
+  /* ==========================================================================
+     4. HERO ROLE ROTATOR
+     ========================================================================== */
+  const roleRotator = document.getElementById("role-rotator");
+  if (roleRotator && !reduceMotion) {
+    const roles = [
+      "SOFTWARE DEVELOPER",
+      "AI BUILDER",
+      "FORWARD-DEPLOYED ENGINEER"
+    ];
+    let roleIndex = 0;
+
+    window.setInterval(() => {
+      roleRotator.classList.add("is-transitioning");
+      window.setTimeout(() => {
+        roleIndex = (roleIndex + 1) % roles.length;
+        roleRotator.textContent = roles[roleIndex];
+        roleRotator.classList.remove("is-transitioning");
+      }, 300);
+    }, 3800);
+  }
+
+  /* ==========================================================================
+     5. RIVE SP ORB & VIRTUAL JOYSTICK GIMBAL
+     ========================================================================== */
+  const initOrbAndJoystick = () => {
+    const orbWrap = document.getElementById("hero-orb-wrap");
+    const orbCanvas = document.getElementById("hero-orb-canvas");
+    const fallback = document.getElementById("hero-orb-fallback");
+    const fallbackOuter = fallback ? fallback.querySelector(".fallback-ring-outer") : null;
+    const fallbackMiddle = fallback ? fallback.querySelector(".fallback-ring-middle") : null;
+    const fallbackInner = fallback ? fallback.querySelector(".fallback-ring-inner") : null;
+    const fallbackHighlight = fallback ? fallback.querySelector(".fallback-highlight") : null;
+    const heroSection = document.getElementById("home");
+
+    if (!orbWrap) return;
+
+    // State variables
+    let currentX = 0; // Normalized -1 to +1
+    let currentY = 0; // Normalized -1 to +1
+    let targetX = 0;
+    let targetY = 0;
+    let velocityX = 0;
+    let velocityY = 0;
+    let isDragging = false;
+    let dragStartPointerX = 0;
+    let dragStartPointerY = 0;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let animationFrameId = null;
+
+    // Rive instance
+    let riveOrb = null;
+
+    const initRive = () => {
+      if (!orbCanvas) return;
+      if (typeof rive === "undefined") {
+        if (!window._riveRetryCount) window._riveRetryCount = 0;
+        if (window._riveRetryCount < 30) {
+          window._riveRetryCount++;
+          window.setTimeout(initRive, 100);
+        }
+        return;
+      }
+      try {
+        riveOrb = new rive.Rive({
+          src: "assets/rive/hero-orb.riv",
+          canvas: orbCanvas,
+          artboard: "PortfolioOrb",
+          stateMachine: "State Machine 1",
+          autoplay: !reduceMotion,
+          onLoad: () => {
+            riveOrb.resizeDrawingSurfaceToCanvas();
+            orbWrap.classList.add("is-loaded");
+          },
+          onError: () => {
+            orbWrap.classList.remove("is-loaded");
+          }
+        });
+
+        let resizeTimeout = null;
+        window.addEventListener("resize", () => {
+          if (resizeTimeout) window.clearTimeout(resizeTimeout);
+          resizeTimeout = window.setTimeout(() => {
+            if (riveOrb) riveOrb.resizeDrawingSurfaceToCanvas();
+          }, 120);
+        }, { passive: true });
+      } catch (e) {
+        console.warn("Rive orb notice:", e);
       }
     };
-    const draw = () => {
-      frame += reducedMotion ? 0.001 : 0.006;
-      ctx.clearRect(0, 0, width, height);
-      const cx = width * .51, cy = height * .49, radius = Math.min(width, height) * .31;
-      const rot = frame * (reducedMotion ? .15 : .55);
-      const projected = points.map((p) => {
-        const x = p.x * Math.cos(rot) - p.z * Math.sin(rot);
-        const z = p.x * Math.sin(rot) + p.z * Math.cos(rot);
-        const tilt = p.y * Math.cos(.22) - z * Math.sin(.22);
-        const depth = p.y * Math.sin(.22) + z * Math.cos(.22);
-        const scale = 1 + depth * .12;
-        return { x: cx + x * radius * scale + (pointer.active ? pointer.x * 8 : 0), y: cy + tilt * radius * scale + (pointer.active ? pointer.y * 6 : 0), depth, size: p.size, phase: p.phase };
-      });
-      const maxDist = Math.max(25, width * .105);
-      for (let i = 0; i < projected.length; i++) {
-        for (let j = i + 1; j < projected.length; j++) {
-          const a = projected[i], b = projected[j], dx = a.x - b.x, dy = a.y - b.y;
-          const dist = Math.hypot(dx, dy);
-          if (dist < maxDist) {
-            const alpha = (1 - dist / maxDist) * (.1 + (a.depth + b.depth + 2) * .055);
-            ctx.strokeStyle = `rgba(102,242,229,${alpha})`;
-            ctx.lineWidth = .55;
-            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-          }
+
+    initRive();
+
+    // Helper: update visual 3D transforms from currentX and currentY
+    const updateTransforms = (x, y) => {
+      if (reduceMotion) return;
+
+      const dist = Math.min(Math.hypot(x, y), 1.2);
+
+      // 3D Spatial Gimbal Deflection on Orb
+      const rotY = x * 26;
+      const rotX = -y * 26;
+      const scaleFactor = 1 + dist * 0.04;
+      orbWrap.style.transform = `perspective(900px) rotateY(${rotY}deg) rotateX(${rotX}deg) scale(${scaleFactor})`;
+
+      // Canvas / Fallback ring parallax layers
+      if (fallbackOuter) {
+        fallbackOuter.style.transform = `translate3d(${x * 14}px, ${y * 14}px, 0)`;
+      }
+      if (fallbackMiddle) {
+        fallbackMiddle.style.transform = `translate3d(${x * 6}px, ${y * 6}px, 0)`;
+      }
+      if (fallbackInner) {
+        fallbackInner.style.transform = `translate3d(${-x * 8}px, ${-y * 8}px, 0)`;
+      }
+      if (fallbackHighlight) {
+        const rad = Math.atan2(y, x);
+        const hDist = dist * 20;
+        fallbackHighlight.style.transform = `translate3d(${Math.cos(rad) * hDist}px, ${Math.sin(rad) * hDist}px, 0)`;
+      }
+    };
+
+    // Smooth physics loop (spring or lerp)
+    const tick = () => {
+      if (isDragging) {
+        currentX = targetX;
+        currentY = targetY;
+        velocityX = 0;
+        velocityY = 0;
+      } else {
+        // Harmonic spring physics towards targetX, targetY
+        const spring = 0.14;
+        const damping = 0.76;
+
+        const forceX = (targetX - currentX) * spring;
+        const forceY = (targetY - currentY) * spring;
+
+        velocityX = (velocityX + forceX) * damping;
+        velocityY = (velocityY + forceY) * damping;
+
+        currentX += velocityX;
+        currentY += velocityY;
+
+        if (Math.abs(currentX - targetX) < 0.001 && Math.abs(currentY - targetY) < 0.001 && Math.abs(velocityX) < 0.001 && Math.abs(velocityY) < 0.001) {
+          currentX = targetX;
+          currentY = targetY;
+          velocityX = 0;
+          velocityY = 0;
         }
       }
-      projected.forEach((p, i) => {
-        const glow = .5 + .5 * Math.sin(frame * 2 + p.phase);
-        const alpha = .38 + (p.depth + 1) * .22;
-        ctx.beginPath();
-        ctx.fillStyle = i % 9 === 0 ? `rgba(178,139,255,${alpha})` : `rgba(102,242,229,${alpha})`;
-        ctx.arc(p.x, p.y, p.size * (.7 + glow * .45), 0, Math.PI * 2);
-        ctx.fill();
-      });
-      const core = ctx.createRadialGradient(cx, cy, 2, cx, cy, radius * .8);
-      core.addColorStop(0, "rgba(82,205,220,.12)");
-      core.addColorStop(.6, "rgba(80,113,210,.055)");
-      core.addColorStop(1, "rgba(7,9,16,0)");
-      ctx.fillStyle = core;
-      ctx.beginPath(); ctx.arc(cx, cy, radius * .8, 0, Math.PI * 2); ctx.fill();
-      if (!reducedMotion) raf = requestAnimationFrame(draw);
+
+      updateTransforms(currentX, currentY);
+
+      if (isDragging || Math.abs(currentX - targetX) > 0.0005 || Math.abs(currentY - targetY) > 0.0005 || Math.abs(velocityX) > 0.0005) {
+        animationFrameId = requestAnimationFrame(tick);
+      } else {
+        animationFrameId = null;
+      }
     };
-    stage.addEventListener("pointermove", (event) => {
-      const rect = stage.getBoundingClientRect();
-      pointer = { x: (event.clientX - rect.left) / rect.width - .5, y: (event.clientY - rect.top) / rect.height - .5, active: true };
+
+    const wakeUp = () => {
+      if (!animationFrameId) {
+        animationFrameId = requestAnimationFrame(tick);
+      }
+    };
+
+    // Direct Virtual Joystick Dragging on the Orb
+    const handlePointerDown = (e) => {
+      isDragging = true;
+      orbWrap.classList.add("is-dragging");
+      dragStartPointerX = e.clientX;
+      dragStartPointerY = e.clientY;
+      dragStartX = targetX;
+      dragStartY = targetY;
+      try {
+        orbWrap.setPointerCapture(e.pointerId);
+      } catch (_) {}
+    };
+
+    const handlePointerMove = (e) => {
+      if (!isDragging) return;
+      const rect = orbWrap.getBoundingClientRect();
+      const sensitivity = (rect.width / 2) || 120;
+
+      let dx = dragStartX + (e.clientX - dragStartPointerX) / sensitivity;
+      let dy = dragStartY + (e.clientY - dragStartPointerY) / sensitivity;
+      const dist = Math.hypot(dx, dy);
+      if (dist > 1.25) {
+        dx = (dx / dist) * 1.25;
+        dy = (dy / dist) * 1.25;
+      }
+      targetX = dx;
+      targetY = dy;
+      wakeUp();
+    };
+
+    const handlePointerUp = (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      orbWrap.classList.remove("is-dragging");
+      try {
+        orbWrap.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+
+      // Spring back to center or settle
+      targetX = 0;
+      targetY = 0;
+      wakeUp();
+    };
+
+    orbWrap.addEventListener("pointerdown", handlePointerDown);
+    orbWrap.addEventListener("pointermove", handlePointerMove);
+    orbWrap.addEventListener("pointerup", handlePointerUp);
+    orbWrap.addEventListener("pointercancel", handlePointerUp);
+
+    // Cursor tracking across Hero section (Handle Source simulation)
+    if (heroSection && isFinePointer && !reduceMotion) {
+      heroSection.addEventListener("mousemove", (e) => {
+        if (isDragging) return;
+        const rect = heroSection.getBoundingClientRect();
+        // Calculate offset relative to orb quadrant
+        const relX = (e.clientX - (rect.left + rect.width * 0.7)) / (rect.width * 0.4);
+        const relY = (e.clientY - (rect.top + rect.height * 0.35)) / (rect.height * 0.4);
+
+        let dx = Math.max(-1, Math.min(1, relX));
+        let dy = Math.max(-1, Math.min(1, relY));
+        const dist = Math.hypot(dx, dy);
+        if (dist > 1) {
+          dx /= dist;
+          dy /= dist;
+        }
+
+        // Subtler motion for passive cursor tracking (max 0.6 deflection)
+        targetX = dx * 0.6;
+        targetY = dy * 0.6;
+        wakeUp();
+      }, { passive: true });
+
+      heroSection.addEventListener("mouseleave", () => {
+        if (!isDragging) {
+          targetX = 0;
+          targetY = 0;
+          wakeUp();
+        }
+      });
+    }
+
+    // Initialize transforms at 0, 0
+    updateTransforms(0, 0);
+  };
+
+  initOrbAndJoystick();
+
+  /* ==========================================================================
+     6. DESKTOP CURSOR SPOTLIGHT
+     ========================================================================== */
+  const spotlight = document.getElementById("cursor-spotlight");
+  if (spotlight && isFinePointer && !reduceMotion) {
+    let mouseX = -999;
+    let mouseY = -999;
+    let ticking = false;
+
+    window.addEventListener("pointermove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          spotlight.style.setProperty("--spotlight-x", `${mouseX}px`);
+          spotlight.style.setProperty("--spotlight-y", `${mouseY}px`);
+          if (!spotlight.classList.contains("is-active")) {
+            spotlight.classList.add("is-active");
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     }, { passive: true });
-    stage.addEventListener("pointerleave", () => { pointer.active = false; }, { passive: true });
-    const observer = new ResizeObserver(() => { resize(); if (raf) cancelAnimationFrame(raf); draw(); });
-    observer.observe(stage);
-    resize(); draw();
+
+    window.addEventListener("pointerleave", () => {
+      spotlight.classList.remove("is-active");
+    });
   }
 
-  setupMobileMenu();
-  loadProfile();
-  setupNeuralCanvas();
+  /* ==========================================================================
+     7. DESKTOP PROJECT CARDS 3D MICRO-TILT
+     ========================================================================== */
+  if (isFinePointer && !reduceMotion) {
+    const projectCards = document.querySelectorAll(".project-card");
+    projectCards.forEach((card) => {
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        // Very subtle angle (max 2.5 deg)
+        const rotateX = ((centerY - y) / centerY) * 2.5;
+        const rotateY = ((x - centerX) / centerX) * 2.5;
+
+        card.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "";
+      });
+    });
+  }
+
+  /* ==========================================================================
+     8. PROFILE DATA PROGRESSIVE LOADING
+     ========================================================================== */
+  fetch("profile.json")
+    .then((response) => {
+      if (!response.ok) throw new Error("Profile unavailable");
+      return response.json();
+    })
+    .then((profile) => {
+      const bio = document.getElementById("bio");
+      if (bio && profile.bio) bio.textContent = profile.bio;
+
+      const skills = document.getElementById("skills-list");
+      if (skills && Array.isArray(profile.skills)) {
+        skills.replaceChildren();
+        profile.skills.forEach((skill) => {
+          const item = document.createElement("li");
+          item.textContent = String(skill);
+          skills.appendChild(item);
+        });
+      }
+    })
+    .catch(() => {
+      /* Static HTML content remains completely functional */
+    });
+
+  /* ==========================================================================
+     9. CONTACT FORM (ORIGINAL GOOGLE FORM BACKEND)
+     ========================================================================== */
+  const contactForm = document.getElementById("portfolio-contact-form");
+  const formStatus = document.getElementById("form-status");
+  const submitBtn = document.getElementById("form-submit-btn");
+  const hiddenFrame = document.getElementById("hidden_iframe");
+  let formSubmitted = false;
+  let submissionFallback = null;
+
+  const completeSubmission = () => {
+    if (!formSubmitted) return;
+    formSubmitted = false;
+    if (submissionFallback) window.clearTimeout(submissionFallback);
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>Send Message</span><span aria-hidden="true">↗</span>';
+    }
+    if (formStatus) {
+      formStatus.className = "form-status success";
+      formStatus.textContent = "Thank you! Your message has been sent.";
+    }
+    if (contactForm) contactForm.reset();
+  };
+
+  if (hiddenFrame) {
+    hiddenFrame.addEventListener("load", () => {
+      if (formSubmitted) completeSubmission();
+    });
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener("submit", () => {
+      formSubmitted = true;
+      if (formStatus) {
+        formStatus.className = "form-status";
+        formStatus.textContent = "";
+      }
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>Sending message...</span>';
+      }
+      submissionFallback = window.setTimeout(completeSubmission, 2500);
+    });
+  }
+
 })();

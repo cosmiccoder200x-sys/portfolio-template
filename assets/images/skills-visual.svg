@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" width="100%" height="100%" fill="none" aria-label="Technical Skills Constellation Network">
+  <defs>
+    <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#888888" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#111111" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="hubCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="70%" stop-color="#2a2a2a" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#0a0a0a" stop-opacity="0.3"/>
+    </radialGradient>
+    <filter id="starGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <style>
+    @keyframes lineDraw {
+      from { stroke-dashoffset: 400; opacity: 0.1; }
+      to { stroke-dashoffset: 0; opacity: 0.8; }
+    }
+    @keyframes pulseCore {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+    @keyframes orbitParticles {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .constellation-line {
+      stroke: #333333;
+      stroke-width: 1.2;
+      stroke-dasharray: 400;
+      stroke-dashoffset: 0;
+      animation: lineDraw 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transition: stroke 0.3s ease, stroke-width 0.3s ease;
+    }
+    .active-line {
+      stroke: #777777;
+      stroke-dasharray: 3 3;
+    }
+    .star-node {
+      cursor: pointer;
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+    }
+    .star-node:hover {
+      transform: scale(1.22);
+      filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8));
+    }
+    .star-node:hover ~ .constellation-line {
+      stroke: #ffffff;
+      stroke-width: 1.8;
+    }
+    .star-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      fill: #888888;
+      transition: fill 0.3s ease;
+      pointer-events: none;
+    }
+    .star-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 7.5px;
+      letter-spacing: 0.08em;
+      fill: #555555;
+      pointer-events: none;
+    }
+    .star-node:hover text {
+      fill: #ffffff !important;
+    }
+    .hub-pulse {
+      transform-origin: 360px 220px;
+      animation: pulseCore 4s ease-in-out infinite;
+    }
+    .orbiting-ring {
+      transform-origin: 360px 220px;
+      animation: orbitParticles 24s linear infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .constellation-line, .hub-pulse, .orbiting-ring {
+        animation: none !important;
+        stroke-dashoffset: 0 !important;
+      }
+    }
+  </style>
+
+  <rect width="720" height="440" fill="#0b0b0b" rx="4"/>
+  <rect x="16" y="16" width="688" height="408" stroke="#1c1c1c" stroke-width="1" fill="none"/>
+
+  <!-- Background Coordinate Crosshairs & Reference Grid -->
+  <line x1="360" y1="24" x2="360" y2="416" stroke="#151515" stroke-width="1" stroke-dasharray="2 4"/>
+  <line x1="24" y1="220" x2="696" y2="220" stroke="#151515" stroke-width="1" stroke-dasharray="2 4"/>
+  <circle cx="360" cy="220" r="160" stroke="#161616" stroke-width="1" stroke-dasharray="4 6"/>
+  <circle cx="360" cy="220" r="100" stroke="#1a1a1a" stroke-width="0.75"/>
+
+  <!-- Rotating Orbit Particles -->
+  <g class="orbiting-ring">
+    <circle cx="360" cy="60" r="2" fill="#555555"/>
+    <circle cx="360" cy="380" r="2" fill="#555555"/>
+    <circle cx="200" cy="220" r="2" fill="#555555"/>
+    <circle cx="520" cy="220" r="2" fill="#555555"/>
+  </g>
+
+  <!-- Constellation Interconnect Lines -->
+  <!-- Center to all nodes -->
+  <line x1="360" y1="220" x2="160" y2="120" class="constellation-line" style="animation-delay: 0.1s;"/>
+  <line x1="360" y1="220" x2="360" y2="80"  class="constellation-line" style="animation-delay: 0.2s;"/>
+  <line x1="360" y1="220" x2="560" y2="120" class="constellation-line" style="animation-delay: 0.3s;"/>
+  <line x1="360" y1="220" x2="560" y2="320" class="constellation-line" style="animation-delay: 0.4s;"/>
+  <line x1="360" y1="220" x2="360" y2="350" class="constellation-line" style="animation-delay: 0.5s;"/>
+  <line x1="360" y1="220" x2="160" y2="320" class="constellation-line" style="animation-delay: 0.6s;"/>
+
+  <!-- Outer perimeter bonds -->
+  <line x1="160" y1="120" x2="360" y2="80"  class="constellation-line active-line" style="animation-delay: 0.7s;"/>
+  <line x1="360" y1="80"  x2="560" y2="120" class="constellation-line active-line" style="animation-delay: 0.8s;"/>
+  <line x1="560" y1="120" x2="560" y2="320" class="constellation-line active-line" style="animation-delay: 0.9s;"/>
+  <line x1="560" y1="320" x2="360" y2="350" class="constellation-line active-line" style="animation-delay: 1.0s;"/>
+  <line x1="360" y1="350" x2="160" y2="320" class="constellation-line active-line" style="animation-delay: 1.1s;"/>
+  <line x1="160" y1="320" x2="160" y2="120" class="constellation-line active-line" style="animation-delay: 1.2s;"/>
+
+  <!-- Cross-domain bridge lines -->
+  <line x1="160" y1="120" x2="560" y2="320" stroke="#222222" stroke-width="0.8" stroke-dasharray="2 4"/>
+  <line x1="560" y1="120" x2="160" y2="320" stroke="#222222" stroke-width="0.8" stroke-dasharray="2 4"/>
+
+  <!-- Central Engine Core Hub -->
+  <g class="hub-pulse">
+    <circle cx="360" cy="220" r="32" fill="url(#hubCore)" stroke="#EDEDED" stroke-width="1.2"/>
+    <circle cx="360" cy="220" r="16" fill="#000000" stroke="#555555" stroke-width="1"/>
+    <circle cx="360" cy="220" r="4" fill="#ffffff"/>
+    <text x="360" y="270" text-anchor="middle" class="star-label" fill="#EDEDED" font-weight="700">CORE // SYSTEMS</text>
+  </g>
+
+  <!-- Node 1: PYTHON (Top-Left) -->
+  <g class="star-node" transform="translate(160, 120)">
+    <circle cx="0" cy="0" r="22" fill="#141414" stroke="#EDEDED" stroke-width="1.2"/>
+    <circle cx="0" cy="0" r="6" fill="#ffffff" filter="url(#starGlow)"/>
+    <text x="0" y="-30" text-anchor="middle" class="star-label">01 // PYTHON</text>
+    <text x="0" y="-18" text-anchor="middle" class="star-sub">DATA · AI · AUTOMATION</text>
+  </g>
+
+  <!-- Node 2: C++ (Top-Center) -->
+  <g class="star-node" transform="translate(360, 80)">
+    <circle cx="0" cy="0" r="22" fill="#141414" stroke="#EDEDED" stroke-width="1.2"/>
+    <circle cx="0" cy="0" r="6" fill="#ffffff" filter="url(#starGlow)"/>
+    <text x="0" y="-30" text-anchor="middle" class="star-label">02 // C &amp; C++</text>
+    <text x="0" y="-18" text-anchor="middle" class="star-sub">LOW-LEVEL · MEMORY · PERF</text>
+  </g>
+
+  <!-- Node 3: DSA (Top-Right) -->
+  <g class="star-node" transform="translate(560, 120)">
+    <circle cx="0" cy="0" r="22" fill="#141414" stroke="#EDEDED" stroke-width="1.2"/>
+    <circle cx="0" cy="0" r="6" fill="#ffffff" filter="url(#starGlow)"/>
+    <text x="0" y="-30" text-anchor="middle" class="star-label">03 // ALGORITHMS</text>
+    <text x="0" y="-18" text-anchor="middle" class="star-sub">TREES · GRAPHS · DYNAMIC PROG</text>
+  </g>
+
+  <!-- Node 4: AI & ML (Bottom-Right) -->
+  <g class="star-node" transform="translate(560, 320)">
+    <circle cx="0" cy="0" r="22" fill="#141414" stroke="#EDEDED" stroke-width="1.2"/>
+    <circle cx="0" cy="0" r="6" fill="#ffffff" filter="url(#starGlow)"/>
+    <text x="0" y="32" text-anchor="middle" class="star-label">04 // AI &amp; AGENTS</text>
+    <text x="0" y="44" text-anchor="middle" class="star-sub">MCP · EMBEDDINGS · VISION</text>
+  </g>
+
+  <!-- Node 5: DATA SCIENCE (Bottom-Center) -->
+  <g class="star-node" transform="translate(360, 350)">
+    <circle cx="0" cy="0" r="22" fill="#141414" stroke="#EDEDED" stroke-width="1.2"/>
+    <circle cx="0" cy="0" r="6" fill="#ffffff" filter="url(#starGlow)"/>
+    <text x="0" y="32" text-anchor="middle" class="star-label">05 // DATA SCIENCE</text>
+    <text x="0" y="44" text-anchor="middle" class="star-sub">NUMPY · PANDAS · SQL · IITM</text>
+  </g>
+
+  <!-- Node 6: WEB DEVELOPMENT (Bottom-Left) -->
+  <g class="star-node" transform="translate(160, 320)">
+    <circle cx="0" cy="0" r="22" fill="#141414" stroke="#EDEDED" stroke-width="1.2"/>
+    <circle cx="0" cy="0" r="6" fill="#ffffff" filter="url(#starGlow)"/>
+    <text x="0" y="32" text-anchor="middle" class="star-label">06 // WEB PLATFORM</text>
+    <text x="0" y="44" text-anchor="middle" class="star-sub">REACT · NEXT.JS · TYPESCRIPT</text>
+  </g>
+
+  <!-- Corner Annotation Indices -->
+  <text x="28" y="36" class="star-sub">INDEX // TOOLKIT_TOPOLOGY</text>
+  <text x="692" y="36" text-anchor="end" class="star-sub">SYNCHRONIZED // 6_NODES</text>
+  <text x="28" y="414" class="star-sub">NODAL_DENSITY: 100%</text>
+  <text x="692" y="414" text-anchor="end" class="star-sub">GRAPH_STATE: ACTIVE</text>
+</svg>
+
