@@ -42,8 +42,7 @@ This project is a high-performance, single-page portfolio built for **Sreerang P
     - Passive cursor tracking across the hero section.
   - Subtle architectural dot/grid background canvas and optional mouse spotlight on desktop.
 - **About**:
-  - Two-column editorial layout: Left column features bold section heading and `about-visual.svg` technical architecture schematic; Right column contains narrative bio and links.
-  - Hardware/software pipeline visual displaying data contracts, vector retrieval engine, and zero-copy IPC telemetry.
+  - Two-column editorial layout: Left column features the bold section heading; Right column contains the narrative bio and links.
 - **Skills**:
   - Constellation network visual (`skills-visual.svg`) displaying 6 core interconnected domains (Python, C++, DSA, AI, Data Science, Web Platform) with live topology telemetry.
   - Detailed 24-skill pill grid with hover translation and arrow micro-interactions.
@@ -65,4 +64,3 @@ This project is a high-performance, single-page portfolio built for **Sreerang P
   - Editorial "Let's talk" heading, interactive inputs with border focus glow, animated send button with state feedback, preserved Google Forms iframe handler.
 - **Global & Nav**:
   - Scroll progress bar at top, active section indicator in navigation, smooth keyboard navigation.
-

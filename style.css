@@ -576,41 +576,6 @@ button, a {
   flex-direction: column;
 }
 
-/* About Section Architecture Visual */
-.about-visual-card {
-  margin-top: 36px;
-  max-width: 540px;
-  border: 1px solid var(--line);
-  background: #0c0c0c;
-  overflow: hidden;
-  transition: border-color var(--dur-med) ease;
-}
-
-.about-visual-card:hover {
-  border-color: rgba(255, 255, 255, 0.35);
-}
-
-.about-visual-frame {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  position: relative;
-  background: #080808;
-}
-
-.about-visual-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform var(--dur-slow) var(--ease-out-expo);
-}
-
-.about-visual-card:hover .about-visual-img {
-  transform: scale(1.02);
-}
-
-.about-visual-tag,
 .skills-visual-tag {
   display: block;
   padding: 8px 14px;
@@ -1497,13 +1462,6 @@ textarea.form-control {
     aspect-ratio: 1 / 1;
   }
   .skills-visual-frame {
-    aspect-ratio: 4 / 3;
-    max-height: 260px;
-  }
-  .about-visual-card {
-    max-width: 100%;
-  }
-  .about-visual-frame {
     aspect-ratio: 4 / 3;
     max-height: 260px;
   }
