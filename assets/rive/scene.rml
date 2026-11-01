@@ -40,11 +40,20 @@
                 <Stroke thickness="1.0" name="InnerRingStroke">
                     <SolidColor colorValue="FFEDEDED" name="InnerStrokeColor"/>
                 </Stroke>
-                <!-- Subtle dark/futuristic core fill -->
                 <Fill name="InnerRingFill">
-                    <SolidColor colorValue="22111111" name="InnerFillColor"/>
+                    <SolidColor colorValue="33111111" name="InnerFillColor"/>
                 </Fill>
             </Shape>
+
+            <!-- Central SP Monogram -->
+            <Text x="-26" y="-12" name="SPText" id="0:60">
+                <TextStylePaint fontSize="38" fontAssetId="0:70" name="SPTextStyle" id="0:61">
+                    <Fill name="SPTextFill">
+                        <SolidColor colorValue="FFEDEDED" name="SPTextColor"/>
+                    </Fill>
+                </TextStylePaint>
+                <TextValueRun styleId="0:61" text="SP" name="SPRun"/>
+            </Text>
         </Node>
 
         <StateMachine name="State Machine 1" id="0:7">
@@ -105,4 +114,6 @@
             </KeyedObject>
         </LinearAnimation>
     </Artboard>
+
+    <FontAsset file="Montserrat.ttf" name="Montserrat" id="0:70"/>
 </Rive>
