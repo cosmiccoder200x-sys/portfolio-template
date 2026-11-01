@@ -31,11 +31,10 @@ This project is a high-performance, single-page portfolio built for **Sreerang P
   - Name reveal with smooth upward trajectory and subtle character cadence.
   - Dynamic rotating role transition (`Software Developer` · `AI Builder` · `Forward-Deployed Engineer`).
   - Interactive "SP" monochrome Rive orb in the top-right quadrant with canvas WebGL2 rendering and CSS fallback.
-  - Interactive **Joystick / Gimbal HUD**:
+  - Interactive **Virtual Joystick Gimbal** (integrated directly into the orb without visual HUD clutter):
     - Embedded Rive `Joystick` architecture linking `PoseX` and `PoseY` timeline controls.
-    - Tactile circular pad with crosshairs and metallic knob supporting touch/mouse dragging.
-    - Automatic cursor tracking (simulating Rive `handleSource` bound to cursor).
-    - Real-time telemetry readout (`X`, `Y`, `TILT` angle).
+    - Automatic cursor tracking (simulating Rive `handleSource` bound to cursor position across the hero).
+    - Direct touch/drag interactivity on the orb itself acting as a virtual trackball/joystick.
     - 3D spatial parallax and deflection of the orb and its concentric rings.
     - Harmonic spring physics with natural bounce back to center on release.
   - Subtle architectural dot/grid background canvas and optional mouse spotlight on desktop.

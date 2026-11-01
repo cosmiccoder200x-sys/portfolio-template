@@ -134,7 +134,7 @@
   }
 
   /* ==========================================================================
-     5. RIVE SP ORB & INTERACTIVE JOYSTICK CONTROLLER
+     5. RIVE SP ORB & VIRTUAL JOYSTICK GIMBAL
      ========================================================================== */
   const initOrbAndJoystick = () => {
     const orbWrap = document.getElementById("hero-orb-wrap");
@@ -144,14 +144,6 @@
     const fallbackMiddle = fallback ? fallback.querySelector(".fallback-ring-middle") : null;
     const fallbackInner = fallback ? fallback.querySelector(".fallback-ring-inner") : null;
     const fallbackHighlight = fallback ? fallback.querySelector(".fallback-highlight") : null;
-
-    const hud = document.getElementById("hero-joystick-hud");
-    const pad = document.getElementById("joystick-pad");
-    const knob = document.getElementById("joystick-knob");
-    const coordsEl = document.getElementById("joystick-coords");
-    const tiltValEl = document.getElementById("joystick-tilt-val");
-    const trackToggleBtn = document.getElementById("joystick-track-toggle");
-    const centerBtn = document.getElementById("joystick-center-btn");
     const heroSection = document.getElementById("home");
 
     if (!orbWrap) return;
@@ -164,7 +156,10 @@
     let velocityX = 0;
     let velocityY = 0;
     let isDragging = false;
-    let cursorTrackEnabled = isFinePointer && !reduceMotion;
+    let dragStartPointerX = 0;
+    let dragStartPointerY = 0;
+    let dragStartX = 0;
+    let dragStartY = 0;
     let animationFrameId = null;
 
     // Rive instance
@@ -210,31 +205,11 @@
 
     initRive();
 
-    // Helper: update visual displays from currentX and currentY
+    // Helper: update visual 3D transforms from currentX and currentY
     const updateTransforms = (x, y) => {
-      const dist = Math.min(Math.hypot(x, y), 1.0);
-      const angleDeg = Math.round(dist * 26 * 10) / 10;
-
-      // Update telemetry
-      const signX = x >= 0 ? "+" : "";
-      const signY = y >= 0 ? "+" : "";
-      if (coordsEl) {
-        coordsEl.textContent = `X: ${signX}${x.toFixed(2)} · Y: ${signY}${y.toFixed(2)}`;
-      }
-      if (tiltValEl) {
-        tiltValEl.textContent = `${angleDeg.toFixed(1)}°`;
-      }
-
-      // Update Knob visual translation
-      if (pad && knob) {
-        const padRect = pad.getBoundingClientRect();
-        const maxRadius = (padRect.width / 2) - 14;
-        const knobX = x * maxRadius;
-        const knobY = y * maxRadius;
-        knob.style.transform = `translate3d(${knobX}px, ${knobY}px, 0)`;
-      }
-
       if (reduceMotion) return;
+
+      const dist = Math.min(Math.hypot(x, y), 1.2);
 
       // 3D Spatial Gimbal Deflection on Orb
       const rotY = x * 26;
@@ -262,7 +237,6 @@
     // Smooth physics loop (spring or lerp)
     const tick = () => {
       if (isDragging) {
-        // Direct tracking
         currentX = targetX;
         currentY = targetY;
         velocityX = 0;
@@ -291,7 +265,7 @@
 
       updateTransforms(currentX, currentY);
 
-      if (isDragging || Math.abs(currentX - targetX) > 0.0005 || Math.abs(currentY - targetY) > 0.0005 || Math.abs(velocityX) > 0.0005 || cursorTrackEnabled) {
+      if (isDragging || Math.abs(currentX - targetX) > 0.0005 || Math.abs(currentY - targetY) > 0.0005 || Math.abs(velocityX) > 0.0005) {
         animationFrameId = requestAnimationFrame(tick);
       } else {
         animationFrameId = null;
@@ -304,31 +278,30 @@
       }
     };
 
-    // Pointer Drag on Pad or Orb
+    // Direct Virtual Joystick Dragging on the Orb
     const handlePointerDown = (e) => {
       isDragging = true;
-      if (hud) hud.classList.add("is-active");
-      if (pad) pad.classList.add("is-dragging");
+      orbWrap.classList.add("is-dragging");
+      dragStartPointerX = e.clientX;
+      dragStartPointerY = e.clientY;
+      dragStartX = targetX;
+      dragStartY = targetY;
       try {
-        e.currentTarget.setPointerCapture(e.pointerId);
+        orbWrap.setPointerCapture(e.pointerId);
       } catch (_) {}
-      handlePointerMove(e);
     };
 
     const handlePointerMove = (e) => {
       if (!isDragging) return;
-      if (!pad) return;
-      const padRect = pad.getBoundingClientRect();
-      const centerX = padRect.left + padRect.width / 2;
-      const centerY = padRect.top + padRect.height / 2;
-      const radius = padRect.width / 2;
+      const rect = orbWrap.getBoundingClientRect();
+      const sensitivity = (rect.width / 2) || 120;
 
-      let dx = (e.clientX - centerX) / radius;
-      let dy = (e.clientY - centerY) / radius;
+      let dx = dragStartX + (e.clientX - dragStartPointerX) / sensitivity;
+      let dy = dragStartY + (e.clientY - dragStartPointerY) / sensitivity;
       const dist = Math.hypot(dx, dy);
-      if (dist > 1) {
-        dx /= dist;
-        dy /= dist;
+      if (dist > 1.25) {
+        dx = (dx / dist) * 1.25;
+        dy = (dy / dist) * 1.25;
       }
       targetX = dx;
       targetY = dy;
@@ -338,42 +311,30 @@
     const handlePointerUp = (e) => {
       if (!isDragging) return;
       isDragging = false;
-      if (hud) hud.classList.remove("is-active");
-      if (pad) pad.classList.remove("is-dragging");
+      orbWrap.classList.remove("is-dragging");
       try {
-        e.currentTarget.releasePointerCapture(e.pointerId);
+        orbWrap.releasePointerCapture(e.pointerId);
       } catch (_) {}
 
-      // If cursor track is off, spring back to center
-      if (!cursorTrackEnabled) {
-        targetX = 0;
-        targetY = 0;
-      }
+      // Spring back to center or settle
+      targetX = 0;
+      targetY = 0;
       wakeUp();
     };
 
-    if (pad) {
-      pad.addEventListener("pointerdown", handlePointerDown);
-      pad.addEventListener("pointermove", handlePointerMove);
-      pad.addEventListener("pointerup", handlePointerUp);
-      pad.addEventListener("pointercancel", handlePointerUp);
-    }
-
-    if (orbWrap) {
-      orbWrap.addEventListener("pointerdown", handlePointerDown);
-      orbWrap.addEventListener("pointermove", handlePointerMove);
-      orbWrap.addEventListener("pointerup", handlePointerUp);
-      orbWrap.addEventListener("pointercancel", handlePointerUp);
-    }
+    orbWrap.addEventListener("pointerdown", handlePointerDown);
+    orbWrap.addEventListener("pointermove", handlePointerMove);
+    orbWrap.addEventListener("pointerup", handlePointerUp);
+    orbWrap.addEventListener("pointercancel", handlePointerUp);
 
     // Cursor tracking across Hero section (Handle Source simulation)
-    if (heroSection) {
+    if (heroSection && isFinePointer && !reduceMotion) {
       heroSection.addEventListener("mousemove", (e) => {
-        if (!cursorTrackEnabled || isDragging) return;
+        if (isDragging) return;
         const rect = heroSection.getBoundingClientRect();
-        // Calculate offset relative to hero center/orb quadrant
-        const relX = (e.clientX - (rect.left + rect.width * 0.65)) / (rect.width * 0.45);
-        const relY = (e.clientY - (rect.top + rect.height * 0.4)) / (rect.height * 0.45);
+        // Calculate offset relative to orb quadrant
+        const relX = (e.clientX - (rect.left + rect.width * 0.7)) / (rect.width * 0.4);
+        const relY = (e.clientY - (rect.top + rect.height * 0.35)) / (rect.height * 0.4);
 
         let dx = Math.max(-1, Math.min(1, relX));
         let dy = Math.max(-1, Math.min(1, relY));
@@ -383,9 +344,9 @@
           dy /= dist;
         }
 
-        // Subtler motion for passive cursor tracking (max 0.65 deflection)
-        targetX = dx * 0.65;
-        targetY = dy * 0.65;
+        // Subtler motion for passive cursor tracking (max 0.6 deflection)
+        targetX = dx * 0.6;
+        targetY = dy * 0.6;
         wakeUp();
       }, { passive: true });
 
@@ -395,31 +356,6 @@
           targetY = 0;
           wakeUp();
         }
-      });
-    }
-
-    // UI Buttons
-    if (trackToggleBtn) {
-      trackToggleBtn.addEventListener("click", () => {
-        cursorTrackEnabled = !cursorTrackEnabled;
-        trackToggleBtn.setAttribute("aria-pressed", String(cursorTrackEnabled));
-        const highlight = trackToggleBtn.querySelector(".btn-highlight");
-        if (highlight) {
-          highlight.textContent = cursorTrackEnabled ? "ON" : "OFF";
-        }
-        if (!cursorTrackEnabled) {
-          targetX = 0;
-          targetY = 0;
-          wakeUp();
-        }
-      });
-    }
-
-    if (centerBtn) {
-      centerBtn.addEventListener("click", () => {
-        targetX = 0;
-        targetY = 0;
-        wakeUp();
       });
     }
 

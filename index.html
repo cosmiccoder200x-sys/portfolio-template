@@ -53,46 +53,15 @@
       </div>
       <p class="hero-statement reveal">Building intelligent systems<br>and thoughtful digital experiences.</p>
       <div class="hero-bottom mono"><a href="#about" class="scroll-cue"><span class="scroll-line"></span> SCROLL TO EXPLORE <span class="down-arrow">↓</span></a><span class="page-count">01 <i>/</i> 04</span></div>
-      <div class="hero-orb-zone reveal" id="hero-orb-zone">
-        <div class="hero-orb-wrap" id="hero-orb-wrap" aria-label="Interactive SP Orb">
-          <canvas id="hero-orb-canvas" class="hero-orb-canvas" width="500" height="500"></canvas>
-          <div class="hero-orb-fallback" id="hero-orb-fallback" aria-hidden="true">
-            <div class="fallback-ring fallback-ring-outer">
-              <span class="fallback-highlight"></span>
-            </div>
-            <div class="fallback-ring fallback-ring-middle"></div>
-            <div class="fallback-ring fallback-ring-inner">
-              <span class="fallback-sp">SP</span>
-            </div>
+      <div class="hero-orb-wrap reveal" id="hero-orb-wrap" aria-label="Interactive SP Orb" role="region" title="Drag or move cursor to tilt orb">
+        <canvas id="hero-orb-canvas" class="hero-orb-canvas" width="500" height="500"></canvas>
+        <div class="hero-orb-fallback" id="hero-orb-fallback" aria-hidden="true">
+          <div class="fallback-ring fallback-ring-outer">
+            <span class="fallback-highlight"></span>
           </div>
-        </div>
-
-        <div class="hero-joystick-hud mono" id="hero-joystick-hud" aria-label="Interactive Orb Joystick">
-          <div class="joystick-hud-bar">
-            <span class="hud-status-chip"><span class="hud-pulse-dot"></span> JOYSTICK // GIMBAL</span>
-            <span class="hud-telemetry" id="joystick-coords">X: +0.00 · Y: +0.00</span>
-          </div>
-          <div class="joystick-stage" id="joystick-stage">
-            <div class="joystick-pad" id="joystick-pad" role="slider" aria-label="Orb Joystick Controller" tabindex="0">
-              <div class="joystick-axis-h"></div>
-              <div class="joystick-axis-v"></div>
-              <div class="joystick-reticle-ring"></div>
-              <div class="joystick-knob" id="joystick-knob">
-                <span class="knob-dot"></span>
-              </div>
-            </div>
-            <div class="joystick-readout">
-              <span class="readout-label">TILT</span>
-              <span class="readout-val" id="joystick-tilt-val">0.0°</span>
-            </div>
-          </div>
-          <div class="joystick-hud-controls">
-            <button type="button" class="joystick-btn" id="joystick-track-toggle" aria-pressed="true">
-              TRACK: <span class="btn-highlight">ON</span>
-            </button>
-            <button type="button" class="joystick-btn" id="joystick-center-btn">
-              CENTER
-            </button>
+          <div class="fallback-ring fallback-ring-middle"></div>
+          <div class="fallback-ring fallback-ring-inner">
+            <span class="fallback-sp">SP</span>
           </div>
         </div>
       </div>
