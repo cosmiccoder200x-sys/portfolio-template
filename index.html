@@ -53,16 +53,9 @@
       </div>
       <p class="hero-statement reveal">Building intelligent systems<br>and thoughtful digital experiences.</p>
       <div class="hero-bottom mono"><a href="#about" class="scroll-cue"><span class="scroll-line"></span> SCROLL TO EXPLORE <span class="down-arrow">↓</span></a><span class="page-count">01 <i>/</i> 04</span></div>
-      <div class="hero-orb-wrap reveal" id="hero-orb-wrap" aria-label="Interactive SP Orb" role="region" title="Drag or move cursor to tilt orb">
-        <canvas id="hero-orb-canvas" class="hero-orb-canvas" width="500" height="500"></canvas>
-        <div class="hero-orb-fallback" id="hero-orb-fallback" aria-hidden="true">
-          <div class="fallback-ring fallback-ring-outer">
-            <span class="fallback-highlight"></span>
-          </div>
-          <div class="fallback-ring fallback-ring-middle"></div>
-          <div class="fallback-ring fallback-ring-inner">
-            <span class="fallback-sp">SP</span>
-          </div>
+      <div class="hero-orb-wrap reveal" id="hero-orb-wrap" aria-label="Interactive SP Identity Orb" role="region" title="Drag or move cursor to tilt orb">
+        <div class="hero-orb-fallback" id="hero-orb-fallback">
+          <img src="assets/images/hero-orb-fallback.svg?v=3" alt="SP Animated Identity Orb" class="hero-orb-fallback-img">
         </div>
       </div>
     </section>
@@ -70,7 +63,15 @@
     <section class="intro section-pad" id="about">
       <div class="section-kicker mono about-reveal about-reveal-kicker"><span>01</span> / A LITTLE ABOUT ME</div>
       <div class="intro-grid">
-        <h2 class="section-heading about-reveal about-reveal-heading">Curious by nature.<br><span>Builder by practice.</span></h2>
+        <div class="intro-left">
+          <h2 class="section-heading about-reveal about-reveal-heading">Curious by nature.<br><span>Builder by practice.</span></h2>
+          <div class="about-visual-card about-reveal about-reveal-copy" aria-label="Software Architecture and Engineering Schematic">
+            <div class="about-visual-frame">
+              <img src="assets/images/about-visual.svg" alt="Abstract Software Engineering and Problem Solving Architecture" class="about-visual-img" loading="lazy">
+            </div>
+            <span class="about-visual-tag mono">SYSTEM_ARCHITECTURE // V26</span>
+          </div>
+        </div>
         <div class="intro-copy about-reveal about-reveal-copy">
           <p id="bio">I'm Sreerang P, an Electrical &amp; Computer Engineering student at TKM College of Engineering and a BS Data Science &amp; Applications student at IIT Madras. I build software, developer tools, and data-driven products, with a growing focus on AI and machine learning.</p>
           <div class="intro-links"><a class="text-link magnetic-btn" href="https://github.com/cosmiccoder200x-sys" target="_blank" rel="noopener noreferrer">GITHUB <span>↗</span></a> <a class="text-link magnetic-btn" href="https://www.linkedin.com/in/sreerang-p/" target="_blank" rel="noopener noreferrer">LINKEDIN <span>↗</span></a></div>
@@ -81,6 +82,12 @@
     <section class="skills-section section-pad" id="skills">
       <div class="section-kicker mono reveal"><span>02</span> / THE TOOLKIT</div>
       <div class="skills-heading-row"><h2 class="section-heading reveal">Tools I use.<br><span>Things I explore.</span></h2><p class="section-note reveal">A growing toolkit for turning ideas into useful products.</p></div>
+      <div class="skills-constellation-wrap reveal" aria-label="Technical Constellation Map">
+        <div class="skills-visual-frame">
+          <img src="assets/images/skills-visual.svg" alt="Technical Skills Constellation Network" class="skills-visual-img" loading="lazy">
+        </div>
+        <span class="skills-visual-tag mono">TOPOLOGY // 6_NODES_INTERCONNECTED</span>
+      </div>
       <ul class="skills-list reveal" id="skills-list">
         <li>Python</li><li>C &amp; C++</li><li>Data Structures &amp; Algorithms</li><li>JavaScript &amp; TypeScript</li><li>React &amp; Next.js</li><li>Flask</li><li>HTML &amp; CSS</li><li>Git &amp; GitHub</li><li>Data Science</li><li>NumPy &amp; Pandas</li><li>Machine Learning</li><li>Computer Vision</li><li>Supabase</li><li>SQL &amp; PostgreSQL</li><li>REST APIs</li><li>Model Context Protocol</li>
       </ul>
@@ -106,19 +113,95 @@
       <div class="section-kicker mono reveal"><span>05</span> / SELECTED WORK</div>
       <div class="projects-heading-row"><h2 class="section-heading reveal">Made with intent<span>.</span></h2><p class="section-note reveal">A selection of projects and experiments.</p></div>
       <div class="projects-grid" id="projects-grid">
-        <article class="project-card reveal"><span class="project-number mono">01 / LEARNING PRODUCT</span><h3>Modulr</h3><p>An adaptive exam-learning platform for KTU students, connecting syllabus topics, previous-year questions, mastery, and mistakes into focused study sessions.</p><div class="project-actions"><a href="https://github.com/cosmiccoder200x-sys/Modulr" target="_blank" rel="noopener noreferrer">SOURCE ↗</a><a href="https://tkm-notes.vercel.app/" target="_blank" rel="noopener noreferrer">LIVE ↗</a></div></article>
-        <article class="project-card reveal"><span class="project-number mono">02 / AI DEVELOPER TOOLING</span><h3>Local Brain MCP</h3><p>A local-first memory layer for AI coding agents, indexing repository history and engineering context into an embedded SQLite vector store.</p><div class="project-actions"><a href="https://github.com/cosmiccoder200x-sys/local-brain-mcp" target="_blank" rel="noopener noreferrer">SOURCE ↗</a><a href="https://local-brain-mcp.vercel.app" target="_blank" rel="noopener noreferrer">LIVE ↗</a></div></article>
-        <article class="project-card reveal"><span class="project-number mono">03 / PRODUCTIVITY</span><h3>FocusFlow</h3><p>A Chrome productivity extension for website tracking, distraction blocking, Pomodoro sessions, tasks, notes, statistics, and reports.</p><div class="project-actions"><a href="https://github.com/cosmiccoder200x-sys/Focusflow" target="_blank" rel="noopener noreferrer">SOURCE ↗</a></div></article>
-        <article class="project-card reveal"><span class="project-number mono">04 / FULL-STACK APPLICATION</span><h3>E-Learning Platform</h3><p>A learning platform with class management, live sessions, course materials, assignments, submissions, and grading, backed by Flask and Supabase.</p><div class="project-actions"><a href="https://github.com/cosmiccoder200x-sys/E--learning" target="_blank" rel="noopener noreferrer">SOURCE ↗</a></div></article>
-        <article class="project-card reveal"><span class="project-number mono">05 / E-COMMERCE</span><h3>Gullylabs</h3><p>An e-commerce platform with storefront discovery, cart, coupons, Razorpay checkout, order tracking, returns, support chat, and admin tools.</p><div class="project-actions"><a href="https://github.com/cosmiccoder200x-sys/Gullylabs" target="_blank" rel="noopener noreferrer">SOURCE ↗</a><a href="https://gullylab.vercel.app" target="_blank" rel="noopener noreferrer">LIVE ↗</a></div></article>
+        <article class="project-card reveal">
+          <div class="project-preview-frame">
+            <img src="assets/images/projects/modulr.svg" alt="Modulr Project Preview" class="project-preview-img" loading="lazy">
+            <div class="project-preview-overlay"></div>
+          </div>
+          <span class="project-number mono">01 / LEARNING PRODUCT</span>
+          <h3>Modulr</h3>
+          <p>An adaptive exam-learning platform for KTU students, connecting syllabus topics, previous-year questions, mastery, and mistakes into focused study sessions.</p>
+          <div class="project-actions">
+            <a href="https://github.com/cosmiccoder200x-sys/Modulr" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+            <a href="https://tkm-notes.vercel.app/" target="_blank" rel="noopener noreferrer">LIVE ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview-frame">
+            <img src="assets/images/projects/local-brain-mcp.svg" alt="Local Brain MCP Project Preview" class="project-preview-img" loading="lazy">
+            <div class="project-preview-overlay"></div>
+          </div>
+          <span class="project-number mono">02 / AI DEVELOPER TOOLING</span>
+          <h3>Local Brain MCP</h3>
+          <p>A local-first memory layer for AI coding agents, indexing repository history and engineering context into an embedded SQLite vector store.</p>
+          <div class="project-actions">
+            <a href="https://github.com/cosmiccoder200x-sys/local-brain-mcp" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+            <a href="https://local-brain-mcp.vercel.app" target="_blank" rel="noopener noreferrer">LIVE ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview-frame">
+            <img src="assets/images/projects/focusflow.svg" alt="FocusFlow Project Preview" class="project-preview-img" loading="lazy">
+            <div class="project-preview-overlay"></div>
+          </div>
+          <span class="project-number mono">03 / PRODUCTIVITY</span>
+          <h3>FocusFlow</h3>
+          <p>A Chrome productivity extension for website tracking, distraction blocking, Pomodoro sessions, tasks, notes, statistics, and reports.</p>
+          <div class="project-actions">
+            <a href="https://github.com/cosmiccoder200x-sys/Focusflow" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview-frame">
+            <img src="assets/images/projects/e-learning.svg" alt="E-Learning Platform Project Preview" class="project-preview-img" loading="lazy">
+            <div class="project-preview-overlay"></div>
+          </div>
+          <span class="project-number mono">04 / FULL-STACK APPLICATION</span>
+          <h3>E-Learning Platform</h3>
+          <p>A learning platform with class management, live sessions, course materials, assignments, submissions, and grading, backed by Flask and Supabase.</p>
+          <div class="project-actions">
+            <a href="https://github.com/cosmiccoder200x-sys/E--learning" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview-frame">
+            <img src="assets/images/projects/gullylabs.svg" alt="Gullylabs Project Preview" class="project-preview-img" loading="lazy">
+            <div class="project-preview-overlay"></div>
+          </div>
+          <span class="project-number mono">05 / E-COMMERCE</span>
+          <h3>Gullylabs</h3>
+          <p>An e-commerce platform with storefront discovery, cart, coupons, Razorpay checkout, order tracking, returns, support chat, and admin tools.</p>
+          <div class="project-actions">
+            <a href="https://github.com/cosmiccoder200x-sys/Gullylabs" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+            <a href="https://gullylab.vercel.app" target="_blank" rel="noopener noreferrer">LIVE ↗</a>
+          </div>
+        </article>
       </div>
     </section>
 
     <section class="contact-section section-pad" id="contact">
       <div class="section-kicker mono reveal"><span>06</span> / THE NEXT STEP</div>
       <div class="contact-grid">
-        <h2 class="contact-heading reveal">Have an idea?<br><span>Let's build it.</span></h2>
-        <div class="contact-copy reveal"><p>Interested in software engineering, AI, data, and building useful products. Open to learning, collaborating, and working on challenging technical projects.</p><div class="contact-actions"><a class="contact-link" href="https://github.com/cosmiccoder200x-sys" target="_blank" rel="noopener noreferrer">GITHUB <span>↗</span></a><a class="contact-link" href="https://www.linkedin.com/in/sreerang-p/" target="_blank" rel="noopener noreferrer">LINKEDIN <span>↗</span></a><a class="contact-link" href="mailto:sreerangp.official@gmail.com">EMAIL <span>↗</span></a></div></div>
+        <div class="contact-left">
+          <h2 class="contact-heading reveal">Have an idea?<br><span>Let's build it.</span></h2>
+          <div class="contact-copy reveal">
+            <p>Interested in software engineering, AI, data, and building useful products. Open to learning, collaborating, and working on challenging technical projects.</p>
+            <div class="contact-actions">
+              <a class="contact-link" href="https://github.com/cosmiccoder200x-sys" target="_blank" rel="noopener noreferrer">GITHUB <span>↗</span></a>
+              <a class="contact-link" href="https://www.linkedin.com/in/sreerang-p/" target="_blank" rel="noopener noreferrer">LINKEDIN <span>↗</span></a>
+              <a class="contact-link" href="mailto:sreerangp.official@gmail.com">EMAIL <span>↗</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="contact-visual-card reveal" aria-label="Closing SP Identity Visual">
+          <div class="contact-visual-frame">
+            <img src="assets/images/contact-visual.svg" alt="Sreerang P Closing Identity Visual" class="contact-visual-img" loading="lazy">
+          </div>
+        </div>
       </div>
       <div class="contact-form-wrap reveal">
         <div class="contact-form-heading">
