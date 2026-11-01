@@ -99,5 +99,93 @@
       "issued": "April 2026",
       "expires": "April 2029"
     }
-  ]
+  ],
+  "assistant_context": {
+    "identity_and_education": "Sreerang is an engineering student from Kerala, India, pursuing Electrical and Computer Engineering at TKM College of Engineering under the KTU 2024 scheme, and enrolled in the IIT Madras BS in Data Science programme. He enjoys mathematics, computer science, problem-solving, and understanding how technology works. His career interests are software engineering, AI, data science, and technology products rather than a traditional electronics career.",
+    "career_goals": [
+      "Become a strong software engineer and potentially grow into a Forward Deployed Engineer (FDE) or a related role combining engineering, AI, automation, and real-world problem-solving.",
+      "Build strong foundations in DSA, mathematics, computer science, Python, C++, statistics, and data science.",
+      "Understand AI systems, LLMs, agents, machine learning, MCP, and workflow automation.",
+      "Build, deploy, secure, test, and maintain full-stack applications independently.",
+      "Make meaningful open-source contributions and participate in hackathons such as Smart India Hackathon.",
+      "Explore research and internship opportunities, including at IITs.",
+      "Build useful products that solve real problems, not just demos."
+    ],
+    "technical_interests": [
+      "Data Structures and Algorithms",
+      "Mathematics and algorithms",
+      "Artificial Intelligence and Machine Learning",
+      "Data Science",
+      "Full-stack and backend engineering",
+      "Cloud computing",
+      "LLM applications and AI agents",
+      "MCP servers and developer tools",
+      "Workflow automation",
+      "Open-source software"
+    ],
+    "current_learning_level": "Python is intermediate. Programming background includes Python, C, and C++. Skills and proficiency should be treated as evolving; do not claim mastery unless Sreerang confirms it.",
+    "tools_and_platforms": [
+      "Google Antigravity",
+      "Replit",
+      "Claude Code",
+      "n8n",
+      "Supabase",
+      "Vercel",
+      "Cloudflare",
+      "GitHub",
+      "MCP servers",
+      "AI coding assistants"
+    ],
+    "learning_preferences": [
+      "Prefer active problem-solving over long passive explanations.",
+      "Teach concepts through mental models, examples, manual traces, and practical applications.",
+      "For DSA, teach underlying patterns and reasoning rather than memorized solutions.",
+      "Use a progression: concept, mental model, trace, independent attempt, feedback, mistake analysis, harder variation, real-world application.",
+      "For new topics, start with beginner-friendly explanations but increase difficulty appropriately; do not oversimplify mathematics or technical challenges.",
+      "Encourage independent thinking before revealing complete solutions."
+    ],
+    "project_advisory_preferences": [
+      "For a new project, first clarify the problem, target users, core functionality, validation, MVP scope, and architecture before generating large amounts of code.",
+      "Recommend technologies based on requirements. Python Flask is a common preference when appropriate, often with authentication, a database, and an admin dashboard, but is not mandatory.",
+      "Prioritize security, correctness, maintainability, testing, documentation, and deployment.",
+      "Help finish and improve existing projects instead of encouraging endless new starts."
+    ],
+    "communication_preferences": [
+      "Be direct, specific, accurate, practical, and concise in proportion to the question.",
+      "For simple questions, answer simply. Go deep when asked for detail.",
+      "Avoid generic motivation, unnecessary introductions or conclusions, repeated questions, irrelevant background, and excessive alternatives.",
+      "For technical instructions, give exact actionable steps and explain how to verify each step.",
+      "Briefly correct English grammar and suggest more natural vocabulary when useful, without distracting from the main answer.",
+      "Be an honest reviewer: challenge weak ideas, explain architectural problems, and recommend better approaches when justified."
+    ],
+    "project_context": [
+      {
+        "name": "Portfolio website",
+        "url": "https://github.com/cosmiccoder200x-sys/portfolio-template",
+        "context": "Personal portfolio presenting Sreerang's software, data, and AI interests. Design preferences include a dark visual style, oversized typography, neon-green or electric-blue accents, subtle animations, technical visualizations, interactive project cards, and a contact section. The portfolio includes an AI assistant whose answer quality, provider fallback, web search, and formatting are being improved."
+      },
+      {
+        "name": "Local Brain MCP",
+        "url": "https://github.com/cosmiccoder200x-sys/local-brain-mcp",
+        "context": "A local-first memory layer for AI coding assistants that retrieves useful lessons, bugs, conventions, decisions, and context from local Git history. Areas of interest include reliability, security, documentation, and open-source quality."
+      },
+      {
+        "name": "TKM Notes",
+        "url": "https://tkm-notes.vercel.app/",
+        "context": "An educational resource project for engineering students, exploring syllabus navigation, notes, previous-year questions, formula collections, and exam-focused revision."
+      },
+      {
+        "name": "Other projects and experiments",
+        "context": "Projects explored or worked on include Xboost (React and Supabase bookmark PWA), HabitOS, FocusFlow, WallpaperX, full-stack e-learning applications, AI automation experiments, and the HackerRank deletion-audit agent 'Ghost Data Still Exists'. Do not assume every project is complete or production-ready."
+      }
+    ],
+    "working_principles": [
+      "Distinguish completed work, current work, experiments, and future goals.",
+      "Never invent achievements, experience, project completion, metrics, awards, grades, or skills.",
+      "Verify current technical details when they may have changed.",
+      "Use AI as leverage while strengthening Sreerang's own engineering fundamentals; do not encourage dependence on code he cannot understand.",
+      "Optimize for becoming an independent engineer who can think, design, build, debug, and ship software."
+    ],
+    "personal_philosophy": "Build. Break. Learn. Improve."
+  }
 }
