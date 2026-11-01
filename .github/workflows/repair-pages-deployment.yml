@@ -11,29 +11,16 @@ permissions:
   deployments: write
 
 jobs:
-  inspect-stale-deployment:
+  deactivate-stale-deployment:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect and clear stale deployment record
+      - name: Deactivate stale Pages deployment record
         env:
           GH_TOKEN: ${{ github.token }}
-          STALE_SHA: cf44e068045960a30fd723356964d709bc66d507
         shell: bash
         run: |
           set -euo pipefail
-          echo "Checking deployment records for ${STALE_SHA}..."
-          records="$(gh api "repos/${GITHUB_REPOSITORY}/deployments?sha=${STALE_SHA}&per_page=100")"
-          echo "${records}" | jq '[.[] | {id, sha, ref, environment, task, created_at, updated_at}]'
-          while IFS= read -r deployment_id; do
-            [ -n "${deployment_id}" ] || continue
-            status="$(gh api "repos/${GITHUB_REPOSITORY}/deployments/${deployment_id}/statuses?per_page=1")"
-            state="$(echo "${status}" | jq -r '.[0].state // "unknown"')"
-            echo "Deployment ${deployment_id}: ${state}"
-            if [ "${state}" = "in_progress" ]; then
-              gh api --method POST "repos/${GITHUB_REPOSITORY}/deployments/${deployment_id}/statuses" \
-                -f state=inactive \
-                -f description="Deactivate stale GitHub Pages deployment"
-              gh api --method DELETE "repos/${GITHUB_REPOSITORY}/deployments/${deployment_id}"
-              echo "Cleared stale deployment record ${deployment_id}."
-            fi
-          done < <(echo "${records}" | jq -r '.[] | select(.environment == "github-pages") | .id')
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/deployments/7470452874/statuses" \
+            -f state=inactive \
+            -f description="Release stale GitHub Pages deployment lock"
+          echo "Marked the stale Pages deployment inactive."
