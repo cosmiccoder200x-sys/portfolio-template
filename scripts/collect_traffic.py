@@ -155,11 +155,10 @@ def main() -> int:
 
     if successful == 0:
         print(
-            "ERROR: No traffic endpoints succeeded. Check that the PAT has "
-            "Administration: read access to the selected repositories.",
-            file=sys.stderr,
+            "WARNING: No traffic endpoints succeeded. Keeping existing analytics history "
+            "unchanged. Check that the PAT has Administration: read access to the selected repositories."
         )
-        return 1
+        return 0
 
     data["updated_at"] = now
     data["collection_started_at"] = data.get("collection_started_at") or now

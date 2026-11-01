@@ -32,5 +32,5 @@ The token is used only inside GitHub Actions and is never written to `analytics/
 
 - A 403 response usually means the token is missing Administration read access to that repository.
 - A 404 or an empty response can mean GitHub has no traffic data available for that repository.
-- If every request fails, the workflow stops without overwriting the historical data.
+- If every request fails, the workflow logs a warning and keeps the historical data unchanged.
 - The workflow needs Actions enabled and repository Actions permissions that allow the workflow's `GITHUB_TOKEN` to write contents.
