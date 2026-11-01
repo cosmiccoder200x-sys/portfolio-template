@@ -114,7 +114,7 @@
       addMessage("assistant", data.answer, Array.isArray(data.sources) ? data.sources : []);
       history.push({ role: "assistant", content: data.answer });
       if (history.length > 10) history.splice(0, history.length - 10);
-      status.textContent = data.searched ? "ANSWER GROUNDED WITH WEB SOURCES" : "RESPONSE GENERATED";
+      status.textContent = data.notice ? "FALLBACK RESPONSE · WEB SEARCH UNAVAILABLE" : (data.searched ? "ANSWER GROUNDED WITH WEB SOURCES" : ((data.provider || "AI").toUpperCase() + " RESPONSE GENERATED"));\n      if (data.notice) addMessage("assistant", data.notice, [], true);
     } catch (error) {
       thinking.remove();
       addMessage("assistant", error.message || "Something went wrong. Please try again.", [], true);
