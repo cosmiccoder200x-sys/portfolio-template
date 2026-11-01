@@ -1,7 +1,7 @@
 {
   "name": "Sreerang P",
   "tagline": "Software, Data & AI Builder",
-  "bio": "I'm Sreerang P, an Electrical & Computer Engineering student at TKM College of Engineering (KTU 2024 Scheme, expected graduation 2029) and a BS Data Science & Applications student at IIT Madras. I build software, developer tools, and data-driven products, and I'm especially interested in AI, machine learning, and solving practical problems through code. I learn by shipping projects, testing ideas, and iterating in the open.",
+  "bio": "I'm Sreerang P, an Electrical & Computer Engineering student at TKM College of Engineering (KTU 2024 Scheme, expected graduation 2029) and a BS Data Science & Applications student at IIT Madras. I build software, developer tools, and data-driven products, with a strong interest in practical AI and machine learning. I learn by building, testing, and improving real projects.",
   "education": [
     {
       "degree": "B.Tech in Electrical & Computer Engineering",
@@ -22,7 +22,6 @@
     "C++",
     "JavaScript",
     "TypeScript",
-    "Data Structures & Algorithms",
     "React",
     "Next.js",
     "Vite",
@@ -31,16 +30,17 @@
     "CSS",
     "Git",
     "GitHub",
-    "Data Science",
+    "SQL",
+    "PostgreSQL",
+    "Supabase",
+    "REST APIs",
     "NumPy",
     "Pandas",
     "Machine Learning",
     "Computer Vision",
-    "Supabase",
-    "SQL",
-    "PostgreSQL",
-    "REST APIs",
-    "Model Context Protocol (MCP)"
+    "Vector Search",
+    "Model Context Protocol (MCP)",
+    "Data Structures & Algorithms"
   ],
   "projects": [
     {
@@ -89,7 +89,7 @@
   },
   "certifications": [
     {
-      "name": "5-Day AI Agents: Intensive Vibe Coding Course With Google",
+      "name": "5-Day AI Agents: Intensive Vibe Coding Course",
       "issuer": "Google",
       "issued": "June 2026"
     },
@@ -99,5 +99,74 @@
       "issued": "April 2026",
       "expires": "April 2029"
     }
-  ]
+  ],
+  "assistant_context": {
+    "identity": "Sreerang P is a student-developer interested in building software, developer tools, and data-driven products. He studies Electrical & Computer Engineering at TKM College of Engineering (KTU 2024 Scheme, 2025–2029) and is also pursuing the online BS in Data Science & Applications at IIT Madras.",
+    "direction": "His main interests are software engineering, AI and machine learning, practical code-first solutions, computer vision, Model Context Protocol (MCP), vector search, and private-first AI tooling. He is especially interested in shipping useful products and developer tools.",
+    "technical_skills": [
+      "Python",
+      "C",
+      "C++",
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "Next.js",
+      "Vite",
+      "Flask",
+      "HTML",
+      "CSS",
+      "Git",
+      "SQL",
+      "PostgreSQL",
+      "Supabase",
+      "REST APIs",
+      "NumPy",
+      "Pandas",
+      "Machine Learning",
+      "Computer Vision",
+      "Vector Search",
+      "MCP"
+    ],
+    "representative_projects": [
+      {
+        "name": "Modulr",
+        "description": "An adaptive exam-learning platform.",
+        "technologies": "Next.js, TypeScript, Tailwind CSS"
+      },
+      {
+        "name": "Local Brain MCP",
+        "description": "A local-first memory layer for AI coding agents, using repository context and a private vector store.",
+        "technologies": "TypeScript, Node.js, SQLite, vector search, MCP"
+      },
+      {
+        "name": "FocusFlow",
+        "description": "A Chrome productivity extension.",
+        "technologies": "JavaScript, HTML, CSS"
+      },
+      {
+        "name": "E-Learning Platform",
+        "description": "A full-stack learning system.",
+        "technologies": "React, Flask, Supabase"
+      },
+      {
+        "name": "Gullylabs",
+        "description": "An e-commerce site with Razorpay checkout.",
+        "technologies": "React, Supabase, Razorpay"
+      }
+    ],
+    "certifications": [
+      "5-Day AI Agents: Intensive Vibe Coding Course — Google, June 2026",
+      "Gemini Certified University Student — Google for Education, April 2026; valid until April 2029"
+    ],
+    "response_guidance": [
+      "Use this context together with the main portfolio fields when answering questions about Sreerang.",
+      "When asked who Sreerang is, what he does, or for a short biography, write a natural, polished third-person introduction or bio. Do not dump the profile as a table, raw field list, or résumé unless the visitor explicitly asks for that format.",
+      "For a first-person 'About me' draft, write in Sreerang's voice. Do not claim to be Sreerang in ordinary conversation.",
+      "Keep the tone confident but grounded. Describe him as a student-developer and builder; do not exaggerate his seniority or call him an expert without evidence.",
+      "Do not invent project outcomes, user counts, revenue, awards, employment, internships, grades, or proficiency levels.",
+      "Treat project names, technologies, and descriptions as supplied portfolio facts. If a visitor asks for details not provided, say they are not specified and point to the relevant GitHub repository.",
+      "Do not overemphasize hardware or imply that Sreerang wants an electronics career. His stated interests focus on software, AI/ML, data science, and developer tooling.",
+      "Use concise prose by default. Use bullets only when they improve clarity or the visitor requests them."
+    ]
+  }
 }
