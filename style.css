@@ -1501,6 +1501,7 @@ textarea.form-control {
 .ai-message.user{margin-left:auto}
 .ai-message-label{margin-bottom:6px;color:#737373;font: .52rem var(--mono);letter-spacing:.1em}
 .ai-message-bubble{padding:11px 13px;border:1px solid rgba(255,255,255,.13);background:#111;color:#d5d5d5;font-size:.78rem;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.ai-message-bubble p{margin:0 0 8px}.ai-message-bubble p:last-child{margin-bottom:0}.ai-message-bubble ul{margin:0;padding-left:18px}.ai-message-bubble li{margin:0 0 4px}.ai-message-bubble li:last-child{margin-bottom:0}.ai-message-bubble a{color:#eee;text-decoration:underline;text-underline-offset:3px}.ai-message-bubble code{padding:1px 4px;background:#1b1b1b;color:#eee;font-family:var(--mono);font-size:.9em}
 .ai-message.user .ai-message-bubble{background:#e8e8e8;color:#111;border-color:#e8e8e8}
 .ai-message.error .ai-message-bubble{border-color:rgba(255,150,150,.4);color:#ffc2c2}
 .ai-sources{display:grid;gap:6px;margin-top:9px}

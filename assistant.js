@@ -29,6 +29,48 @@
     messages.scrollTop = messages.scrollHeight;
   }
 
+  function escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
+  function inlineMarkdown(value) {
+    return escapeHtml(value)
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/`([^`]+)`/g, "<code>$1</code>");
+  }
+
+  function renderMarkdown(container, content) {
+    const lines = String(content).replace(/\r\n?/g, "\n").split("\n");
+    const blocks = [];
+    let listItems = [];
+
+    const flushList = () => {
+      if (!listItems.length) return;
+      blocks.push(`<ul>${listItems.map((item) => `<li>${inlineMarkdown(item)}</li>`).join("")}</ul>`);
+      listItems = [];
+    };
+
+    for (const line of lines) {
+      const listMatch = line.match(/^\s*[-*]\s+(.+)$/);
+      if (listMatch) {
+        listItems.push(listMatch[1]);
+      } else if (line.trim()) {
+        flushList();
+        blocks.push(`<p>${inlineMarkdown(line.trim())}</p>`);
+      } else {
+        flushList();
+      }
+    }
+    flushList();
+    container.innerHTML = blocks.join("");
+  }
+
   function addMessage(role, content, sources = [], error = false) {
     const wrapper = document.createElement("article");
     wrapper.className = "ai-message " + role + (error ? " error" : "");
@@ -40,7 +82,7 @@
 
     const bubble = document.createElement("div");
     bubble.className = "ai-message-bubble";
-    bubble.textContent = content;
+    renderMarkdown(bubble, content);
     wrapper.appendChild(bubble);
 
     if (sources.length) {
