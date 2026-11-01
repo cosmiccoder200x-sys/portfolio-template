@@ -134,53 +134,300 @@
   }
 
   /* ==========================================================================
-     5. RIVE SP ORB WITH GRACEFUL FALLBACK
+     5. RIVE SP ORB & INTERACTIVE JOYSTICK CONTROLLER
      ========================================================================== */
-  const initRiveOrb = () => {
+  const initOrbAndJoystick = () => {
     const orbWrap = document.getElementById("hero-orb-wrap");
     const orbCanvas = document.getElementById("hero-orb-canvas");
-    if (!orbCanvas || !orbWrap) return;
+    const fallback = document.getElementById("hero-orb-fallback");
+    const fallbackOuter = fallback ? fallback.querySelector(".fallback-ring-outer") : null;
+    const fallbackMiddle = fallback ? fallback.querySelector(".fallback-ring-middle") : null;
+    const fallbackInner = fallback ? fallback.querySelector(".fallback-ring-inner") : null;
+    const fallbackHighlight = fallback ? fallback.querySelector(".fallback-highlight") : null;
 
-    if (typeof rive === "undefined") {
-      // Retry for up to 3 seconds before sticking with pure CSS fallback
-      if (!window._riveRetryCount) window._riveRetryCount = 0;
-      if (window._riveRetryCount < 30) {
-        window._riveRetryCount++;
-        window.setTimeout(initRiveOrb, 100);
+    const hud = document.getElementById("hero-joystick-hud");
+    const pad = document.getElementById("joystick-pad");
+    const knob = document.getElementById("joystick-knob");
+    const coordsEl = document.getElementById("joystick-coords");
+    const tiltValEl = document.getElementById("joystick-tilt-val");
+    const trackToggleBtn = document.getElementById("joystick-track-toggle");
+    const centerBtn = document.getElementById("joystick-center-btn");
+    const heroSection = document.getElementById("home");
+
+    if (!orbWrap) return;
+
+    // State variables
+    let currentX = 0; // Normalized -1 to +1
+    let currentY = 0; // Normalized -1 to +1
+    let targetX = 0;
+    let targetY = 0;
+    let velocityX = 0;
+    let velocityY = 0;
+    let isDragging = false;
+    let cursorTrackEnabled = isFinePointer && !reduceMotion;
+    let animationFrameId = null;
+
+    // Rive instance
+    let riveOrb = null;
+
+    const initRive = () => {
+      if (!orbCanvas) return;
+      if (typeof rive === "undefined") {
+        if (!window._riveRetryCount) window._riveRetryCount = 0;
+        if (window._riveRetryCount < 30) {
+          window._riveRetryCount++;
+          window.setTimeout(initRive, 100);
+        }
+        return;
       }
-      return;
+      try {
+        riveOrb = new rive.Rive({
+          src: "assets/rive/hero-orb.riv",
+          canvas: orbCanvas,
+          artboard: "PortfolioOrb",
+          stateMachine: "State Machine 1",
+          autoplay: !reduceMotion,
+          onLoad: () => {
+            riveOrb.resizeDrawingSurfaceToCanvas();
+            orbWrap.classList.add("is-loaded");
+          },
+          onError: () => {
+            orbWrap.classList.remove("is-loaded");
+          }
+        });
+
+        let resizeTimeout = null;
+        window.addEventListener("resize", () => {
+          if (resizeTimeout) window.clearTimeout(resizeTimeout);
+          resizeTimeout = window.setTimeout(() => {
+            if (riveOrb) riveOrb.resizeDrawingSurfaceToCanvas();
+          }, 120);
+        }, { passive: true });
+      } catch (e) {
+        console.warn("Rive orb notice:", e);
+      }
+    };
+
+    initRive();
+
+    // Helper: update visual displays from currentX and currentY
+    const updateTransforms = (x, y) => {
+      const dist = Math.min(Math.hypot(x, y), 1.0);
+      const angleDeg = Math.round(dist * 26 * 10) / 10;
+
+      // Update telemetry
+      const signX = x >= 0 ? "+" : "";
+      const signY = y >= 0 ? "+" : "";
+      if (coordsEl) {
+        coordsEl.textContent = `X: ${signX}${x.toFixed(2)} · Y: ${signY}${y.toFixed(2)}`;
+      }
+      if (tiltValEl) {
+        tiltValEl.textContent = `${angleDeg.toFixed(1)}°`;
+      }
+
+      // Update Knob visual translation
+      if (pad && knob) {
+        const padRect = pad.getBoundingClientRect();
+        const maxRadius = (padRect.width / 2) - 14;
+        const knobX = x * maxRadius;
+        const knobY = y * maxRadius;
+        knob.style.transform = `translate3d(${knobX}px, ${knobY}px, 0)`;
+      }
+
+      if (reduceMotion) return;
+
+      // 3D Spatial Gimbal Deflection on Orb
+      const rotY = x * 26;
+      const rotX = -y * 26;
+      const scaleFactor = 1 + dist * 0.04;
+      orbWrap.style.transform = `perspective(900px) rotateY(${rotY}deg) rotateX(${rotX}deg) scale(${scaleFactor})`;
+
+      // Canvas / Fallback ring parallax layers
+      if (fallbackOuter) {
+        fallbackOuter.style.transform = `translate3d(${x * 14}px, ${y * 14}px, 0)`;
+      }
+      if (fallbackMiddle) {
+        fallbackMiddle.style.transform = `translate3d(${x * 6}px, ${y * 6}px, 0)`;
+      }
+      if (fallbackInner) {
+        fallbackInner.style.transform = `translate3d(${-x * 8}px, ${-y * 8}px, 0)`;
+      }
+      if (fallbackHighlight) {
+        const rad = Math.atan2(y, x);
+        const hDist = dist * 20;
+        fallbackHighlight.style.transform = `translate3d(${Math.cos(rad) * hDist}px, ${Math.sin(rad) * hDist}px, 0)`;
+      }
+    };
+
+    // Smooth physics loop (spring or lerp)
+    const tick = () => {
+      if (isDragging) {
+        // Direct tracking
+        currentX = targetX;
+        currentY = targetY;
+        velocityX = 0;
+        velocityY = 0;
+      } else {
+        // Harmonic spring physics towards targetX, targetY
+        const spring = 0.14;
+        const damping = 0.76;
+
+        const forceX = (targetX - currentX) * spring;
+        const forceY = (targetY - currentY) * spring;
+
+        velocityX = (velocityX + forceX) * damping;
+        velocityY = (velocityY + forceY) * damping;
+
+        currentX += velocityX;
+        currentY += velocityY;
+
+        if (Math.abs(currentX - targetX) < 0.001 && Math.abs(currentY - targetY) < 0.001 && Math.abs(velocityX) < 0.001 && Math.abs(velocityY) < 0.001) {
+          currentX = targetX;
+          currentY = targetY;
+          velocityX = 0;
+          velocityY = 0;
+        }
+      }
+
+      updateTransforms(currentX, currentY);
+
+      if (isDragging || Math.abs(currentX - targetX) > 0.0005 || Math.abs(currentY - targetY) > 0.0005 || Math.abs(velocityX) > 0.0005 || cursorTrackEnabled) {
+        animationFrameId = requestAnimationFrame(tick);
+      } else {
+        animationFrameId = null;
+      }
+    };
+
+    const wakeUp = () => {
+      if (!animationFrameId) {
+        animationFrameId = requestAnimationFrame(tick);
+      }
+    };
+
+    // Pointer Drag on Pad or Orb
+    const handlePointerDown = (e) => {
+      isDragging = true;
+      if (hud) hud.classList.add("is-active");
+      if (pad) pad.classList.add("is-dragging");
+      try {
+        e.currentTarget.setPointerCapture(e.pointerId);
+      } catch (_) {}
+      handlePointerMove(e);
+    };
+
+    const handlePointerMove = (e) => {
+      if (!isDragging) return;
+      if (!pad) return;
+      const padRect = pad.getBoundingClientRect();
+      const centerX = padRect.left + padRect.width / 2;
+      const centerY = padRect.top + padRect.height / 2;
+      const radius = padRect.width / 2;
+
+      let dx = (e.clientX - centerX) / radius;
+      let dy = (e.clientY - centerY) / radius;
+      const dist = Math.hypot(dx, dy);
+      if (dist > 1) {
+        dx /= dist;
+        dy /= dist;
+      }
+      targetX = dx;
+      targetY = dy;
+      wakeUp();
+    };
+
+    const handlePointerUp = (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      if (hud) hud.classList.remove("is-active");
+      if (pad) pad.classList.remove("is-dragging");
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+
+      // If cursor track is off, spring back to center
+      if (!cursorTrackEnabled) {
+        targetX = 0;
+        targetY = 0;
+      }
+      wakeUp();
+    };
+
+    if (pad) {
+      pad.addEventListener("pointerdown", handlePointerDown);
+      pad.addEventListener("pointermove", handlePointerMove);
+      pad.addEventListener("pointerup", handlePointerUp);
+      pad.addEventListener("pointercancel", handlePointerUp);
     }
 
-    try {
-      const orb = new rive.Rive({
-        src: "assets/rive/hero-orb.riv",
-        canvas: orbCanvas,
-        artboard: "PortfolioOrb",
-        stateMachine: "State Machine 1",
-        autoplay: !reduceMotion,
-        onLoad: () => {
-          orb.resizeDrawingSurfaceToCanvas();
-          orbWrap.classList.add("is-loaded");
-        },
-        onError: () => {
-          // Keep CSS fallback active gracefully
-          orbWrap.classList.remove("is-loaded");
+    if (orbWrap) {
+      orbWrap.addEventListener("pointerdown", handlePointerDown);
+      orbWrap.addEventListener("pointermove", handlePointerMove);
+      orbWrap.addEventListener("pointerup", handlePointerUp);
+      orbWrap.addEventListener("pointercancel", handlePointerUp);
+    }
+
+    // Cursor tracking across Hero section (Handle Source simulation)
+    if (heroSection) {
+      heroSection.addEventListener("mousemove", (e) => {
+        if (!cursorTrackEnabled || isDragging) return;
+        const rect = heroSection.getBoundingClientRect();
+        // Calculate offset relative to hero center/orb quadrant
+        const relX = (e.clientX - (rect.left + rect.width * 0.65)) / (rect.width * 0.45);
+        const relY = (e.clientY - (rect.top + rect.height * 0.4)) / (rect.height * 0.45);
+
+        let dx = Math.max(-1, Math.min(1, relX));
+        let dy = Math.max(-1, Math.min(1, relY));
+        const dist = Math.hypot(dx, dy);
+        if (dist > 1) {
+          dx /= dist;
+          dy /= dist;
+        }
+
+        // Subtler motion for passive cursor tracking (max 0.65 deflection)
+        targetX = dx * 0.65;
+        targetY = dy * 0.65;
+        wakeUp();
+      }, { passive: true });
+
+      heroSection.addEventListener("mouseleave", () => {
+        if (!isDragging) {
+          targetX = 0;
+          targetY = 0;
+          wakeUp();
         }
       });
-
-      let resizeTimeout = null;
-      window.addEventListener("resize", () => {
-        if (resizeTimeout) window.clearTimeout(resizeTimeout);
-        resizeTimeout = window.setTimeout(() => {
-          orb.resizeDrawingSurfaceToCanvas();
-        }, 120);
-      }, { passive: true });
-    } catch (e) {
-      console.warn("Rive orb notice (using graceful fallback):", e);
     }
+
+    // UI Buttons
+    if (trackToggleBtn) {
+      trackToggleBtn.addEventListener("click", () => {
+        cursorTrackEnabled = !cursorTrackEnabled;
+        trackToggleBtn.setAttribute("aria-pressed", String(cursorTrackEnabled));
+        const highlight = trackToggleBtn.querySelector(".btn-highlight");
+        if (highlight) {
+          highlight.textContent = cursorTrackEnabled ? "ON" : "OFF";
+        }
+        if (!cursorTrackEnabled) {
+          targetX = 0;
+          targetY = 0;
+          wakeUp();
+        }
+      });
+    }
+
+    if (centerBtn) {
+      centerBtn.addEventListener("click", () => {
+        targetX = 0;
+        targetY = 0;
+        wakeUp();
+      });
+    }
+
+    // Initialize transforms at 0, 0
+    updateTransforms(0, 0);
   };
 
-  initRiveOrb();
+  initOrbAndJoystick();
 
   /* ==========================================================================
      6. DESKTOP CURSOR SPOTLIGHT

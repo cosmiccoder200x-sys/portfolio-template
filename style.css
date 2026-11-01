@@ -79,8 +79,7 @@ button, a {
 .project-card > a,
 .text-link,
 .contact-link,
-.site-footer,
-.about-portrait-tag {
+.site-footer {
   font-family: var(--mono);
   letter-spacing: 0.08em;
 }
@@ -428,20 +427,37 @@ button, a {
 }
 
 /* ==========================================================================
-   SP ANIMATED ORB (RIVE CANVAS + CSS FALLBACK)
+   SP ANIMATED ORB & INTERACTIVE JOYSTICK HUD
    ========================================================================== */
-.hero-orb-wrap {
+.hero-orb-zone {
   position: absolute;
   z-index: 2;
-  width: clamp(220px, 23vw, 350px);
-  aspect-ratio: 1 / 1;
   right: 4.5%;
-  top: clamp(130px, 18vh, 195px);
-  line-height: 0;
+  top: clamp(120px, 16vh, 180px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
   pointer-events: none;
+}
+
+.hero-orb-wrap {
+  position: relative;
+  width: clamp(200px, 21vw, 320px);
+  aspect-ratio: 1 / 1;
+  line-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  perspective: 900px;
+  transform-style: preserve-3d;
+  pointer-events: auto;
+  cursor: grab;
+  transition: opacity var(--dur-med) ease;
+}
+
+.hero-orb-wrap:active {
+  cursor: grabbing;
 }
 
 .hero-orb-canvas {
@@ -451,6 +467,7 @@ button, a {
   opacity: 0.94;
   filter: drop-shadow(0 0 35px rgba(255, 255, 255, 0.08));
   transition: opacity var(--dur-med) ease;
+  will-change: transform;
 }
 
 /* Pure CSS Fallback when Rive is offline or loading */
@@ -463,6 +480,7 @@ button, a {
   pointer-events: none;
   opacity: 1;
   transition: opacity var(--dur-med) ease;
+  will-change: transform;
 }
 
 .hero-orb-wrap.is-loaded .hero-orb-fallback {
@@ -474,6 +492,7 @@ button, a {
   position: absolute;
   border-radius: 50%;
   box-sizing: border-box;
+  will-change: transform;
 }
 
 .fallback-ring-outer {
@@ -524,6 +543,210 @@ button, a {
 }
 
 /* ==========================================================================
+   ENGAGING INTERACTIVE JOYSTICK HUD
+   ========================================================================== */
+.hero-joystick-hud {
+  pointer-events: auto;
+  width: clamp(200px, 21vw, 250px);
+  background: rgba(13, 13, 13, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  user-select: none;
+  -webkit-user-select: none;
+  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+}
+
+.hero-joystick-hud:hover,
+.hero-joystick-hud.is-active {
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.65), 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+.joystick-hud-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  color: #777;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hud-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ededed;
+  font-weight: 600;
+}
+
+.hud-pulse-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+  animation: hudPulse 2s ease-in-out infinite;
+}
+
+@keyframes hudPulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+.hud-telemetry {
+  font-size: 0.58rem;
+  color: #aaa;
+  font-variant-numeric: tabular-nums;
+}
+
+.joystick-stage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+/* Joystick Circular Track / Pad */
+.joystick-pad {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, rgba(8, 8, 8, 0.85) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  touch-action: none;
+  overflow: visible;
+  transition: border-color var(--dur-fast) ease;
+}
+
+.joystick-pad:active,
+.joystick-pad.is-dragging {
+  cursor: grabbing;
+  border-color: rgba(255, 255, 255, 0.38);
+}
+
+.joystick-axis-h {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+
+.joystick-axis-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+
+.joystick-reticle-ring {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+/* Tactile Handle / Knob */
+.joystick-knob {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #888888 60%, #333333 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 255, 255, 0.18);
+  top: calc(50% - 13px);
+  left: calc(50% - 13px);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.knob-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #000;
+  opacity: 0.65;
+}
+
+.joystick-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.55rem;
+}
+
+.readout-label {
+  color: #666;
+  letter-spacing: 0.1em;
+}
+
+.readout-val {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #ededed;
+  font-variant-numeric: tabular-nums;
+}
+
+.joystick-hud-controls {
+  display: flex;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.joystick-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #888;
+  font: 500 0.55rem var(--mono);
+  letter-spacing: 0.08em;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: all var(--dur-fast) ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.joystick-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.joystick-btn .btn-highlight {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* ==========================================================================
    ABOUT / INTRO SECTION & PORTRAIT
    ========================================================================== */
 .section-pad {
@@ -547,15 +770,9 @@ button, a {
 .intro-grid,
 .contact-grid {
   display: grid;
-  grid-template-columns: 1.25fr 0.75fr;
-  gap: 9%;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 80px;
   align-items: start;
-}
-
-.intro-headline-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 48px;
 }
 
 .section-heading {
@@ -569,44 +786,6 @@ button, a {
 .section-heading span,
 .contact-heading span {
   color: #777;
-}
-
-/* Dedicated Portrait Presentation in About Section */
-.about-portrait-card {
-  max-width: 340px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.about-portrait-frame {
-  width: 100%;
-  aspect-ratio: 4 / 4.7;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  background: #0d0d0d;
-  position: relative;
-}
-
-.about-portrait-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  filter: grayscale(1) contrast(1.1);
-  transition: transform var(--dur-slow) var(--ease-out-expo), filter var(--dur-slow) var(--ease-out-expo);
-  display: block;
-}
-
-.about-portrait-card:hover .about-portrait-img {
-  transform: scale(1.03);
-  filter: grayscale(0.85) contrast(1.12);
-}
-
-.about-portrait-tag {
-  font-size: 0.58rem;
-  color: #666;
-  letter-spacing: 0.12em;
 }
 
 .intro-copy {
@@ -1049,19 +1228,11 @@ textarea.form-control {
   transform: translateY(0);
 }
 
-.hero-orb-wrap.reveal {
+.hero-orb-zone.reveal {
   transform: translateY(20px) scale(0.985);
 }
 
-.hero-orb-wrap.reveal.is-visible {
-  transform: translateY(0) scale(1);
-}
-
-.about-portrait-card.reveal {
-  transform: translateY(24px) scale(0.99);
-}
-
-.about-portrait-card.reveal.is-visible {
+.hero-orb-zone.reveal.is-visible {
   transform: translateY(0) scale(1);
 }
 
@@ -1108,12 +1279,21 @@ textarea.form-control {
     right: 3%;
     font-size: 0.65rem;
   }
-  .hero-orb-wrap {
-    width: clamp(180px, 25vw, 250px);
+  .hero-orb-zone {
     right: 4.5%;
-    top: 140px;
-    left: auto;
-    bottom: auto;
+    top: 130px;
+    align-items: flex-end;
+  }
+  .hero-orb-wrap {
+    width: clamp(170px, 23vw, 230px);
+  }
+  .hero-joystick-hud {
+    width: 200px;
+    padding: 10px 12px;
+  }
+  .joystick-pad {
+    width: 64px;
+    height: 64px;
   }
   .hero-statement {
     margin-top: 85px;
@@ -1125,9 +1305,6 @@ textarea.form-control {
   .contact-grid {
     grid-template-columns: 1fr;
     gap: 36px;
-  }
-  .about-portrait-card {
-    max-width: 280px;
   }
   .section-kicker {
     margin-bottom: 48px;
@@ -1224,13 +1401,57 @@ textarea.form-control {
     margin-top: 145px;
     max-width: 260px;
   }
+  .hero-orb-zone {
+    right: 7%;
+    top: 130px;
+    align-items: flex-end;
+    gap: 8px;
+  }
   .hero-orb-wrap {
     width: min(24vw, 95px);
-    right: 7%;
-    top: 135px;
-    left: auto;
-    bottom: auto;
     opacity: 0.85;
+  }
+  .hero-joystick-hud {
+    width: 135px;
+    padding: 7px 9px;
+    gap: 6px;
+  }
+  .joystick-hud-bar {
+    font-size: 0.48rem;
+    padding-bottom: 4px;
+  }
+  .hud-telemetry {
+    display: none;
+  }
+  .joystick-stage {
+    padding: 2px 0;
+  }
+  .joystick-pad {
+    width: 48px;
+    height: 48px;
+  }
+  .joystick-knob {
+    width: 18px;
+    height: 18px;
+    top: calc(50% - 9px);
+    left: calc(50% - 9px);
+  }
+  .knob-dot {
+    width: 4px;
+    height: 4px;
+  }
+  .joystick-reticle-ring {
+    width: 28px;
+    height: 28px;
+  }
+  .readout-label {
+    font-size: 0.48rem;
+  }
+  .readout-val {
+    font-size: 0.72rem;
+  }
+  .joystick-hud-controls {
+    display: none;
   }
   .hero-bottom {
     left: 7%;
@@ -1253,9 +1474,6 @@ textarea.form-control {
   }
   .section-heading {
     font-size: clamp(2.6rem, 12vw, 4.7rem);
-  }
-  .about-portrait-card {
-    max-width: 100%;
   }
   .intro-copy {
     font-size: 0.94rem;

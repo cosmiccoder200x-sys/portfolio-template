@@ -31,10 +31,17 @@ This project is a high-performance, single-page portfolio built for **Sreerang P
   - Name reveal with smooth upward trajectory and subtle character cadence.
   - Dynamic rotating role transition (`Software Developer` · `AI Builder` · `Forward-Deployed Engineer`).
   - Interactive "SP" monochrome Rive orb in the top-right quadrant with canvas WebGL2 rendering and CSS fallback.
+  - Interactive **Joystick / Gimbal HUD**:
+    - Embedded Rive `Joystick` architecture linking `PoseX` and `PoseY` timeline controls.
+    - Tactile circular pad with crosshairs and metallic knob supporting touch/mouse dragging.
+    - Automatic cursor tracking (simulating Rive `handleSource` bound to cursor).
+    - Real-time telemetry readout (`X`, `Y`, `TILT` angle).
+    - 3D spatial parallax and deflection of the orb and its concentric rings.
+    - Harmonic spring physics with natural bounce back to center on release.
   - Subtle architectural dot/grid background canvas and optional mouse spotlight on desktop.
 - **About**:
-  - Editorial section heading with staggered reveal.
-  - Refined portrait display with soft monochrome blend and subtle hover scale.
+  - Editorial section heading with staggered reveal (`Curious by nature. Builder by practice.`).
+  - Pure brutalist/editorial typography without portrait photograph for maximal focus on craftsmanship.
   - Bio copy with high legibility and links with animated arrow indicators.
 - **Skills**:
   - Categorized or structured grid presentation with staggered card entrances and subtle hover illumination.

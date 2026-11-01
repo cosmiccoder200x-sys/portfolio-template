@@ -113,6 +113,31 @@
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
+
+        <!-- Joystick Pose X: frame 0 = left (-1), frame 30 = center (0), frame 60 = right (+1) -->
+        <LinearAnimation loopValue="oneShot" fps="60" duration="60" name="PoseX" id="0:80">
+            <KeyedObject objectId="0:10">
+                <KeyedProperty propertyKey="13">
+                    <KeyFrameDouble value="210" frame="0" interpolationType="linear"/>
+                    <KeyFrameDouble value="250" frame="30" interpolationType="linear"/>
+                    <KeyFrameDouble value="290" frame="60" interpolationType="linear"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Joystick Pose Y: frame 0 = top (-1), frame 30 = center (0), frame 60 = bottom (+1) -->
+        <LinearAnimation loopValue="oneShot" fps="60" duration="60" name="PoseY" id="0:81">
+            <KeyedObject objectId="0:10">
+                <KeyedProperty propertyKey="14">
+                    <KeyFrameDouble value="210" frame="0" interpolationType="linear"/>
+                    <KeyFrameDouble value="250" frame="30" interpolationType="linear"/>
+                    <KeyFrameDouble value="290" frame="60" interpolationType="linear"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Rive Native Joystick: controls the PoseX and PoseY timelines -->
+        <Joystick posX="250" posY="250" width="100" height="100" xId="0:80" yId="0:81" name="OrbJoystick" id="0:85"/>
     </Artboard>
 
     <FontAsset file="Montserrat.ttf" name="Montserrat" id="0:70"/>
