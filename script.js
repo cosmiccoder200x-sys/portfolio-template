@@ -494,4 +494,118 @@
     });
   }
 
+
+  /* ==========================================================================
+     10. PAGE-WIDE MOUSE-REACTIVE AMBIENT NETWORK
+     ========================================================================== */
+  const ambientCanvas = document.getElementById("ambient-network");
+  if (ambientCanvas && isFinePointer && !reduceMotion) {
+    const context = ambientCanvas.getContext("2d", { alpha: true });
+    if (context) {
+      const pointer = { x: -1000, y: -1000, active: false };
+      const particles = [];
+      const connectionDistance = 138;
+      let width = 0;
+      let height = 0;
+      let frameId = 0;
+      let lastFrame = 0;
+      let pageVisible = !document.hidden;
+
+      const resizeNetwork = () => {
+        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        ambientCanvas.width = Math.round(width * dpr);
+        ambientCanvas.height = Math.round(height * dpr);
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const targetCount = Math.max(28, Math.min(72, Math.round((width * height) / 18000)));
+        while (particles.length < targetCount) {
+          particles.push({
+            x: Math.random() * width, y: Math.random() * height,
+            vx: (Math.random() - .5) * .22, vy: (Math.random() - .5) * .22,
+            radius: Math.random() * 1.25 + .45
+          });
+        }
+        if (particles.length > targetCount) particles.length = targetCount;
+      };
+
+      const drawNetwork = (time) => {
+        if (!pageVisible) { frameId = 0; return; }
+        frameId = window.requestAnimationFrame(drawNetwork);
+        if (time - lastFrame < 24) return;
+        lastFrame = time;
+        context.clearRect(0, 0, width, height);
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < -12) p.x = width + 12;
+          if (p.x > width + 12) p.x = -12;
+          if (p.y < -12) p.y = height + 12;
+          if (p.y > height + 12) p.y = -12;
+
+          if (pointer.active) {
+            const dx = p.x - pointer.x;
+            const dy = p.y - pointer.y;
+            const distance = Math.hypot(dx, dy);
+            if (distance < 155 && distance > 0) {
+              const force = (155 - distance) / 155 * .34;
+              p.x += (dx / distance) * force * 2.4;
+              p.y += (dy / distance) * force * 2.4;
+            }
+          }
+
+          context.beginPath();
+          context.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          context.fillStyle = "rgba(220, 228, 238, .42)";
+          context.fill();
+
+          for (let j = i + 1; j < particles.length; j++) {
+            const q = particles[j];
+            const distance = Math.hypot(p.x - q.x, p.y - q.y);
+            if (distance < connectionDistance) {
+              context.beginPath();
+              context.moveTo(p.x, p.y);
+              context.lineTo(q.x, q.y);
+              context.strokeStyle = `rgba(190, 205, 220, ${(1 - distance / connectionDistance) * .16})`;
+              context.lineWidth = .7;
+              context.stroke();
+            }
+          }
+
+          if (pointer.active) {
+            const distance = Math.hypot(p.x - pointer.x, p.y - pointer.y);
+            if (distance < 175) {
+              context.beginPath();
+              context.moveTo(p.x, p.y);
+              context.lineTo(pointer.x, pointer.y);
+              context.strokeStyle = `rgba(220, 232, 245, ${(1 - distance / 175) * .24})`;
+              context.lineWidth = .8;
+              context.stroke();
+            }
+          }
+        }
+      };
+
+      const startNetwork = () => {
+        if (pageVisible && !frameId) frameId = window.requestAnimationFrame(drawNetwork);
+      };
+      resizeNetwork();
+      startNetwork();
+      window.addEventListener("resize", resizeNetwork, { passive: true });
+      window.addEventListener("pointermove", (event) => {
+        pointer.x = event.clientX;
+        pointer.y = event.clientY;
+        pointer.active = true;
+      }, { passive: true });
+      window.addEventListener("pointerleave", () => { pointer.active = false; });
+      document.addEventListener("visibilitychange", () => {
+        pageVisible = !document.hidden;
+        if (pageVisible) startNetwork();
+        else if (frameId) { window.cancelAnimationFrame(frameId); frameId = 0; }
+      });
+    }
+  }
+
 })();
