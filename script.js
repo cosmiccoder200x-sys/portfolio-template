@@ -397,28 +397,40 @@
   }
 
   /* ==========================================================================
-     7. DESKTOP PROJECT CARDS 3D MICRO-TILT
+     7. DESKTOP PROJECT CARDS: VISIBLE 3D TILT + POINTER GLOW
      ========================================================================== */
   if (isFinePointer && !reduceMotion) {
-    const projectCards = document.querySelectorAll(".project-card");
-    projectCards.forEach((card) => {
-      card.addEventListener("mousemove", (e) => {
+    document.querySelectorAll(".project-card").forEach((card) => {
+      card.addEventListener("pointermove", (event) => {
         const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        
-        // Very subtle angle (max 2.5 deg)
-        const rotateX = ((centerY - y) / centerY) * 2.5;
-        const rotateY = ((x - centerX) / centerX) * 2.5;
-
-        card.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
-      });
-
-      card.addEventListener("mouseleave", () => {
+        const x = event.clientX - rect.left, y = event.clientY - rect.top;
+        const cx = rect.width / 2, cy = rect.height / 2;
+        const rotateX = ((cy - y) / Math.max(cy, 1)) * 5.5;
+        const rotateY = ((x - cx) / Math.max(cx, 1)) * 5.5;
+        card.style.setProperty("--pointer-x", `${x}px`);
+        card.style.setProperty("--pointer-y", `${y}px`);
+        card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-6px)`;
+      }, { passive: true });
+      card.addEventListener("pointerleave", () => {
         card.style.transform = "";
+        card.style.removeProperty("--pointer-x");
+        card.style.removeProperty("--pointer-y");
       });
+    });
+  }
+
+  /* ==========================================================================
+     7A. MAGNETIC MICRO-INTERACTIONS FOR LINKS
+     ========================================================================== */
+  if (isFinePointer && !reduceMotion) {
+    document.querySelectorAll(".magnetic-btn, .header-contact, .contact-link, .project-actions a").forEach((element) => {
+      element.addEventListener("pointermove", (event) => {
+        const rect = element.getBoundingClientRect();
+        const dx = event.clientX - (rect.left + rect.width / 2);
+        const dy = event.clientY - (rect.top + rect.height / 2);
+        element.style.transform = `translate3d(${(dx * .13).toFixed(1)}px, ${(dy * .16).toFixed(1)}px, 0)`;
+      }, { passive: true });
+      element.addEventListener("pointerleave", () => { element.style.transform = ""; });
     });
   }
 
@@ -504,7 +516,7 @@
     if (context) {
       const pointer = { x: -1000, y: -1000, active: false };
       const particles = [];
-      const connectionDistance = 138;
+      const connectionDistance = 178;
       let width = 0;
       let height = 0;
       let frameId = 0;
@@ -518,12 +530,12 @@
         ambientCanvas.width = Math.round(width * dpr);
         ambientCanvas.height = Math.round(height * dpr);
         context.setTransform(dpr, 0, 0, dpr, 0, 0);
-        const targetCount = Math.max(28, Math.min(72, Math.round((width * height) / 18000)));
+        const targetCount = Math.max(48, Math.min(118, Math.round((width * height) / 10500)));
         while (particles.length < targetCount) {
           particles.push({
             x: Math.random() * width, y: Math.random() * height,
             vx: (Math.random() - .5) * .22, vy: (Math.random() - .5) * .22,
-            radius: Math.random() * 1.25 + .45
+            radius: Math.random() * 1.35 + .75
           });
         }
         if (particles.length > targetCount) particles.length = targetCount;
@@ -535,6 +547,17 @@
         if (time - lastFrame < 24) return;
         lastFrame = time;
         context.clearRect(0, 0, width, height);
+
+        if (pointer.active) {
+          const glow = context.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 230);
+          glow.addColorStop(0, "rgba(205, 226, 255, 0.13)");
+          glow.addColorStop(0.42, "rgba(190, 215, 245, 0.055)");
+          glow.addColorStop(1, "rgba(190, 215, 245, 0)");
+          context.fillStyle = glow;
+          context.beginPath();
+          context.arc(pointer.x, pointer.y, 230, 0, Math.PI * 2);
+          context.fill();
+        }
 
         for (let i = 0; i < particles.length; i++) {
           const p = particles[i];
@@ -549,16 +572,16 @@
             const dx = p.x - pointer.x;
             const dy = p.y - pointer.y;
             const distance = Math.hypot(dx, dy);
-            if (distance < 155 && distance > 0) {
-              const force = (155 - distance) / 155 * .34;
-              p.x += (dx / distance) * force * 2.4;
-              p.y += (dy / distance) * force * 2.4;
+            if (distance < 210 && distance > 0) {
+              const force = (210 - distance) / 210 * .48;
+              p.x += (dx / distance) * force * 2.8;
+              p.y += (dy / distance) * force * 2.8;
             }
           }
 
           context.beginPath();
           context.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          context.fillStyle = "rgba(220, 228, 238, .42)";
+          context.fillStyle = "rgba(220, 232, 248, .72)";
           context.fill();
 
           for (let j = i + 1; j < particles.length; j++) {
@@ -568,20 +591,20 @@
               context.beginPath();
               context.moveTo(p.x, p.y);
               context.lineTo(q.x, q.y);
-              context.strokeStyle = `rgba(190, 205, 220, ${(1 - distance / connectionDistance) * .16})`;
-              context.lineWidth = .7;
+              context.strokeStyle = `rgba(190, 205, 220, ${(1 - distance / connectionDistance) * .28})`;
+              context.lineWidth = .95;
               context.stroke();
             }
           }
 
           if (pointer.active) {
             const distance = Math.hypot(p.x - pointer.x, p.y - pointer.y);
-            if (distance < 175) {
+            if (distance < 230) {
               context.beginPath();
               context.moveTo(p.x, p.y);
               context.lineTo(pointer.x, pointer.y);
-              context.strokeStyle = `rgba(220, 232, 245, ${(1 - distance / 175) * .24})`;
-              context.lineWidth = .8;
+              context.strokeStyle = `rgba(220, 232, 245, ${(1 - distance / 230) * .48})`;
+              context.lineWidth = 1.15;
               context.stroke();
             }
           }

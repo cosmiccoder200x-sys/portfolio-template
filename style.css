@@ -116,21 +116,19 @@ button, a {
 
 /* Desktop Cursor Spotlight */
 .cursor-spotlight {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 650px;
-  height: 650px;
-  margin-left: -325px;
-  margin-top: -325px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.038) 0%, transparent 68%);
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0;
-  transition: opacity var(--dur-med) ease;
-  transform: translate3d(var(--spotlight-x, -999px), var(--spotlight-y, -999px), 0);
-  will-change: transform;
+  position: fixed; top: 0; left: 0; width: 820px; height: 820px;
+  margin-left: -410px; margin-top: -410px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(205,226,255,.115) 0%, rgba(190,215,245,.065) 22%, rgba(255,255,255,.025) 46%, transparent 72%);
+  pointer-events: none; z-index: 2; opacity: 0; transition: opacity 220ms ease;
+  transform: translate3d(var(--spotlight-x,-999px),var(--spotlight-y,-999px),0);
+  will-change: transform; mix-blend-mode: screen;
+}
+.cursor-spotlight::after {
+  content: ""; position: absolute; top: 50%; left: 50%; width: 15px; height: 15px;
+  border: 1px solid rgba(225,239,255,.72); border-radius: 50%;
+  background: rgba(220,235,255,.13);
+  box-shadow: 0 0 16px rgba(190,220,255,.38), 0 0 42px rgba(190,220,255,.18);
+  transform: translate(-50%,-50%);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -809,19 +807,18 @@ button, a {
 }
 
 .project-card {
-  min-height: 310px;
-  padding: 36px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  background: #090909;
-  transition: background var(--dur-med) ease, border-color var(--dur-med) ease, transform var(--dur-med) var(--ease-out-expo);
-  position: relative;
-  transform-style: preserve-3d;
-  will-change: transform;
+  min-height: 310px; padding: 36px; display: flex; flex-direction: column; align-items: flex-start;
+  border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #090909;
+  transition: background var(--dur-med) ease, border-color var(--dur-med) ease, transform 180ms var(--ease-out-expo);
+  position: relative; isolation: isolate; transform-style: preserve-3d; will-change: transform; overflow: hidden;
 }
+.project-card::before {
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0;
+  background: radial-gradient(460px circle at var(--pointer-x,50%) var(--pointer-y,50%), rgba(205,226,255,.17), transparent 66%);
+  transition: opacity 180ms ease;
+}
+.project-card:hover::before { opacity: 1; }
+.project-card > * { position: relative; z-index: 1; }
 
 .project-card:hover {
   background: #131313;
@@ -1528,15 +1525,8 @@ textarea.form-control {
 
 /* Page-wide pointer-reactive particle network */
 .ambient-network {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  display: block;
-  pointer-events: none;
-  opacity: .62;
-  mix-blend-mode: screen;
+  position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block;
+  pointer-events: none; opacity: .9; mix-blend-mode: screen;
 }
 
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
