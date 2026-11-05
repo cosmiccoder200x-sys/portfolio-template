@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/immersive-3d-portfolio
+      - feat/mobile-responsive
   pull_request:
   workflow_dispatch:
 

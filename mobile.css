@@ -1,0 +1,385 @@
+/* ==========================================================================
+   MOBILE EXPERIENCE
+   Dedicated responsive layer. Desktop layout remains owned by style.css and
+   immersive.css; these rules progressively adapt navigation, touch targets,
+   viewport sizing and dense sections for phones and tablets.
+   ========================================================================== */
+
+:root {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 88px;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent, #d6ff3f);
+  outline-offset: 4px;
+}
+
+.menu-toggle {
+  min-width: 44px;
+  min-height: 44px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+}
+
+@media (max-width: 900px) {
+  .site-header {
+    padding-left: max(24px, env(safe-area-inset-left));
+    padding-right: max(24px, env(safe-area-inset-right));
+  }
+
+  .main-nav a,
+  .header-contact,
+  .read-mode-toggle {
+    min-height: 40px;
+  }
+
+  .project-actions a,
+  .intro-links a,
+  .contact-actions a,
+  .journey-select {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .project-card,
+  .education-item,
+  .certification-item,
+  .journey-item {
+    min-width: 0;
+  }
+
+  .project-card p,
+  .intro-copy p,
+  .contact-copy p,
+  .journey-item p {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 620px) {
+  :root {
+    scroll-padding-top: 78px;
+  }
+
+  body {
+    min-width: 320px;
+  }
+
+  .site-header {
+    min-height: 70px;
+    height: auto;
+    padding-top: env(safe-area-inset-top);
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+    gap: 6px;
+  }
+
+  .brand {
+    flex: 0 0 auto;
+  }
+
+  .header-contact {
+    min-height: 40px;
+    white-space: nowrap;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    flex: 0 0 44px;
+    margin-left: 0;
+    font-size: 1.25rem;
+    border-radius: 8px;
+    touch-action: manipulation;
+  }
+
+  .main-nav {
+    top: calc(100% + 1px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: min(72dvh, 560px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 12px max(22px, env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
+    gap: 0;
+    border: 1px solid var(--line);
+    border-top: 0;
+    border-radius: 0 0 14px 14px;
+    box-shadow: 0 18px 45px rgb(0 0 0 / 34%);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .main-nav.open {
+    display: flex;
+  }
+
+  .main-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: .78rem;
+  }
+
+  .main-nav a:last-child {
+    border-bottom: 0;
+  }
+
+  .read-mode-toggle {
+    flex: 0 0 38px;
+    min-width: 38px;
+    min-height: 38px;
+  }
+
+  .hero {
+    min-height: min(790px, 100svh);
+    min-height: max(680px, 100svh);
+    padding-top: max(132px, calc(112px + env(safe-area-inset-top)));
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
+  .hero-name {
+    max-width: 100%;
+    overflow-wrap: normal;
+  }
+
+  .hero-statement {
+    max-width: min(78vw, 300px);
+    text-wrap: pretty;
+  }
+
+  .hero-orb-wrap {
+    pointer-events: none;
+  }
+
+  .section-pad {
+    padding-top: clamp(66px, 13vw, 82px);
+    padding-bottom: clamp(66px, 13vw, 82px);
+  }
+
+  .section-heading,
+  .contact-heading {
+    overflow-wrap: break-word;
+  }
+
+  .skills-list {
+    column-gap: 14px;
+  }
+
+  .skills-list li {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .project-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .project-preview-frame {
+    overflow: hidden;
+  }
+
+  .project-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .project-actions {
+    flex-wrap: wrap;
+    gap: 8px 18px;
+  }
+
+  .contact-form-wrap {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .contact-form-wrap input,
+  .contact-form-wrap textarea,
+  .contact-form-wrap select,
+  .ai-panel input,
+  .ai-panel textarea {
+    font-size: 16px;
+  }
+
+  .ai-assistant {
+    right: max(12px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 1000;
+  }
+
+  .ai-launcher {
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+
+  .ai-panel {
+    right: 0;
+    bottom: calc(58px + env(safe-area-inset-bottom));
+    width: min(440px, calc(100vw - 24px));
+    height: min(650px, calc(100dvh - 104px - env(safe-area-inset-bottom)));
+    max-height: calc(100svh - 104px);
+    min-height: min(390px, calc(100svh - 120px));
+    overflow: hidden;
+  }
+
+  .ai-panel button,
+  .ai-panel a,
+  .ai-launcher {
+    touch-action: manipulation;
+  }
+
+  .site-footer {
+    padding-bottom: calc(30px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 480px) {
+  .site-header {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .header-contact {
+    padding-left: 9px;
+    padding-right: 9px;
+    font-size: .54rem;
+  }
+
+  .hero-index {
+    font-size: .48rem;
+  }
+
+  .hero-name {
+    font-size: clamp(4rem, 17vw, 5.8rem);
+  }
+
+  .hero-role {
+    max-width: 56vw;
+  }
+
+  .skills-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-card {
+    padding: 16px;
+  }
+
+  .contact-form-wrap {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .site-header {
+    gap: 4px;
+  }
+
+  .brand {
+    font-size: 1.1rem;
+  }
+
+  .header-contact {
+    margin-left: auto;
+    padding: 0 7px;
+    font-size: .5rem;
+  }
+
+  .menu-toggle {
+    flex-basis: 42px;
+    min-width: 42px;
+  }
+
+  .read-mode-toggle {
+    flex-basis: 34px;
+    min-width: 34px;
+    width: 34px;
+  }
+
+  .hero-name {
+    font-size: clamp(3.65rem, 16.5vw, 4.6rem);
+  }
+
+  .hero-statement {
+    font-size: .88rem;
+  }
+
+  .section-heading {
+    font-size: clamp(2.35rem, 11vw, 3.4rem);
+  }
+
+  .skills-list li {
+    font-size: .76rem;
+  }
+
+  .ai-panel {
+    width: calc(100vw - 16px);
+    right: -4px;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) and (max-width: 900px) {
+  .hero {
+    min-height: 650px;
+  }
+
+  .main-nav {
+    max-height: 68dvh;
+  }
+
+  .ai-panel {
+    height: calc(100dvh - 88px);
+    min-height: 260px;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .magnetic-btn,
+  .header-contact,
+  .contact-link,
+  .project-actions a {
+    transform: none !important;
+  }
+
+  .project-card:hover,
+  .journey-item:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-nav {
+    scroll-behavior: auto;
+  }
+}
