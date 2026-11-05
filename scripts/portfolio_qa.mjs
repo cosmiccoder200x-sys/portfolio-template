@@ -151,11 +151,11 @@ for (const character of cssSource) {
 check("CSS blocks are balanced", cssBalanced && cssDepth === 0, "final brace depth=" + cssDepth);
 const breakpoints = [...immersiveCss.matchAll(/@media\s*\(max-width:\s*(\d+)px\)/g)].map((item) => Number(item[1]));
 check("Responsive breakpoints are defined", breakpoints.length >= 3, breakpoints.join(", ") + "px");
-check("Dedicated mobile stylesheet is loaded", /href=["']mobile\\.css["']/.test(html) && mobileCss.length > 500);
+check("Dedicated mobile stylesheet is loaded", html.includes('href="mobile.css"') && mobileCss.length > 500);
 check("Mobile navigation exposes its controlled element", /id=["']menu-toggle["'][^>]*aria-controls=["']main-nav["']/.test(html));
 check("Mobile navigation supports outside-click and Escape dismissal", script.includes('pointerdown') && script.includes('event.key === "Escape"') && script.includes("closeMobileNav"));
-check("Mobile stylesheet covers compact phones and touch targets", /max-width:\\s*380px/.test(mobileCss) && /min-height:\\s*44px/.test(mobileCss));
-check("Mobile layout prevents horizontal page overflow", /overflow-x:\\s*clip/.test(mobileCss) && /100dvh/.test(mobileCss));
+check("Mobile stylesheet covers compact phones and touch targets", mobileCss.includes("@media (max-width: 380px)") && mobileCss.includes("min-height: 44px"));
+check("Mobile layout prevents horizontal page overflow", mobileCss.includes("overflow-x: clip") && mobileCss.includes("100dvh"));
 
 console.log("\n" + passed + " checks passed; " + failures.length + " failed.");
 if (failures.length) process.exitCode = 1;
