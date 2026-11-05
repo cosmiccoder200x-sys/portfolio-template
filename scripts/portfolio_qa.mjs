@@ -43,6 +43,7 @@ const immersive = read("immersive.js");
 const assistant = read("assistant.js");
 const baseCss = read("style.css");
 const immersiveCss = read("immersive.css");
+const mobileCss = read("mobile.css");
 const profileText = read("profile.json");
 
 check("Node.js 20 or newer", Number(process.versions.node.split(".")[0]) >= 20, process.versions.node);
@@ -141,7 +142,7 @@ check("Native page scrolling is not hijacked", !/addEventListener\(["'](?:wheel|
 
 let cssDepth = 0;
 let cssBalanced = true;
-const cssSource = (baseCss + "\n" + immersiveCss).replace(/\/\*[\s\S]*?\*\//g, "");
+const cssSource = (baseCss + "\n" + immersiveCss + "\n" + mobileCss).replace(/\/\*[\s\S]*?\*\//g, "");
 for (const character of cssSource) {
   if (character === "{") cssDepth += 1;
   if (character === "}") cssDepth -= 1;
@@ -150,6 +151,11 @@ for (const character of cssSource) {
 check("CSS blocks are balanced", cssBalanced && cssDepth === 0, "final brace depth=" + cssDepth);
 const breakpoints = [...immersiveCss.matchAll(/@media\s*\(max-width:\s*(\d+)px\)/g)].map((item) => Number(item[1]));
 check("Responsive breakpoints are defined", breakpoints.length >= 3, breakpoints.join(", ") + "px");
+check("Dedicated mobile stylesheet is loaded", /href=["']mobile\\.css["']/.test(html) && mobileCss.length > 500);
+check("Mobile navigation exposes its controlled element", /id=["']menu-toggle["'][^>]*aria-controls=["']main-nav["']/.test(html));
+check("Mobile navigation supports outside-click and Escape dismissal", script.includes('pointerdown') && script.includes('event.key === "Escape"') && script.includes("closeMobileNav"));
+check("Mobile stylesheet covers compact phones and touch targets", /max-width:\\s*380px/.test(mobileCss) && /min-height:\\s*44px/.test(mobileCss));
+check("Mobile layout prevents horizontal page overflow", /overflow-x:\\s*clip/.test(mobileCss) && /100dvh/.test(mobileCss));
 
 console.log("\n" + passed + " checks passed; " + failures.length + " failed.");
 if (failures.length) process.exitCode = 1;
