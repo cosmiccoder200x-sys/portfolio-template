@@ -708,7 +708,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     if (contactProgress > 0) {
       const tangent = path.getTangent(routeT).normalize();
       desiredPosition.addScaledVector(tangent, contactProgress * 5.2);
-      desiredTarget.lerp(path.getPoint(journeyT), contactProgress * .58);
+      desiredTarget.lerp(path.getPoint(journeyT), contactProgress);
     }
 
     const phase = routeT >= .999 ? "beyond"
