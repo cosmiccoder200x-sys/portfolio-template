@@ -530,11 +530,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     );
     horizon.position.set(0, -2.18, .12);
 
+    const markerMaterial = new THREE.MeshBasicMaterial({
+      color: 0xe1e4e8, transparent: true, opacity: .62, depthWrite: false
+    });
     const marker = new THREE.Mesh(
       new THREE.IcosahedronGeometry(.14, 1),
-      new THREE.MeshBasicMaterial({
-        color: 0xe1e4e8, transparent: true, opacity: .62, depthWrite: false
-      })
+      markerMaterial
     );
     marker.position.set(3.55, 2.65, .12);
 
@@ -543,8 +544,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     transitionFrames.push({
       group,
       progress: t,
-      materials: [outerMaterial, innerMaterial, horizonMaterial],
-      baseOpacities: [.17, .1, .075]
+      materials: [outerMaterial, innerMaterial, horizonMaterial, markerMaterial],
+      baseOpacities: [.17, .1, .075, .62]
     });
   }
 
