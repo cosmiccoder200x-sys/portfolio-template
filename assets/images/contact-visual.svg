@@ -35,8 +35,6 @@
       }
     }
   </style>
-
-  <rect width="480" height="320" fill="#0c0c0c" rx="4"/>
   <rect x="14" y="14" width="452" height="292" stroke="#1f1f1f" stroke-width="1" rx="2"/>
 
   <!-- Subtle Corner Crosshairs -->

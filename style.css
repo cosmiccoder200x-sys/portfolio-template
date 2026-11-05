@@ -114,35 +114,6 @@ button, a {
   transition: width 0.08s linear;
 }
 
-/* Desktop Cursor Spotlight */
-.cursor-spotlight {
-  position: fixed; top: 0; left: 0; width: 820px; height: 820px;
-  margin-left: -410px; margin-top: -410px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(205,226,255,.115) 0%, rgba(190,215,245,.065) 22%, rgba(255,255,255,.025) 46%, transparent 72%);
-  pointer-events: none; z-index: 2; opacity: 0; transition: opacity 220ms ease;
-  transform: translate3d(var(--spotlight-x,-999px),var(--spotlight-y,-999px),0);
-  will-change: transform; mix-blend-mode: screen;
-}
-.cursor-spotlight::after {
-  content: ""; position: absolute; top: 50%; left: 50%; width: 15px; height: 15px;
-  border: 1px solid rgba(225,239,255,.72); border-radius: 50%;
-  background: rgba(220,235,255,.13);
-  box-shadow: 0 0 16px rgba(190,220,255,.38), 0 0 42px rgba(190,220,255,.18);
-  transform: translate(-50%,-50%);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .cursor-spotlight.is-active {
-    opacity: 1;
-  }
-}
-
-@media (hover: none), (pointer: coarse) {
-  .cursor-spotlight {
-    display: none !important;
-  }
-}
-
 /* ==========================================================================
    SITE HEADER & NAVIGATION
    ========================================================================== */
@@ -814,7 +785,7 @@ button, a {
 }
 .project-card::before {
   content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0;
-  background: radial-gradient(460px circle at var(--pointer-x,50%) var(--pointer-y,50%), rgba(205,226,255,.17), transparent 66%);
+  background: radial-gradient(460px circle at var(--pointer-x,50%) var(--pointer-y,50%), rgba(225,231,238,.075), transparent 66%);
   transition: opacity 180ms ease;
 }
 .project-card:hover::before { opacity: 1; }
@@ -1452,9 +1423,6 @@ textarea.form-control {
   .fallback-ring-outer {
     animation: none !important;
   }
-  .cursor-spotlight {
-    display: none !important;
-  }
 }
 
 
@@ -1523,12 +1491,3 @@ textarea.form-control {
 @media(prefers-reduced-motion:reduce){.ai-panel{animation:none}.ai-launcher,.ai-suggestions button,.ai-toggle-track,.ai-toggle-track:after{transition:none}.ai-thinking:before{animation:none}}
 
 
-/* Page-wide pointer-reactive particle network */
-.ambient-network {
-  position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block;
-  pointer-events: none; opacity: .9; mix-blend-mode: screen;
-}
-
-@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
-  .ambient-network { display: none; }
-}

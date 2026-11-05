@@ -9,7 +9,6 @@
       <stop offset="100%" stop-color="#777777"/>
     </linearGradient>
   </defs>
-  <rect width="540" height="320" fill="#090909" rx="4"/>
   <rect x="16" y="16" width="508" height="288" stroke="#222222" stroke-width="1" rx="2"/>
 
   <!-- Header -->

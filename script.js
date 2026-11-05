@@ -11,6 +11,30 @@
   const nav = document.getElementById("main-nav");
   const siteHeader = document.querySelector(".site-header");
 
+  /* Optional reading layout — deliberately off on every fresh visit. */
+  const readModeButton = document.getElementById("read-mode-toggle");
+  const setReadMode = (enabled) => {
+    const active = Boolean(enabled);
+    document.body.classList.toggle("is-read-mode", active);
+    document.documentElement.classList.toggle("read-mode-active", active);
+    if (readModeButton) {
+      readModeButton.setAttribute("aria-pressed", String(active));
+      readModeButton.setAttribute("aria-label", active ? "Disable read mode" : "Enable read mode");
+      readModeButton.title = active ? "Disable read mode" : "Enable read mode";
+      const label = readModeButton.querySelector(".read-mode-label");
+      if (label) label.textContent = active ? "READING" : "READ MODE";
+    }
+    window.dispatchEvent(new CustomEvent("portfolio:readmodechange", {
+      detail: { enabled: active }
+    }));
+  };
+
+  if (readModeButton) {
+    readModeButton.addEventListener("click", () => {
+      setReadMode(!document.body.classList.contains("is-read-mode"));
+    });
+  }
+
   if (menuToggle && nav) {
     menuToggle.addEventListener("click", () => {
       const isOpen = nav.classList.toggle("open");
@@ -63,6 +87,43 @@
   const revealItems = document.querySelectorAll(".reveal");
   const navLinks = document.querySelectorAll("#main-nav a");
   const sections = document.querySelectorAll("main > section[id]");
+
+  const chapterRailLinks = [...document.querySelectorAll(".chapter-rail a[data-chapter]")];
+  const setActiveChapter = (id) => {
+    chapterRailLinks.forEach((link) => {
+      const active = link.dataset.chapter === id;
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  };
+
+  if (chapterRailLinks.length) {
+    if ("IntersectionObserver" in window) {
+      const chapterObserver = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveChapter(visible.target.id);
+      }, {
+        rootMargin: "-42% 0px -42% 0px",
+        threshold: [0, 0.15, 0.35, 0.6]
+      });
+      sections.forEach((section) => chapterObserver.observe(section));
+    } else {
+      const updateChapterFromScroll = () => {
+        const center = window.innerHeight * 0.5;
+        let current = sections[0];
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= center) current = section;
+        });
+        if (current) setActiveChapter(current.id);
+      };
+      window.addEventListener("scroll", updateChapterFromScroll, { passive: true });
+      window.addEventListener("resize", updateChapterFromScroll, { passive: true });
+      updateChapterFromScroll();
+    }
+  }
 
   if (reduceMotion || !("IntersectionObserver" in window)) {
     revealItems.forEach((item) => item.classList.add("is-visible"));
@@ -124,6 +185,7 @@
     let roleIndex = 0;
 
     window.setInterval(() => {
+      if (document.body.classList.contains("is-read-mode")) return;
       roleRotator.classList.add("is-transitioning");
       window.setTimeout(() => {
         roleIndex = (roleIndex + 1) % roles.length;
@@ -280,6 +342,7 @@
 
     // Direct Virtual Joystick Dragging on the Orb
     const handlePointerDown = (e) => {
+      if (document.body.classList.contains("is-read-mode")) return;
       isDragging = true;
       orbWrap.classList.add("is-dragging");
       dragStartPointerX = e.clientX;
@@ -292,7 +355,7 @@
     };
 
     const handlePointerMove = (e) => {
-      if (!isDragging) return;
+      if (document.body.classList.contains("is-read-mode") || !isDragging) return;
       const rect = orbWrap.getBoundingClientRect();
       const sensitivity = (rect.width / 2) || 120;
 
@@ -330,7 +393,7 @@
     // Cursor tracking across Hero section (Handle Source simulation)
     if (heroSection && isFinePointer && !reduceMotion) {
       heroSection.addEventListener("mousemove", (e) => {
-        if (isDragging) return;
+        if (isDragging || document.body.classList.contains("is-read-mode")) return;
         const rect = heroSection.getBoundingClientRect();
         // Calculate offset relative to orb quadrant
         const relX = (e.clientX - (rect.left + rect.width * 0.7)) / (rect.width * 0.4);
@@ -366,42 +429,12 @@
   initOrbAndJoystick();
 
   /* ==========================================================================
-     6. DESKTOP CURSOR SPOTLIGHT
-     ========================================================================== */
-  const spotlight = document.getElementById("cursor-spotlight");
-  if (spotlight && isFinePointer && !reduceMotion) {
-    let mouseX = -999;
-    let mouseY = -999;
-    let ticking = false;
-
-    window.addEventListener("pointermove", (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          spotlight.style.setProperty("--spotlight-x", `${mouseX}px`);
-          spotlight.style.setProperty("--spotlight-y", `${mouseY}px`);
-          if (!spotlight.classList.contains("is-active")) {
-            spotlight.classList.add("is-active");
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-
-    window.addEventListener("pointerleave", () => {
-      spotlight.classList.remove("is-active");
-    });
-  }
-
-  /* ==========================================================================
      7. DESKTOP PROJECT CARDS: VISIBLE 3D TILT + POINTER GLOW
      ========================================================================== */
   if (isFinePointer && !reduceMotion) {
     document.querySelectorAll(".project-card").forEach((card) => {
       card.addEventListener("pointermove", (event) => {
+        if (document.body.classList.contains("is-read-mode")) return;
         const rect = card.getBoundingClientRect();
         const x = event.clientX - rect.left, y = event.clientY - rect.top;
         const cx = rect.width / 2, cy = rect.height / 2;
@@ -420,11 +453,70 @@
   }
 
   /* ==========================================================================
+     7B. SCROLL-LINKED PROJECT GALLERY
+     ========================================================================== */
+  const galleryCards = [...document.querySelectorAll("#projects-grid .project-card")];
+  const galleryProgress = document.getElementById("project-gallery-progress");
+  const galleryCount = document.getElementById("project-gallery-count");
+
+  if (galleryCards.length && "IntersectionObserver" in window) {
+    const galleryVisibility = new Map(galleryCards.map((card) => [card, 0]));
+
+    const galleryObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        galleryVisibility.set(entry.target, entry.isIntersecting ? entry.intersectionRatio : 0);
+      });
+
+      const visibleRatio = Math.max(...galleryVisibility.values());
+      if (visibleRatio <= 0) return;
+
+      const activeCard = galleryCards.reduce((best, card) => {
+        return galleryVisibility.get(card) > galleryVisibility.get(best) ? card : best;
+      }, galleryCards[0]);
+      const activeIndex = galleryCards.indexOf(activeCard);
+
+      galleryCards.forEach((card, index) => {
+        card.classList.toggle("is-gallery-active", index === activeIndex);
+      });
+
+      if (galleryProgress) {
+        galleryProgress.style.width = `${((activeIndex + 1) / galleryCards.length) * 100}%`;
+      }
+      if (galleryCount) {
+        galleryCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(galleryCards.length).padStart(2, "0")}`;
+      }
+    }, {
+      rootMargin: "-20% 0px -20% 0px",
+      threshold: [0, .15, .35, .55, .75, .9]
+    });
+
+    galleryCards.forEach((card) => galleryObserver.observe(card));
+  } else if (galleryCards.length) {
+    const updateGalleryFallback = () => {
+      const center = window.innerHeight * .5;
+      let activeIndex = 0;
+      let nearest = Infinity;
+      galleryCards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const distance = Math.abs((rect.top + rect.height / 2) - center);
+        if (distance < nearest) { nearest = distance; activeIndex = index; }
+      });
+      galleryCards.forEach((card, index) => card.classList.toggle("is-gallery-active", index === activeIndex));
+      if (galleryProgress) galleryProgress.style.width = `${((activeIndex + 1) / galleryCards.length) * 100}%`;
+      if (galleryCount) galleryCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(galleryCards.length).padStart(2, "0")}`;
+    };
+    window.addEventListener("scroll", updateGalleryFallback, { passive: true });
+    window.addEventListener("resize", updateGalleryFallback, { passive: true });
+    updateGalleryFallback();
+  }
+
+  /* ==========================================================================
      7A. MAGNETIC MICRO-INTERACTIONS FOR LINKS
      ========================================================================== */
   if (isFinePointer && !reduceMotion) {
     document.querySelectorAll(".magnetic-btn, .header-contact, .contact-link, .project-actions a").forEach((element) => {
       element.addEventListener("pointermove", (event) => {
+        if (document.body.classList.contains("is-read-mode")) return;
         const rect = element.getBoundingClientRect();
         const dx = event.clientX - (rect.left + rect.width / 2);
         const dy = event.clientY - (rect.top + rect.height / 2);
@@ -507,128 +599,5 @@
   }
 
 
-  /* ==========================================================================
-     10. PAGE-WIDE MOUSE-REACTIVE AMBIENT NETWORK
-     ========================================================================== */
-  const ambientCanvas = document.getElementById("ambient-network");
-  if (ambientCanvas && isFinePointer && !reduceMotion) {
-    const context = ambientCanvas.getContext("2d", { alpha: true });
-    if (context) {
-      const pointer = { x: -1000, y: -1000, active: false };
-      const particles = [];
-      const connectionDistance = 178;
-      let width = 0;
-      let height = 0;
-      let frameId = 0;
-      let lastFrame = 0;
-      let pageVisible = !document.hidden;
-
-      const resizeNetwork = () => {
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-        width = window.innerWidth;
-        height = window.innerHeight;
-        ambientCanvas.width = Math.round(width * dpr);
-        ambientCanvas.height = Math.round(height * dpr);
-        context.setTransform(dpr, 0, 0, dpr, 0, 0);
-        const targetCount = Math.max(48, Math.min(118, Math.round((width * height) / 10500)));
-        while (particles.length < targetCount) {
-          particles.push({
-            x: Math.random() * width, y: Math.random() * height,
-            vx: (Math.random() - .5) * .22, vy: (Math.random() - .5) * .22,
-            radius: Math.random() * 1.35 + .75
-          });
-        }
-        if (particles.length > targetCount) particles.length = targetCount;
-      };
-
-      const drawNetwork = (time) => {
-        if (!pageVisible) { frameId = 0; return; }
-        frameId = window.requestAnimationFrame(drawNetwork);
-        if (time - lastFrame < 24) return;
-        lastFrame = time;
-        context.clearRect(0, 0, width, height);
-
-        if (pointer.active) {
-          const glow = context.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 230);
-          glow.addColorStop(0, "rgba(205, 226, 255, 0.13)");
-          glow.addColorStop(0.42, "rgba(190, 215, 245, 0.055)");
-          glow.addColorStop(1, "rgba(190, 215, 245, 0)");
-          context.fillStyle = glow;
-          context.beginPath();
-          context.arc(pointer.x, pointer.y, 230, 0, Math.PI * 2);
-          context.fill();
-        }
-
-        for (let i = 0; i < particles.length; i++) {
-          const p = particles[i];
-          p.x += p.vx;
-          p.y += p.vy;
-          if (p.x < -12) p.x = width + 12;
-          if (p.x > width + 12) p.x = -12;
-          if (p.y < -12) p.y = height + 12;
-          if (p.y > height + 12) p.y = -12;
-
-          if (pointer.active) {
-            const dx = p.x - pointer.x;
-            const dy = p.y - pointer.y;
-            const distance = Math.hypot(dx, dy);
-            if (distance < 210 && distance > 0) {
-              const force = (210 - distance) / 210 * .48;
-              p.x += (dx / distance) * force * 2.8;
-              p.y += (dy / distance) * force * 2.8;
-            }
-          }
-
-          context.beginPath();
-          context.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          context.fillStyle = "rgba(220, 232, 248, .72)";
-          context.fill();
-
-          for (let j = i + 1; j < particles.length; j++) {
-            const q = particles[j];
-            const distance = Math.hypot(p.x - q.x, p.y - q.y);
-            if (distance < connectionDistance) {
-              context.beginPath();
-              context.moveTo(p.x, p.y);
-              context.lineTo(q.x, q.y);
-              context.strokeStyle = `rgba(190, 205, 220, ${(1 - distance / connectionDistance) * .28})`;
-              context.lineWidth = .95;
-              context.stroke();
-            }
-          }
-
-          if (pointer.active) {
-            const distance = Math.hypot(p.x - pointer.x, p.y - pointer.y);
-            if (distance < 230) {
-              context.beginPath();
-              context.moveTo(p.x, p.y);
-              context.lineTo(pointer.x, pointer.y);
-              context.strokeStyle = `rgba(220, 232, 245, ${(1 - distance / 230) * .48})`;
-              context.lineWidth = 1.15;
-              context.stroke();
-            }
-          }
-        }
-      };
-
-      const startNetwork = () => {
-        if (pageVisible && !frameId) frameId = window.requestAnimationFrame(drawNetwork);
-      };
-      resizeNetwork();
-      startNetwork();
-      window.addEventListener("resize", resizeNetwork, { passive: true });
-      window.addEventListener("pointermove", (event) => {
-        pointer.x = event.clientX;
-        pointer.y = event.clientY;
-        pointer.active = true;
-      }, { passive: true });
-      window.addEventListener("pointerleave", () => { pointer.active = false; });
-      document.addEventListener("visibilitychange", () => {
-        pageVisible = !document.hidden;
-        if (pageVisible) startNetwork();
-        else if (frameId) { window.cancelAnimationFrame(frameId); frameId = 0; }
-      });
-    }
-  }
 
 })();
