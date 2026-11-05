@@ -136,6 +136,11 @@ check("Primary navigation exposes keyboard focus indicators", immersiveCss.inclu
 check("Read Mode control starts disabled and has a handler", /id=["']read-mode-toggle["'][^>]*aria-pressed=["']false["']/.test(html)
   && script.includes("read-mode-toggle") && immersive.includes("portfolio:readmodechange"));
 check("Contact pullback holds focus on the Contact landmark", immersive.includes("desiredTarget.lerp(path.getPoint(journeyT), contactProgress);"));
+check("Pointer steering uses horizontal movement only", /const pointer = \{ x: 0, targetX: 0 \}/.test(immersive)
+  && immersive.includes("pointer.targetX = (event.clientX / Math.max(1, window.innerWidth) - 0.5) * 2;")
+  && !/pointer\.(?:y|targetY)/.test(immersive));
+check("Horizontal pointer movement changes camera heading without shifting its path position", immersive.includes("camera.position.lerp(desiredPosition, 0.2);")
+  && immersive.includes("cameraTarget.addScaledVector(lateral, pointer.x * 3.2)"));
 check("Native page scrolling is not hijacked", !/addEventListener\(["'](?:wheel|touchmove)["'][\s\S]{0,300}?preventDefault\(/.test(immersive + script));
 
 let cssDepth = 0;
