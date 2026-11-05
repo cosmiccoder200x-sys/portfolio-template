@@ -1,0 +1,9 @@
+# Keep deployment/configuration and backend source out of public static assets.
+# The Worker bundles worker/index.js and its imported Pages Function source.
+functions/
+worker/
+wrangler.jsonc
+.assetsignore
+_routes.json
+.gitignore
+README.md

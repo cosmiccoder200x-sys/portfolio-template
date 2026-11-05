@@ -1,1 +1,10 @@
+# Build artifacts
+assets/rive/build/
+.DS_Store
+Thumbs.db
+
+# Local Cloudflare Pages secrets (never commit API keys)
+.dev.vars*
+
+# Local data
 rubix_csv/

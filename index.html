@@ -1,35 +1,350 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Portfolio</title>
+  <script>
+    const host = location.hostname;
+    if (
+      host === "github.io" ||
+      host.endsWith(".github.io") ||
+      host === "pages.dev" ||
+      host.endsWith(".pages.dev")
+    ) {
+      document.documentElement.classList.add("hide-ai-assistant");
+    }
+  </script>
+  <style>
+    html.hide-ai-assistant #portfolio-ai-assistant { display: none !important; }
+  </style>
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="Sreerang P — Software, Data & AI Builder studying Electrical & Computer Engineering at TKM and Data Science at IIT Madras.">
+  <title>Sreerang P — Software, Data &amp; AI Builder</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <meta property="og:title" content="Sreerang P — Software, Data &amp; AI Builder">
+  <meta property="og:description" content="Software, Data &amp; AI Builder studying Electrical &amp; Computer Engineering at TKM and Data Science at IIT Madras.">
+  <meta property="og:image" content="assets/preview.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sreerang P — Software, Data &amp; AI Builder">
+  <meta name="twitter:description" content="Software, Data &amp; AI Builder studying Electrical &amp; Computer Engineering at TKM and Data Science at IIT Madras.">
+  <meta name="twitter:image" content="assets/preview.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="immersive.css">
+  <script src="https://unpkg.com/@rive-app/webgl2@2.49.0/rive.js" defer></script>
+  <script src="script.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
+  <script type="module" src="immersive.js"></script>
 </head>
-
 <body>
-  <header class="hero">
-    <h1 id="name"></h1>
-    <p id="tagline"></p>
-    <nav id="links"></nav>
+  <canvas class="world-canvas" id="world-canvas" aria-hidden="true"></canvas>
+  <div class="world-meta mono" aria-hidden="true">
+    <span class="world-meta-index" id="world-phase">01 / ORIGIN</span>
+    <span class="world-meta-rule"></span>
+    <span class="world-meta-caption">SCROLL TO NAVIGATE THE SPACE</span>
+  </div>
+  <nav class="chapter-rail" aria-label="Jump to a portfolio chapter">
+    <a href="#home" data-chapter="home" class="is-active" aria-current="location" aria-label="Go to introduction"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">00 / INTRO</span></a>
+    <a href="#about" data-chapter="about" aria-label="Go to about"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">01 / ABOUT</span></a>
+    <a href="#skills" data-chapter="skills" aria-label="Go to toolkit"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">02 / TOOLKIT</span></a>
+    <a href="#education" data-chapter="education" aria-label="Go to education"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">03 / EDUCATION</span></a>
+    <a href="#certifications" data-chapter="certifications" aria-label="Go to certifications"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">04 / CERTS</span></a>
+    <a href="#projects" data-chapter="projects" aria-label="Go to projects"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">05 / WORK</span></a>
+    <a href="#journey" data-chapter="journey" aria-label="Go to journey"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">06 / JOURNEY</span></a>
+    <a href="#contact" data-chapter="contact" aria-label="Go to contact"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">07 / CONTACT</span></a>
+  </nav>
+  <div class="page-frame" aria-hidden="true"></div>
+  <div class="scroll-progress-bar" id="scroll-progress" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Sreerang P home">S.P.</a>
+    <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+      <a href="#home">Portfolio</a><a href="#about">About</a><a href="#education">Education</a><a href="#certifications">Certifications</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="analytics/">Analytics</a>
+    </nav>
+    <a class="header-contact" href="#contact">LET'S TALK <span aria-hidden="true">↗</span></a>
+    <button class="read-mode-toggle" id="read-mode-toggle" type="button" aria-pressed="false" aria-label="Enable read mode" title="Enable read mode">
+      <span class="read-mode-symbol" aria-hidden="true">Aa</span>
+      <span class="read-mode-label">READ MODE</span>
+    </button>
+    <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
   </header>
+
   <main>
-    <section>
-      <h2>About</h2>
-      <p id="bio"></p>
+    <section class="hero" id="home">
+      <div class="hero-index mono reveal">PORTFOLIO / 2026 <span>INDEPENDENT BUILDER</span></div>
+      <div class="hero-name-wrap">
+        <h1 class="hero-name" aria-label="Sreerang P"><span class="name-first">Sreerang</span><span class="name-last">P<span class="period">.</span></span></h1>
+        <div class="hero-role reveal">
+          <span class="vertical-rule"></span>
+          <div class="hero-role-text">
+            <span class="hero-role-rotator" id="role-rotator" aria-live="polite">SOFTWARE DEVELOPER</span>
+            <p>TKM · ELECTRICAL &amp; COMPUTER ENGINEERING<br>IIT MADRAS · DATA SCIENCE<br>SOFTWARE · DATA · AI</p>
+          </div>
+        </div>
+      </div>
+      <p class="hero-statement reveal">Building intelligent systems<br>and thoughtful digital experiences.</p>
+      <div class="hero-bottom mono"><a href="#about" class="scroll-cue"><span class="scroll-line"></span> SCROLL TO EXPLORE <span class="down-arrow">↓</span></a><span class="page-count">01 <i>/</i> 04</span></div>
+      <div class="hero-orb-wrap reveal" id="hero-orb-wrap" aria-label="Interactive SP Identity Orb" role="region" title="Drag or move cursor to tilt orb">
+        <div class="hero-orb-fallback" id="hero-orb-fallback">
+          <img src="assets/images/hero-orb-fallback.svg?v=3" alt="SP Animated Identity Orb" class="hero-orb-fallback-img">
+        </div>
+      </div>
     </section>
-    <section>
-      <h2>Skills</h2>
-      <ul id="skills" class="chips"></ul>
+
+    <section class="intro section-pad" id="about">
+      <div class="section-kicker mono"><span>01</span> / A LITTLE ABOUT ME</div>
+      <div class="intro-grid">
+        <div class="intro-left">
+          <h2 class="section-heading">Curious by nature.<br><span>Builder by practice.</span></h2>
+        </div>
+        <div class="intro-copy">
+          <p id="bio">I'm Sreerang P, an Electrical &amp; Computer Engineering student at TKM College of Engineering and a BS Data Science &amp; Applications student at IIT Madras. I build software, developer tools, and data-driven products, with a growing focus on AI and machine learning.</p>
+          <div class="intro-links"><a class="text-link magnetic-btn" href="https://github.com/cosmiccoder200x-sys" target="_blank" rel="noopener noreferrer">GITHUB <span>↗</span></a> <a class="text-link magnetic-btn" href="https://www.linkedin.com/in/sreerang-p/" target="_blank" rel="noopener noreferrer">LINKEDIN <span>↗</span></a></div>
+        </div>
+      </div>
     </section>
-    <section>
-      <h2>Projects</h2>
-      <div id="projects" class="grid"></div>
+
+    <section class="skills-section section-pad" id="skills">
+      <div class="section-kicker mono reveal"><span>02</span> / THE TOOLKIT</div>
+      <div class="skills-heading-row"><h2 class="section-heading reveal">Tools I use.<br><span>Things I explore.</span></h2><p class="section-note reveal">A growing toolkit for turning ideas into useful products.</p></div>
+      <ul class="skills-list reveal" id="skills-list">
+        <li>Python</li><li>C &amp; C++</li><li>Data Structures &amp; Algorithms</li><li>JavaScript &amp; TypeScript</li><li>React &amp; Next.js</li><li>Flask</li><li>HTML &amp; CSS</li><li>Git &amp; GitHub</li><li>Data Science</li><li>NumPy &amp; Pandas</li><li>Machine Learning</li><li>Computer Vision</li><li>Supabase</li><li>SQL &amp; PostgreSQL</li><li>REST APIs</li><li>Model Context Protocol</li>
+      </ul>
+    </section>
+
+    <section class="education-section section-pad" id="education">
+      <div class="section-kicker mono reveal"><span>03</span> / EDUCATION</div>
+      <div class="education-grid">
+        <article class="education-item reveal"><span class="project-number mono">2025 — 2029 · KTU</span><h3>B.Tech · Electrical &amp; Computer Engineering</h3><p>TKM College of Engineering</p><span class="education-detail">KTU 2024 Scheme</span></article>
+        <article class="education-item reveal"><span class="project-number mono">ONGOING · IIT MADRAS</span><h3>BS · Data Science &amp; Applications</h3><p>Indian Institute of Technology Madras</p><span class="education-detail">Online degree programme</span></article>
+      </div>
+    </section>
+
+    <section class="certifications-section section-pad" id="certifications">
+      <div class="section-kicker mono reveal"><span>04</span> / CERTIFICATIONS</div>
+      <div class="certifications-grid">
+        <article class="certification-item reveal"><span class="project-number mono">GOOGLE · JUNE 2026</span><h3>5-Day AI Agents: Intensive Vibe Coding Course</h3><p>Google</p></article>
+        <article class="certification-item reveal"><span class="project-number mono">GOOGLE FOR EDUCATION · APRIL 2026</span><h3>Gemini Certified University Student</h3><p>Valid through April 2029</p></article>
+      </div>
+    </section>
+
+    <section class="projects-section section-pad" id="projects">
+      <div class="section-kicker mono reveal"><span>05</span> / SELECTED WORK</div>
+      <div class="projects-heading-row"><h2 class="section-heading reveal">Made with intent<span>.</span></h2><p class="section-note reveal">A selection of projects and experiments.</p></div>
+      <div class="project-gallery-status mono" aria-live="polite">
+        <span class="project-gallery-instruction">SCROLL THROUGH THE COLLECTION</span>
+        <span class="project-gallery-track" aria-hidden="true"><span id="project-gallery-progress"></span></span>
+        <span class="project-gallery-count" id="project-gallery-count">01 / 05</span>
+      </div>
+      <div class="projects-grid" id="projects-grid">
+        <article class="project-card reveal">
+          <div class="project-preview-frame">
+            <img src="assets/images/projects/modulr.svg" alt="Modulr Project Preview" class="project-preview-img" loading="lazy">
+            <div class="project-preview-overlay"></div>
+          </div>
+          <span class="project-number mono">01 / LEARNING PRODUCT</span>
+          <h3>Modulr</h3>
+          <p>An adaptive exam-learning platform for KTU students, connecting syllabus topics, previous-year questions, mastery, and mistakes into focused study sessions.</p>
+          <div class="project-actions">
+            <a href="https://github.com/cosmiccoder200x-sys/Modulr" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+            <a href="https://tkm-notes.vercel.app/" target="_blank" rel="noopener noreferrer">LIVE ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview-frame">
+            <img src="assets/images/projects/local-brain-mcp.svg" alt="Local Brain MCP Project Preview" class="project-preview-img" loading="lazy">
+            <div class="project-preview-overlay"></div>
+          </div>
+          <span class="project-number mono">02 / AI DEVELOPER TOOLING</span>
+          <h3>Local Brain MCP</h3>
+          <p>A local-first memory layer for AI coding agents, indexing repository history and engineering context into an embedded SQLite vector store.</p>
+          <div class="project-actions">
+            <a href="https://github.com/cosmiccoder200x-sys/local-brain-mcp" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+            <a href="https://local-brain-mcp.vercel.app" target="_blank" rel="noopener noreferrer">LIVE ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview-frame">
+            <img src="assets/images/projects/focusflow.svg" alt="FocusFlow Project Preview" class="project-preview-img" loading="lazy">
+            <div class="project-preview-overlay"></div>
+          </div>
+          <span class="project-number mono">03 / PRODUCTIVITY</span>
+          <h3>FocusFlow</h3>
+          <p>A Chrome productivity extension for website tracking, distraction blocking, Pomodoro sessions, tasks, notes, statistics, and reports.</p>
+          <div class="project-actions">
+            <a href="https://github.com/cosmiccoder200x-sys/Focusflow" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview-frame">
+            <img src="assets/images/projects/e-learning.svg" alt="E-Learning Platform Project Preview" class="project-preview-img" loading="lazy">
+            <div class="project-preview-overlay"></div>
+          </div>
+          <span class="project-number mono">04 / FULL-STACK APPLICATION</span>
+          <h3>E-Learning Platform</h3>
+          <p>A learning platform with class management, live sessions, course materials, assignments, submissions, and grading, backed by Flask and Supabase.</p>
+          <div class="project-actions">
+            <a href="https://github.com/cosmiccoder200x-sys/E--learning" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-preview-frame">
+            <img src="assets/images/projects/gullylabs.svg" alt="Gullylabs Project Preview" class="project-preview-img" loading="lazy">
+            <div class="project-preview-overlay"></div>
+          </div>
+          <span class="project-number mono">05 / E-COMMERCE</span>
+          <h3>Gullylabs</h3>
+          <p>An e-commerce platform with storefront discovery, cart, coupons, Razorpay checkout, order tracking, returns, support chat, and admin tools.</p>
+          <div class="project-actions">
+            <a href="https://github.com/cosmiccoder200x-sys/Gullylabs" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+            <a href="https://gullylab.vercel.app" target="_blank" rel="noopener noreferrer">LIVE ↗</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="journey-section section-pad" id="journey">
+      <div class="section-kicker mono reveal"><span>07</span> / THE JOURNEY SO FAR</div>
+      <div class="journey-heading-row">
+        <h2 class="section-heading reveal">Learning in public.<br><span>Building as I go.</span></h2>
+        <p class="section-note reveal">A few verified milestones from my education and continued learning.</p>
+      </div>
+      <ol class="journey-track">
+        <li class="journey-item reveal">
+          <span class="journey-date">2025 — 2029</span>
+          <h3>B.Tech · Electrical &amp; Computer Engineering</h3>
+          <p>TKM College of Engineering · KTU 2024 Scheme.</p>
+          <span class="journey-type">UNDERGRADUATE STUDY</span>
+          <button class="journey-select" type="button" aria-pressed="false" data-title="B.Tech · Electrical &amp; Computer Engineering" data-detail="Studying at TKM College of Engineering under the KTU 2024 Scheme, with an expected programme period of 2025–2029.">VIEW MILESTONE ↗</button>
+        </li>
+        <li class="journey-item reveal">
+          <span class="journey-date">ONGOING</span>
+          <h3>BS · Data Science &amp; Applications</h3>
+          <p>Indian Institute of Technology Madras · Online degree programme.</p>
+          <span class="journey-type">CONTINUED LEARNING</span>
+          <button class="journey-select" type="button" aria-pressed="false" data-title="BS · Data Science &amp; Applications" data-detail="An ongoing online degree programme at the Indian Institute of Technology Madras.">VIEW MILESTONE ↗</button>
+        </li>
+        <li class="journey-item reveal">
+          <span class="journey-date">APRIL 2026</span>
+          <h3>Gemini Certified University Student</h3>
+          <p>Google for Education · Certification valid through April 2029.</p>
+          <span class="journey-type">CERTIFICATION</span>
+          <button class="journey-select" type="button" aria-pressed="false" data-title="Gemini Certified University Student" data-detail="Certification from Google for Education, earned in April 2026 and valid through April 2029.">VIEW MILESTONE ↗</button>
+        </li>
+        <li class="journey-item reveal">
+          <span class="journey-date">JUNE 2026</span>
+          <h3>5-Day AI Agents: Intensive Vibe Coding Course</h3>
+          <p>Google · Focused learning in AI agents and rapid prototyping.</p>
+          <span class="journey-type">COURSE</span>
+          <button class="journey-select" type="button" aria-pressed="false" data-title="5-Day AI Agents: Intensive Vibe Coding Course" data-detail="A five-day course from Google focused on AI agents and rapid prototyping, completed in June 2026.">VIEW MILESTONE ↗</button>
+        </li>
+      </ol>
+      <div class="journey-detail-panel" aria-live="polite" aria-atomic="true">
+        <span class="journey-date">SELECTED MILESTONE</span>
+        <h3 id="journey-detail-title">Choose a point on the timeline.</h3>
+        <p id="journey-detail-copy">Select “View milestone” to reveal a little more context.</p>
+      </div>
+    </section>
+
+    <section class="contact-section section-pad" id="contact">
+      <div class="section-kicker mono reveal"><span>06</span> / THE NEXT STEP</div>
+      <div class="contact-grid">
+        <div class="contact-left">
+          <h2 class="contact-heading reveal">Have an idea?<br><span>Let's build it.</span></h2>
+          <div class="contact-copy reveal">
+            <p>Interested in software engineering, AI, data, and building useful products. Open to learning, collaborating, and working on challenging technical projects.</p>
+            <div class="contact-actions">
+              <a class="contact-link" href="https://github.com/cosmiccoder200x-sys" target="_blank" rel="noopener noreferrer">GITHUB <span>↗</span></a>
+              <a class="contact-link" href="https://www.linkedin.com/in/sreerang-p/" target="_blank" rel="noopener noreferrer">LINKEDIN <span>↗</span></a>
+              <a class="contact-link" href="mailto:sreerangp.official@gmail.com">EMAIL <span>↗</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="contact-visual-card reveal" aria-label="Closing SP Identity Visual">
+          <div class="contact-visual-frame">
+            <img src="assets/images/contact-visual.svg" alt="Sreerang P Closing Identity Visual" class="contact-visual-img" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="contact-form-wrap reveal">
+        <div class="contact-form-heading">
+          <span class="project-number mono">SEND A MESSAGE</span>
+          <h3>Let's talk<span>.</span></h3>
+          <p>Have a question, an idea, or an opportunity? Send me a message.</p>
+        </div>
+        <form id="portfolio-contact-form" action="https://docs.google.com/forms/d/e/1FAIpQLSd5pNZ-nCYtUMCISVXjZpQgNi3UrPxMXuKhkFAmJp_kHMFU8A/formResponse" method="POST" target="hidden_iframe">
+          <div class="form-group">
+            <label for="form-name">Name <span>*</span></label>
+            <input type="text" id="form-name" name="entry.532489079" class="form-control" placeholder="Your name" required autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label for="form-email">Email <span>*</span></label>
+            <input type="email" id="form-email" name="entry.674941910" class="form-control" placeholder="your.email@example.com" required autocomplete="email" />
+          </div>
+          <div class="form-group">
+            <label for="form-message">Message <span>*</span></label>
+            <textarea id="form-message" name="entry.415519859" class="form-control" placeholder="Write your message here..." required></textarea>
+          </div>
+          <button type="submit" class="send-message-btn" id="form-submit-btn">
+            <span>Send Message</span><span aria-hidden="true">↗</span>
+          </button>
+          <div id="form-status" class="form-status" role="status" aria-live="polite"></div>
+        </form>
+        <iframe name="hidden_iframe" id="hidden_iframe" title="Hidden contact form submission" class="contact-form-iframe"></iframe>
+      </div>
     </section>
   </main>
-  <footer id="footer"></footer>
-  <script src="script.js"></script>
-</body>
+  <footer class="site-footer mono"><span>© 2026 SREERANG P</span><span>BUILT WITH CURIOSITY <span class="footer-dot">●</span></span><a href="analytics/">GITHUB ANALYTICS ↗</a><a href="#home">BACK TO TOP ↑</a></footer>
 
+  <section class="ai-assistant" id="portfolio-ai-assistant" aria-label="Ask Sreerang AI assistant">
+    <button class="ai-launcher" id="ai-launcher" type="button" aria-expanded="false" aria-controls="ai-panel">
+      <span class="ai-launcher-mark" aria-hidden="true">✳</span><span>ASK AI</span><span class="ai-launcher-dot" aria-hidden="true"></span>
+    </button>
+    <div class="ai-panel" id="ai-panel" role="dialog" aria-modal="false" aria-labelledby="ai-title" hidden>
+      <div class="ai-panel-head">
+        <div class="ai-brand-mark" aria-hidden="true">SP</div>
+        <div class="ai-panel-title"><h2 id="ai-title">Ask Sreerang</h2><p>PORTFOLIO INTELLIGENCE / GROQ</p></div>
+        <button class="ai-close" id="ai-close" type="button" aria-label="Close assistant">×</button>
+      </div>
+      <div class="ai-mode-row">
+        <label class="ai-search-toggle" for="ai-web-search">
+          <input id="ai-web-search" type="checkbox">
+          <span class="ai-toggle-track" aria-hidden="true"></span>
+          <span>LIVE WEB SEARCH</span>
+        </label>
+        <span class="ai-mode-hint" id="ai-mode-hint">OFF</span>
+      </div>
+      <div class="ai-messages" id="ai-messages" aria-live="polite" aria-relevant="additions">
+        <div class="ai-welcome">
+          <span class="ai-eyebrow">A PERSONAL AI ASSISTANT</span>
+          <h3>Curious about<br>what I build?</h3>
+          <p>Ask about my projects, skills, education, or explore a general topic. Turn on live search for current information.</p>
+          <div class="ai-suggestions">
+            <button type="button" data-prompt="Tell me about Sreerang and his technical interests.">ABOUT SREERANG <span>↗</span></button>
+            <button type="button" data-prompt="Explain the Local Brain MCP project and its architecture.">LOCAL BRAIN MCP <span>↗</span></button>
+            <button type="button" data-prompt="What are the latest developments in AI agents?">LATEST IN AI <span>↗</span></button>
+          </div>
+        </div>
+      </div>
+      <form class="ai-composer" id="ai-form">
+        <label class="visually-hidden" for="ai-input">Ask a question</label>
+        <textarea id="ai-input" rows="1" maxlength="2000" placeholder="Ask anything..." required></textarea>
+        <button class="ai-send" id="ai-send" type="submit" aria-label="Send message"><span aria-hidden="true">↗</span></button>
+      </form>
+      <div class="ai-panel-foot"><span id="ai-status">READY WHEN YOU ARE</span><button id="ai-clear" type="button">CLEAR CHAT</button></div>
+    </div>
+  </section>
+  <script src="assistant.js" defer></script>
+
+</body>
 </html>

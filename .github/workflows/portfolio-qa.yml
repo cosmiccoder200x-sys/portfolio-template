@@ -1,0 +1,25 @@
+name: Portfolio QA
+
+on:
+  push:
+    branches:
+      - feature/immersive-3d-portfolio
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-qa:
+    name: Static portfolio checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run dependency-free QA checks
+        run: node scripts/portfolio_qa.mjs
