@@ -26,6 +26,7 @@ This is my portfolio implementation and its supporting infrastructure—not a ge
 | 3D and motion | Three.js, GSAP, ScrollTrigger, Rive |
 | AI assistant | Cloudflare Workers, Groq API |
 | Analytics | Python, GitHub REST API, GitHub Actions |
+| Responsive layer | Dedicated `mobile.css` for phone, tablet, and landscape layouts |
 | Quality checks | Node.js, custom QA script |
 | Hosting | Cloudflare Workers, GitHub Pages preview |
 
@@ -38,6 +39,7 @@ This is my portfolio implementation and its supporting infrastructure—not a ge
 ├── style.css               # Main visual system
 ├── script.js               # Core interface interactions
 ├── immersive.css           # Immersive experience styling
+├── mobile.css              # Mobile and tablet responsive layer
 ├── immersive.js            # Three.js scene and scroll interactions
 ├── assistant.js            # AI assistant interface
 ├── functions/api/chat.js   # Server-side assistant endpoint
@@ -73,7 +75,7 @@ For the deployment and local development steps, see [AI_ASSISTANT_SETUP.md](AI_A
 
 - **Production portfolio:** served through the Cloudflare Worker configured by `wrangler.jsonc`.
 - **GitHub Pages preview:** the `Deploy feature portfolio to GitHub Pages` workflow publishes the feature branch.
-- **Automated checks:** the `Portfolio QA` workflow runs the static portfolio checks.
+- **Automated checks:** the `Portfolio QA` workflow runs the static portfolio checks, including responsive-layer regression checks.
 
 Run the QA script locally with Node.js 20 or newer:
 
