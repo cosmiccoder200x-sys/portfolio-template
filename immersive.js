@@ -14,16 +14,26 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
   // The camera travels through one continuous world. Each point corresponds to a page chapter.
   const cameraPoints = [
-    new THREE.Vector3(0, 0, 22),
-    new THREE.Vector3(-5, 1, 12),
-    new THREE.Vector3(-11, 5, 2),
-    new THREE.Vector3(-4, 8, -9),
-    new THREE.Vector3(6, 4, -19),
-    new THREE.Vector3(12, -1, -28),
-    new THREE.Vector3(4, -7, -38),
-    new THREE.Vector3(-8, -3, -49),
-    new THREE.Vector3(-1, 1, -61)
+    new THREE.Vector3(0, 0, 22),      // 00 / Origin
+    new THREE.Vector3(-5, 1, 12),     // 01 / About
+    new THREE.Vector3(-11, 5, 2),     // 02 / Toolkit
+    new THREE.Vector3(-4, 8, -9),     // 03 / Education
+    new THREE.Vector3(6, 4, -19),     // 04 / Certifications
+    new THREE.Vector3(12, -1, -28),  // 05 / Project gallery entrance
+    new THREE.Vector3(10, 2, -33),   // 06 / Modulr
+    new THREE.Vector3(5, 4, -38),    // 07 / Local Brain MCP
+    new THREE.Vector3(-2, 2, -43),   // 08 / FocusFlow
+    new THREE.Vector3(-9, -2, -48),  // 09 / E-Learning
+    new THREE.Vector3(-6, -5, -53),  // 10 / Gullylabs
+    new THREE.Vector3(2, -2, -58),   // 11 / Project gallery exit
+    new THREE.Vector3(-8, -3, -66),  // 12 / Journey
+    new THREE.Vector3(-1, 1, -75)    // 13 / Contact
   ];
+
+  // The project chapter uses six camera segments so each project gets its own pass-through.
+  const routeSegments = [1, 1, 1, 1, 1, 6, 1, 1];
+  const chapterWaypointIndices = [0, 1, 2, 3, 4, 5, 11, 12, 13];
+  const projectWaypointIndices = [6, 7, 8, 9, 10];
 
   const chapterNames = [
     "01 / ORIGIN",
@@ -41,6 +51,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   const scrollState = { progress: 0 };
   const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
   const chapterLandmarks = [];
+  const projectGalleryFrames = [];
   const cameraPosition = new THREE.Vector3();
   const cameraTarget = new THREE.Vector3();
   const desiredPosition = new THREE.Vector3();
@@ -76,22 +87,37 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     scrollStops[scrollStops.length - 1] = 1;
   }
 
-  function mapScrollToPath(progress) {
+  function getScrollSegment(progress) {
     const value = clamp(progress, 0, 1);
     for (let i = 0; i < scrollStops.length - 1; i += 1) {
       if (value <= scrollStops[i + 1] || i === scrollStops.length - 2) {
         const start = scrollStops[i];
         const end = Math.max(start + 0.0001, scrollStops[i + 1]);
-        const local = clamp((value - start) / (end - start), 0, 1);
-        return (i + local) / (scrollStops.length - 1);
+        return {
+          index: i,
+          local: clamp((value - start) / (end - start), 0, 1)
+        };
       }
     }
-    return 1;
+    return { index: scrollStops.length - 2, local: 1 };
   }
 
-  function setChapter(routeT) {
+  function mapScrollToPath(progress) {
+    const { index, local } = getScrollSegment(progress);
+    let routeIndex = 0;
+    for (let i = 0; i < index; i += 1) routeIndex += routeSegments[i] || 1;
+    routeIndex += local * (routeSegments[index] || 1);
+    return routeIndex / (cameraPoints.length - 1);
+  }
+
+  function mapChapterToPath(chapterIndex) {
+    return chapterWaypointIndices[chapterIndex] / (cameraPoints.length - 1);
+  }
+
+  function setChapter(progress) {
     if (!stageLabel) return;
-    const index = Math.min(chapterNames.length - 1, Math.floor(routeT * (chapterNames.length - 1) + 0.0001));
+    const segment = getScrollSegment(progress);
+    const index = progress >= 1 ? chapterNames.length - 1 : segment.index;
     if (index === activeChapter) return;
     activeChapter = index;
     stageLabel.textContent = chapterNames[index];
@@ -400,6 +426,71 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     });
   }
 
+  function createProjectGalleryFrame(projectIndex, t) {
+    const center = path.getPoint(t);
+    const tangent = path.getTangent(t).normalize();
+    let side = new THREE.Vector3().crossVectors(tangent, worldUp).normalize();
+    if (side.lengthSq() < 0.01) side = new THREE.Vector3(1, 0, 0);
+
+    const frameGroup = new THREE.Group();
+    const sideSign = projectIndex % 2 === 0 ? 1 : -1;
+    frameGroup.position.copy(center)
+      .addScaledVector(tangent, 2.1)
+      .addScaledVector(side, sideSign * 4.5);
+    frameGroup.position.y += projectIndex % 2 === 0 ? 1.15 : -1.15;
+    frameGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
+
+    const metal = new THREE.MeshBasicMaterial({
+      color: 0xb8bdc4, transparent: true, opacity: .2, depthWrite: false
+    });
+    const faint = new THREE.MeshBasicMaterial({
+      color: 0x8c929a, transparent: true, opacity: .12, depthWrite: false
+    });
+    const plateMaterial = new THREE.MeshBasicMaterial({
+      color: 0x101216, transparent: true, opacity: .055,
+      side: THREE.DoubleSide, depthWrite: false
+    });
+    const plate = new THREE.Mesh(new THREE.PlaneGeometry(5.7, 3.65), plateMaterial);
+    frameGroup.add(plate);
+
+    const outlineGeometry = new THREE.EdgesGeometry(new THREE.BoxGeometry(5.85, 3.8, .08));
+    frameGroup.add(new THREE.LineSegments(outlineGeometry, metal));
+
+    const header = new THREE.Mesh(new THREE.BoxGeometry(5.85, .055, .09), faint);
+    header.position.set(0, 1.9, .055);
+    frameGroup.add(header);
+
+    for (let line = 0; line < 3; line += 1) {
+      const detail = new THREE.Mesh(new THREE.BoxGeometry(1.1 + line * .32, .025, .04), faint);
+      detail.position.set(-1.95, -.92 - line * .22, .06);
+      frameGroup.add(detail);
+    }
+
+    const indexMarker = new THREE.Mesh(new THREE.IcosahedronGeometry(.11, 1), metal);
+    indexMarker.position.set(2.45, 1.55, .1);
+    frameGroup.add(indexMarker);
+
+    floatingWorld.add(frameGroup);
+    projectGalleryFrames.push({
+      group: frameGroup,
+      progress: t,
+      materials: [metal, faint, plateMaterial],
+      baseOpacities: [.2, .12, .055]
+    });
+  }
+
+  function updateProjectGalleryFocus(routeT) {
+    projectGalleryFrames.forEach(({ group, progress, materials, baseOpacities }) => {
+      const distance = Math.abs(routeT - progress);
+      const proximity = 1 - clamp(distance / .11, 0, 1);
+      const focus = proximity * proximity * (3 - 2 * proximity);
+      group.scale.setScalar(.78 + focus * .22);
+      materials.forEach((material, index) => {
+        material.opacity = baseOpacities[index] * (.18 + focus * .82);
+      });
+    });
+  }
+
   function buildFloatingGeometry() {
     floatingWorld = new THREE.Group();
     scene.add(floatingWorld);
@@ -409,9 +500,13 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       createGateway(0.055 + (i / gatewayCount) * 0.91, i);
     }
 
-    for (let i = 0; i < cameraPoints.length; i += 1) {
-      createChapterLandmark(i, i / (cameraPoints.length - 1));
-    }
+    chapterWaypointIndices.forEach((waypointIndex, chapterIndex) => {
+      createChapterLandmark(chapterIndex, mapChapterToPath(chapterIndex));
+    });
+
+    projectWaypointIndices.forEach((waypointIndex, projectIndex) => {
+      createProjectGalleryFrame(projectIndex, waypointIndex / (cameraPoints.length - 1));
+    });
 
     makeLine(path.getPoints(420), 0xb3b7bd, 0.16, 0.018);
     makeLine(routeRail(-3.5), 0x878c93, 0.11, 0.012);
@@ -512,8 +607,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   function updateCamera() {
     if (!camera) return;
     const routeT = mapScrollToPath(scrollState.progress);
-    setChapter(routeT);
+    setChapter(scrollState.progress);
     updateChapterFocus(routeT);
+    updateProjectGalleryFocus(routeT);
 
     const lookT = clamp(routeT + (routeT > 0.97 ? -0.025 : 0.025), 0, 1);
     desiredPosition.copy(path.getPoint(routeT));
@@ -664,7 +760,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
   setupJourney();
 
-  if (!canvas || !sections.length || sections.length + 1 !== cameraPoints.length) {
+  if (!canvas || !sections.length || sections.length + 1 !== chapterWaypointIndices.length
+      || routeSegments.length !== sections.length
+      || routeSegments.reduce((sum, value) => sum + value, 0) !== cameraPoints.length - 1) {
     console.warn("The 3D world could not map the portfolio sections. Content remains available.");
     return;
   }
