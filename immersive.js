@@ -909,7 +909,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       if (reduceMotion) {
         updateCamera();
         renderer.render(scene, camera);
-      } else if (!document.hidden && !animationFrame) {
+      } else if (!document.hidden && !animationFrame && !isReadMode) {
         lastTime = 0;
         animate(0);
       }
@@ -939,7 +939,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
         if (document.hidden && animationFrame) {
           cancelAnimationFrame(animationFrame);
           animationFrame = 0;
-        } else if (!document.hidden && !animationFrame) {
+        } else if (!document.hidden && !animationFrame && !isReadMode) {
           lastTime = 0;
           animate(0);
         }
