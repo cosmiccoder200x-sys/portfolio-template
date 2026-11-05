@@ -352,3 +352,204 @@ main > section.contact-section,
 @media (max-width: 640px) {
   .world-canvas { opacity: .52; }
 }
+
+
+/* Optional Read Mode control — off by default. */
+.read-mode-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  margin-left: 2px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 2px;
+  background: rgba(9,10,12,.22);
+  color: rgba(235,238,242,.72);
+  font: 9px/1 var(--mono, monospace);
+  letter-spacing: .09em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease, background .2s ease;
+}
+.read-mode-symbol {
+  font: 600 13px/1 var(--sans, sans-serif);
+  letter-spacing: -.08em;
+}
+.read-mode-toggle:hover,
+.read-mode-toggle:focus-visible {
+  color: #fff;
+  border-color: rgba(255,255,255,.58);
+  outline: none;
+}
+.read-mode-toggle:focus-visible {
+  box-shadow: 0 0 0 2px rgba(255,255,255,.24);
+}
+.read-mode-toggle[aria-pressed="true"] {
+  color: #090909;
+  border-color: #eceff2;
+  background: #eceff2;
+}
+@media (max-width: 620px) {
+  .site-header { gap: 7px; }
+  .read-mode-toggle {
+    min-width: 34px;
+    width: 34px;
+    min-height: 34px;
+    margin-left: 0;
+    padding: 0;
+  }
+  .read-mode-label { display: none; }
+  .read-mode-symbol { font-size: 14px; }
+}
+
+/* The chapter rail is a compact, keyboard-accessible map of the scroll journey. */
+.chapter-rail {
+  position: fixed;
+  z-index: 26;
+  top: 50%;
+  right: clamp(15px, 2.6vw, 38px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 11px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.chapter-rail a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-height: 18px;
+  color: rgba(220,225,232,.55);
+  text-decoration: none;
+  pointer-events: auto;
+}
+.chapter-rail-dot {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  border: 1px solid rgba(220,225,232,.52);
+  border-radius: 50%;
+  background: rgba(9,10,12,.4);
+  transition: width .22s ease, height .22s ease, background .22s ease, border-color .22s ease;
+}
+.chapter-rail-label {
+  order: -1;
+  opacity: 0;
+  transform: translateX(5px);
+  color: rgba(225,230,236,.76);
+  font: 8px/1 var(--mono, monospace);
+  letter-spacing: .1em;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.chapter-rail a:hover .chapter-rail-label,
+.chapter-rail a:focus-visible .chapter-rail-label,
+.chapter-rail a.is-active .chapter-rail-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+.chapter-rail a.is-active .chapter-rail-dot {
+  width: 8px;
+  height: 8px;
+  flex-basis: 8px;
+  border-color: #f0f2f5;
+  background: #f0f2f5;
+}
+.chapter-rail a:focus-visible {
+  outline: 1px solid rgba(255,255,255,.7);
+  outline-offset: 5px;
+}
+@media (max-width: 1050px) {
+  .chapter-rail { display: none; }
+}
+
+/* Read Mode intentionally replaces the immersive layers with a quiet reading surface. */
+html.read-mode-active {
+  scroll-behavior: auto !important;
+}
+body.is-read-mode {
+  line-height: 1.8;
+}
+body.is-read-mode .world-canvas,
+body.is-read-mode .world-meta,
+body.is-read-mode .hero-orb-wrap {
+  display: none !important;
+}
+body.is-read-mode main > section {
+  background: rgba(8,9,11,.96) !important;
+}
+body.is-read-mode .site-footer {
+  background: rgba(8,9,11,.98) !important;
+}
+body.is-read-mode .site-header,
+body.is-read-mode .site-header.is-scrolled {
+  background: rgba(8,9,11,.97) !important;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+body.is-read-mode .projects-grid .project-card,
+body.is-read-mode .education-item,
+body.is-read-mode .certification-item,
+body.is-read-mode .skills-constellation-wrap,
+body.is-read-mode .contact-form-wrap,
+body.is-read-mode .journey-detail-panel {
+  background: rgba(17,18,20,.92) !important;
+}
+body.is-read-mode .form-control {
+  background: #111214 !important;
+}
+body.is-read-mode .project-card::before {
+  display: none !important;
+}
+body.is-read-mode .project-card {
+  transform: none !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+body.is-read-mode .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+body.is-read-mode .intro-copy,
+body.is-read-mode .contact-copy,
+body.is-read-mode .project-card p,
+body.is-read-mode .education-item p,
+body.is-read-mode .certification-item p,
+body.is-read-mode .journey-item p {
+  color: #c4c8ce !important;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+body.is-read-mode .section-note,
+body.is-read-mode .hero-statement {
+  color: #c1c5ca !important;
+}
+body.is-read-mode .read-mode-toggle[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px rgba(255,255,255,.18);
+}
+body.is-read-mode .chapter-rail {
+  display: none;
+}
+body.is-read-mode .read-mode-toggle ~ .menu-toggle {
+  color: #fff;
+}
+body.is-read-mode .main-nav.open {
+  background: rgba(8,9,11,.98) !important;
+}
+body.is-read-mode *,
+body.is-read-mode *::before,
+body.is-read-mode *::after {
+  animation-play-state: paused !important;
+  transition-duration: .01ms !important;
+}
+body.is-read-mode .journey-select {
+  color: #fff;
+}
+
+.skills-list {
+  margin-top: clamp(32px, 4vw, 48px) !important;
+}
