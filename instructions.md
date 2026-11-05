@@ -8,6 +8,7 @@ The portfolio is a static-first, single-page experience designed for fast initia
 
 - **Markup:** semantic HTML5 in `index.html`.
 - **Styles:** CSS custom properties, Grid/Flexbox, and transform-based animation in `style.css` and `immersive.css`.
+- **Responsive layer:** `mobile.css` adds phone/tablet overrides, touch targets, safe-area spacing, compact navigation, and mobile viewport handling without replacing the desktop visual system.
 - **Content:** public portfolio information and assistant context in `profile.json`.
 - **Interactions:** native JavaScript in `script.js` and `immersive.js`.
 - **3D and motion:** Three.js, GSAP/ScrollTrigger, and Rive assets.
@@ -28,7 +29,16 @@ The portfolio is a static-first, single-page experience designed for fast initia
 4. Avoid layout shifts during hover and focus interactions.
 5. Keep navigation and interactive controls usable with a keyboard.
 
-## 4. Portfolio sections and custom visuals
+## 4. Responsive experience
+
+- Keep the desktop visual language intact; adapt composition rather than simply scaling everything down.
+- Use a compact navigation drawer with link selection, outside-tap, Escape-key, and viewport-change dismissal.
+- Maintain readable type and comfortable touch targets on phones, including compact 320px-wide screens.
+- Respect safe-area insets, dynamic viewport height, and mobile keyboard/input sizing.
+- Reduce hover-dependent effects on coarse pointers and preserve reduced-motion behaviour.
+- Check portrait and landscape layouts, the AI assistant panel, contact form, project cards, and long navigation lists.
+
+## 5. Portfolio sections and custom visuals
 
 - **Hero:** animated name and role presentation, SP identity orb, grid/spotlight treatment, and pointer-responsive motion.
 - **About:** editorial biography layout and links.
@@ -37,7 +47,7 @@ The portfolio is a static-first, single-page experience designed for fast initia
 - **Experience and education:** timeline presentation with scroll-linked progress.
 - **Contact:** closing statement, SP visual, and contact form interaction.
 
-## 5. Assistant design
+## 6. Assistant design
 
 - Treat `profile.json` as the source of public portfolio facts.
 - Keep the Groq API key on the server as the `GROQ_API_KEY` Worker secret.
@@ -45,7 +55,7 @@ The portfolio is a static-first, single-page experience designed for fast initia
 - Do not invent personal details, project outcomes, employment, awards, or proficiency claims.
 - If a fact is not present in the profile, the assistant should say it is not specified.
 
-## 6. Performance and maintenance
+## 7. Performance and maintenance
 
 - Lazy-load or defer noncritical visual assets where practical.
 - Keep the static frontend independent from the AI endpoint so the portfolio remains useful if the assistant is unavailable.
@@ -54,7 +64,7 @@ The portfolio is a static-first, single-page experience designed for fast initia
 - Run `node scripts/portfolio_qa.mjs` before pushing changes.
 - Never commit secrets, local environment files, generated caches, or unrelated personal data.
 
-## 7. Deployment
+## 8. Deployment
 
 The production Worker and static assets are configured in `wrangler.jsonc`. GitHub Actions also runs portfolio QA and publishes a GitHub Pages preview from the feature branch. The separate analytics workflow collects repository-level traffic data.
 
