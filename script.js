@@ -366,37 +366,6 @@
   initOrbAndJoystick();
 
   /* ==========================================================================
-     6. DESKTOP CURSOR SPOTLIGHT
-     ========================================================================== */
-  const spotlight = document.getElementById("cursor-spotlight");
-  if (spotlight && isFinePointer && !reduceMotion) {
-    let mouseX = -999;
-    let mouseY = -999;
-    let ticking = false;
-
-    window.addEventListener("pointermove", (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          spotlight.style.setProperty("--spotlight-x", `${mouseX}px`);
-          spotlight.style.setProperty("--spotlight-y", `${mouseY}px`);
-          if (!spotlight.classList.contains("is-active")) {
-            spotlight.classList.add("is-active");
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-
-    window.addEventListener("pointerleave", () => {
-      spotlight.classList.remove("is-active");
-    });
-  }
-
-  /* ==========================================================================
      7. DESKTOP PROJECT CARDS: VISIBLE 3D TILT + POINTER GLOW
      ========================================================================== */
   if (isFinePointer && !reduceMotion) {
