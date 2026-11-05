@@ -73,7 +73,8 @@ For the deployment and local development steps, see [AI_ASSISTANT_SETUP.md](AI_A
 
 ## Deployment and quality checks
 
-- **Production portfolio:** served through the Cloudflare Worker configured by `wrangler.jsonc`.
+- **Production portfolio:** served through the Cloudflare Worker configured by `wrangler.jsonc`. Commits to the connected deployment branch can trigger the configured Cloudflare build; even documentation-only commits update the deployment revision.
+
 - **GitHub Pages preview:** the `Deploy feature portfolio to GitHub Pages` workflow publishes the feature branch.
 - **Automated checks:** the `Portfolio QA` workflow runs the static portfolio checks, including responsive-layer regression checks.
 
