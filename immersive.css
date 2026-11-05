@@ -249,3 +249,34 @@ main {
   .world-canvas { opacity: .2; }
   .journey-select { transition: none !important; }
 }
+
+/* Continuous 3D scene integration: keep page surfaces glass-clear. */
+main > section,
+.site-footer {
+  background: transparent !important;
+}
+main > section {
+  isolation: isolate;
+}
+.projects-grid .project-card {
+  background: rgba(9, 10, 12, .34) !important;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  transition: background .28s ease, border-color .28s ease, transform 180ms var(--ease-out-expo);
+}
+.projects-grid .project-card:hover {
+  background: rgba(20, 22, 26, .52) !important;
+}
+.projects-grid .project-card::before {
+  background: radial-gradient(
+    460px circle at var(--pointer-x,50%) var(--pointer-y,50%),
+    rgba(230,235,242,.075),
+    transparent 66%
+  );
+}
+.skills-visual-tag {
+  background: rgba(9, 9, 9, .3) !important;
+}
+.site-footer {
+  border-top: 1px solid rgba(255,255,255,.12);
+}
