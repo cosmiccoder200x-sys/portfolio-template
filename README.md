@@ -1,131 +1,102 @@
-# Sreerang P — Immersive Portfolio
-
-A dark, editorial portfolio built to showcase software projects, engineering interests, and experiments in AI and data. It combines a lightweight static frontend with a scroll-driven 3D experience and an optional AI portfolio assistant.
+# Sreerang P — Personal Portfolio
 
 ![Portfolio preview](assets/preview.png)
 
-> **This repository contains the source code for my personal portfolio.** You can explore the implementation, learn from it, or adapt it as a starting point for your own portfolio.
+**Live site:** [itsme.cosmiccoder200x.workers.dev](https://itsme.cosmiccoder200x.workers.dev)  
+**Owner:** [Sreerang P](https://github.com/cosmiccoder200x-sys) · [LinkedIn](https://in.linkedin.com/in/sreerang-p)
 
-## Explore
+This repository contains the source code for my personal portfolio: a dark, editorial experience built to present my work in software engineering, data, and AI. It brings together a custom visual system, scroll-driven 3D interactions, project case studies, and an AI assistant grounded in my public profile.
 
-- **Portfolio:** [itsme.cosmiccoder200x.workers.dev](https://itsme.cosmiccoder200x.workers.dev)
-- **GitHub:** [@cosmiccoder200x-sys](https://github.com/cosmiccoder200x-sys)
-- **LinkedIn:** [Sreerang P](https://in.linkedin.com/in/sreerang-p)
+This is my portfolio implementation and its supporting infrastructure—not a generic portfolio starter or a reusable template.
 
-## Highlights
+## What I built
 
-- **Immersive 3D experience** — a Three.js scene responds to page scroll and portfolio chapters.
-- **Motion-led interface** — GSAP, ScrollTrigger, Rive, and CSS transitions create the visual details and interactions.
-- **Data-driven content** — profile, education, skills, projects, and links are maintained in `profile.json`.
-- **Project showcase** — custom visuals and descriptions highlight selected software and AI projects.
-- **AI portfolio assistant** — a Cloudflare Worker endpoint connects the assistant to Groq, with optional web search.
-- **Responsive and accessible foundations** — semantic HTML, keyboard-friendly navigation, image descriptions, and reduced-motion support.
-- **GitHub traffic dashboard** — an optional dashboard at `/analytics/` displays collected repository traffic history.
+- **Immersive 3D experience** — a Three.js scene tied to the page's scroll-driven narrative.
+- **Motion and interaction system** — GSAP, ScrollTrigger, Rive, and custom CSS/JavaScript interactions.
+- **Personal project showcase** — selected projects, technical interests, education, skills, and links presented through a bespoke interface.
+- **Profile-grounded AI assistant** — a Cloudflare Worker endpoint connects the chat interface to Groq without exposing the API key in the browser.
+- **Responsive interface** — layouts and interactions designed to work across desktop and mobile, with reduced-motion considerations.
+- **GitHub traffic analytics** — a separate dashboard and scheduled collector for repository-level traffic history.
 
-## Built with
+## Technology
 
-| Area | Technologies |
+| Area | Stack |
 |---|---|
 | Frontend | HTML, CSS, JavaScript |
 | 3D and motion | Three.js, GSAP, ScrollTrigger, Rive |
 | AI assistant | Cloudflare Workers, Groq API |
 | Analytics | Python, GitHub REST API, GitHub Actions |
-| Quality checks | Node.js, dependency-free custom QA script |
-| Deployment | Cloudflare Workers Builds, GitHub Pages |
+| Quality checks | Node.js, custom QA script |
+| Hosting | Cloudflare Workers, GitHub Pages preview |
 
-## Run locally
+## Repository walkthrough
 
-The portfolio frontend is static and does not need a package installation.
+```text
+.
+├── index.html              # Portfolio page
+├── profile.json            # My public portfolio content and assistant context
+├── style.css               # Main visual system
+├── script.js               # Core interface interactions
+├── immersive.css           # Immersive experience styling
+├── immersive.js            # Three.js scene and scroll interactions
+├── assistant.js            # AI assistant interface
+├── functions/api/chat.js   # Server-side assistant endpoint
+├── worker/index.js         # Cloudflare Worker entry point
+├── wrangler.jsonc          # Worker and static asset configuration
+├── assets/                 # Portfolio visuals, icons, and Rive assets
+├── analytics/              # GitHub traffic dashboard and data
+├── scripts/                # QA and analytics scripts
+└── .github/workflows/      # Quality checks, deployment, and analytics
+```
 
-1. Clone the repository:
+## Run the portfolio locally
 
-   ```bash
-   git clone https://github.com/cosmiccoder200x-sys/portfolio-template.git
-   cd portfolio-template
-   ```
+The frontend is static. From the repository root:
 
-2. Start a local web server from the repository root:
+```bash
+python -m http.server 8000
+```
 
-   ```bash
-   python -m http.server 8000
-   ```
+Then open [http://localhost:8000](http://localhost:8000).
 
-3. Open [http://localhost:8000](http://localhost:8000).
+Use a local server rather than opening `index.html` directly so the browser can load `profile.json` and local assets correctly.
 
-Use a local server instead of opening `index.html` directly so browser requests for `profile.json` and other local assets work correctly.
+## AI assistant
 
-## Personalise the portfolio
+The assistant's browser interface lives in `assistant.js`. Its API handler runs server-side through the Cloudflare Worker and reads the `GROQ_API_KEY` secret from the Worker environment.
 
-Most portfolio content is stored in `profile.json`. Update the relevant fields to customise:
+For the deployment and local development steps, see [AI_ASSISTANT_SETUP.md](AI_ASSISTANT_SETUP.md).
 
-- Name, tagline, and biography
-- Education and certifications
-- Skills and project descriptions
-- Project repository and demo links
-- Social and contact links
+**Security:** never commit API keys or place them in `profile.json`, HTML, or browser-side JavaScript.
 
-Keep the JSON valid after editing. The visual structure and interactions live mainly in `index.html`, `style.css`, `script.js`, `immersive.css`, and `immersive.js`.
+## Deployment and quality checks
 
-## AI assistant setup
+- **Production portfolio:** served through the Cloudflare Worker configured by `wrangler.jsonc`.
+- **GitHub Pages preview:** the `Deploy feature portfolio to GitHub Pages` workflow publishes the feature branch.
+- **Automated checks:** the `Portfolio QA` workflow runs the static portfolio checks.
 
-The assistant API runs through the Cloudflare Worker configured in `wrangler.jsonc`.
-
-1. Create a Groq API key.
-2. Add it as a Worker secret named `GROQ_API_KEY` in the Cloudflare dashboard, or configure it locally for Wrangler development.
-3. Deploy the Worker using the connected Cloudflare Workers Builds integration, or run:
-
-   ```bash
-   npx wrangler deploy
-   ```
-
-Never put API keys in `profile.json`, frontend JavaScript, or committed files. The Worker reads the key from its environment and applies request validation and rate limiting.
-
-## Deployment and checks
-
-- **Cloudflare Workers:** the repository's `wrangler.jsonc` defines the Worker entry point, static assets, and API routing. The configured Cloudflare production branch is `feature/immersive-3d-portfolio`.
-- **GitHub Pages preview:** the `Deploy feature portfolio to GitHub Pages` workflow deploys this feature branch when it receives a push.
-- **Portfolio QA:** the `Portfolio QA` workflow runs static checks on pushes and pull requests.
-
-Run the same QA check locally with Node.js 20 or newer:
+Run the QA script locally with Node.js 20 or newer:
 
 ```bash
 node scripts/portfolio_qa.mjs
 ```
 
-## GitHub traffic dashboard (optional)
+## GitHub traffic dashboard
 
-The `analytics/` directory contains a dashboard and historical data collector. To enable collection, configure the `GH_TRAFFIC_STATS_TOKEN` repository secret with the read-only repository permissions described in [analytics/README.md](analytics/README.md). The collector runs on a schedule and can also be started manually from GitHub Actions.
+The analytics dashboard is available at [`/analytics/`](https://itsme.cosmiccoder200x.workers.dev/analytics/). Its collector uses the GitHub REST API and a repository secret named `GH_TRAFFIC_STATS_TOKEN`.
 
-## Project structure
+See [analytics/README.md](analytics/README.md) for the collector's data scope, permissions, and operational details.
 
-```text
-.
-├── index.html              # Portfolio page
-├── profile.json            # Editable portfolio content
-├── style.css               # Main visual system
-├── script.js               # Interface interactions
-├── immersive.css           # 3D experience styling
-├── immersive.js            # Three.js scene
-├── assistant.js            # Portfolio assistant interface
-├── functions/api/chat.js   # AI assistant API handler
-├── worker/index.js         # Cloudflare Worker entry point
-├── wrangler.jsonc          # Worker and asset configuration
-├── assets/                 # Images, icons, and Rive assets
-├── analytics/              # Traffic dashboard and history
-├── scripts/                # QA and analytics scripts
-└── .github/workflows/      # CI, Pages deployment, analytics
-```
+## Project notes
 
-## Contributing and feedback
+- [`instructions.md`](instructions.md) documents the design system, architecture, and implementation constraints behind this portfolio.
+- [`AI_ASSISTANT_SETUP.md`](AI_ASSISTANT_SETUP.md) documents the assistant's deployment and configuration.
+- The `showcase/` directory is retained as historical community material from the repository's earlier FOSS Cell context; it is not part of my personal portfolio content.
 
-Found a bug, accessibility issue, or improvement? Open an issue with steps to reproduce it and, where possible, a screenshot or browser details. Focused pull requests are welcome.
+## Attribution and license
 
-For substantial visual or behavioural changes, please explain the motivation and test the portfolio at both desktop and mobile widths. Avoid committing credentials, personal tokens, generated build output, or unrelated personal data.
-
-## License
-
-No license file is currently included. Unless a license is added, the source is publicly visible but reuse and redistribution are not automatically granted. Please open an issue if you would like to discuss licensing.
+The existing [MIT license](LICENSE) is preserved with its original copyright attribution to **FOSS Cell TKMCE**. That attribution is intentionally not changed here. Portfolio-specific content and identity are maintained in this repository by Sreerang P; third-party and pre-existing contributions retain their applicable attribution and license terms.
 
 ---
 
-Built and iterated on by **[Sreerang P](https://github.com/cosmiccoder200x-sys)**.
+Built, designed, and continuously iterated on by **[Sreerang P](https://github.com/cosmiccoder200x-sys)**.
