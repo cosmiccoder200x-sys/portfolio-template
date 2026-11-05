@@ -209,7 +209,7 @@
 }
 .journey-item p { max-width: 250px; margin: 0; color: var(--muted); font-size: .88rem; line-height: 1.7; }
 .journey-item .journey-type { display: inline-block; margin-top: 1.2rem; color: #858b93; font: 9px var(--mono, monospace); letter-spacing: .1em; }
-.projects-grid { align-items: stretch; }
+.projects-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: stretch; }
 .projects-grid .project-card {
   min-width: 0;
   overflow: hidden;
