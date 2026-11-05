@@ -1,66 +1,61 @@
-# Portfolio Architecture & Animation System Guidelines
+# Sreerang P's Portfolio — Engineering Notes
 
-## 1. Project Overview & Architecture
-This project is a high-performance, single-page portfolio built for **Sreerang P** (Software Developer, AI Builder, Forward-Deployed Engineer). It operates on a static stack designed for speed, high visual polish, and zero hydration delay:
-- **Markup**: Semantic HTML5 (`index.html`)
-- **Styles**: Modern CSS3 (`style.css`) with custom properties, CSS Grid/Flexbox, and GPU-accelerated transforms
-- **Scripting**: Native ES6+ JavaScript (`script.js`) with progressive data enrichment via `profile.json`
-- **Interactive Motion**: Native Rive WebGL2 runtime (`@rive-app/webgl2`) loading `assets/rive/hero-orb.riv`, paired with CSS transitions/keyframes and IntersectionObserver scroll triggers.
+This document records the architecture, visual language, interaction principles, and implementation decisions for my personal portfolio. It is a project-specific engineering reference, not a generic portfolio-building guide.
 
-## 2. Visual & Design Language
-- **Palette**: Dark monochrome — Background `#090909`, Surface `#111111`, High-contrast Text `#EDEDED`, Muted `#A3A3A3`, Dim accents `#707070`, Thin geometric borders `rgba(255, 255, 255, 0.15)`.
-- **Typography**: Dual font hierarchy:
-  - Sans-serif: `Manrope` for editorial display headlines and body copy
-  - Monospace: `DM Mono` for index tags, kicking labels, metadata, and timestamps
-- **Grid & Framing**: Fixed inset frame (`.page-frame`) and structured grid lines giving an architectural, brutalist-editorial aesthetic.
+## 1. Project architecture
 
-## 3. Motion & Animation Foundation Rules
-1. **GPU Acceleration**: Animate exclusively `transform` and `opacity` properties to guarantee 60fps/120fps smooth compositing without triggering layout recalculations or paint thrashing.
-2. **Timing Curves**:
-   - Primary Ease: `cubic-bezier(0.16, 1, 0.3, 1)` (Apple/Vercel standard deceleration curve)
-   - Accent Ease: `cubic-bezier(0.2, 0.75, 0.25, 1)`
-   - Durations: Standard UI interactions `200ms–350ms`; Entrance reveals `600ms–900ms`; Ambient cycles `3s–6s`.
-3. **Accessibility**: Strictly honor `prefers-reduced-motion: reduce`:
-   - Instantly display content without transform deltas
-   - Disable ambient loops, cursor tracking, and continuous rotations
-4. **Single IntersectionObserver Registry**: Prevent duplicate observer allocations by sharing a unified observer that manages reveal classes and section highlighting.
-5. **No Layout Shift**: All interactive hover transforms (card lift, link nudges) must use transforms or box-shadows rather than padding or margin modifications.
+The portfolio is a static-first, single-page experience designed for fast initial rendering and progressive enhancement.
 
-## 4. Section Implementation Decisions
-- **Hero**:
-  - Name reveal with smooth upward trajectory and subtle character cadence.
-  - Dynamic rotating role transition (`Software Developer` · `AI Builder` · `Forward-Deployed Engineer`).
-  - Interactive "SP" monochrome identity orb positioned in the top-right quadrant matching the closing section visual:
-    - Central bold "SP" typography in heavy sans-serif.
-    - Outer specular silver gradient rim with high-contrast reflection.
-    - Deep dark inner plate for maximum optical contrast.
-    - Concentric dashed orbital rings with counter-rotating cycles and satellite dots.
-    - Convergence dashed crosshair axis lines.
-    - Ambient radial glow.
-    - Interactive 3D spatial gimbal deflection and perspective tilt (`perspective(900px) rotateY/rotateX`).
-    - Direct pointer drag interaction with harmonic spring physics (`spring: 0.14`, `damping: 0.76`).
-    - Passive cursor tracking across the hero section.
-  - Subtle architectural dot/grid background canvas and optional mouse spotlight on desktop.
-- **About**:
-  - Two-column editorial layout: Left column features the bold section heading; Right column contains the narrative bio and links.
-- **Skills**:
-  - Constellation network visual (`skills-visual.svg`) displaying 6 core interconnected domains (Python, C++, DSA, AI, Data Science, Web Platform) with live topology telemetry.
-  - Detailed 24-skill pill grid with hover translation and arrow micro-interactions.
-- **Projects**:
-  - 5 dedicated technical SVG mockups with bespoke schematics:
-    - `modulr.svg`: Adaptive exam platform, topic syllabus graph, mastery retention metrics.
-    - `local-brain-mcp.svg`: Local SQLite vector store, MCP JSON-RPC protocol panel, embedding projection.
-    - `focusflow.svg`: Pomodoro timer dial, distraction shielding histogram, session telemetry.
-    - `e-learning.svg`: Course schedule timeline, relational database schema matrix, grading pipeline.
-    - `gullylabs.svg`: Storefront transaction pipeline, coupon logic, inventory state machine.
-  - Interactive card lift, 3D desktop micro-tilt, and animated arrow links.
-- **Contact**:
-  - `Have an idea? Let's build it.` oversized typography.
-  - Closing SP identity visual (`contact-visual.svg`) matching the hero orb.
-  - Fully functional asynchronous contact form submitted to Google Forms with instant validation and status feedback.
-- **Experience / Education / Certifications**:
-  - Timeline styling with animated vertical line drawn on scroll, distinct achievement markers.
-- **Contact & Footer**:
-  - Editorial "Let's talk" heading, interactive inputs with border focus glow, animated send button with state feedback, preserved Google Forms iframe handler.
-- **Global & Nav**:
-  - Scroll progress bar at top, active section indicator in navigation, smooth keyboard navigation.
+- **Markup:** semantic HTML5 in `index.html`.
+- **Styles:** CSS custom properties, Grid/Flexbox, and transform-based animation in `style.css` and `immersive.css`.
+- **Content:** public portfolio information and assistant context in `profile.json`.
+- **Interactions:** native JavaScript in `script.js` and `immersive.js`.
+- **3D and motion:** Three.js, GSAP/ScrollTrigger, and Rive assets.
+- **Assistant:** browser UI in `assistant.js`, server-side API handler in `functions/api/chat.js`, and Cloudflare Worker routing in `worker/index.js`.
+
+## 2. Visual direction
+
+- **Palette:** dark monochrome — background `#090909`, surface `#111111`, high-contrast text `#EDEDED`, muted text `#A3A3A3`, and restrained borders.
+- **Typography:** Manrope for display and body text; DM Mono for labels, indices, metadata, and technical details.
+- **Composition:** inset page frame, structured grid lines, editorial typography, and carefully controlled negative space.
+- **Identity:** the SP orb and related visual elements establish a consistent visual motif across the hero and closing sections.
+
+## 3. Motion and accessibility principles
+
+1. Prefer `transform` and `opacity` for animation to reduce layout and paint work.
+2. Use the established easing curves and restrained durations defined in the stylesheets.
+3. Respect `prefers-reduced-motion: reduce`: remove nonessential movement, ambient loops, cursor tracking, and continuous rotations.
+4. Avoid layout shifts during hover and focus interactions.
+5. Keep navigation and interactive controls usable with a keyboard.
+
+## 4. Portfolio sections and custom visuals
+
+- **Hero:** animated name and role presentation, SP identity orb, grid/spotlight treatment, and pointer-responsive motion.
+- **About:** editorial biography layout and links.
+- **Skills:** visual skills constellation and grouped technical skills.
+- **Projects:** bespoke SVG visuals and project descriptions for the selected work in `profile.json`.
+- **Experience and education:** timeline presentation with scroll-linked progress.
+- **Contact:** closing statement, SP visual, and contact form interaction.
+
+## 5. Assistant design
+
+- Treat `profile.json` as the source of public portfolio facts.
+- Keep the Groq API key on the server as the `GROQ_API_KEY` Worker secret.
+- Validate requests and apply rate limiting in the API handler.
+- Do not invent personal details, project outcomes, employment, awards, or proficiency claims.
+- If a fact is not present in the profile, the assistant should say it is not specified.
+
+## 6. Performance and maintenance
+
+- Lazy-load or defer noncritical visual assets where practical.
+- Keep the static frontend independent from the AI endpoint so the portfolio remains useful if the assistant is unavailable.
+- Test desktop and mobile layouts after changes.
+- Test keyboard navigation and reduced-motion behaviour.
+- Run `node scripts/portfolio_qa.mjs` before pushing changes.
+- Never commit secrets, local environment files, generated caches, or unrelated personal data.
+
+## 7. Deployment
+
+The production Worker and static assets are configured in `wrangler.jsonc`. GitHub Actions also runs portfolio QA and publishes a GitHub Pages preview from the feature branch. The separate analytics workflow collects repository-level traffic data.
+
+For assistant-specific configuration, see [AI_ASSISTANT_SETUP.md](AI_ASSISTANT_SETUP.md). For analytics operations, see [analytics/README.md](analytics/README.md).
