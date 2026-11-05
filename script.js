@@ -405,11 +405,11 @@
         const rect = card.getBoundingClientRect();
         const x = event.clientX - rect.left, y = event.clientY - rect.top;
         const cx = rect.width / 2, cy = rect.height / 2;
-        const rotateX = ((cy - y) / Math.max(cy, 1)) * 5.5;
+        const rotateX = ((cy - y) / Math.max(cy, 1)) * 3.2;
         const rotateY = ((x - cx) / Math.max(cx, 1)) * 5.5;
         card.style.setProperty("--pointer-x", `${x}px`);
         card.style.setProperty("--pointer-y", `${y}px`);
-        card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-6px)`;
+        card.style.transform = `perspective(900px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-3px)`;
       }, { passive: true });
       card.addEventListener("pointerleave", () => {
         card.style.transform = "";
@@ -428,7 +428,7 @@
         const rect = element.getBoundingClientRect();
         const dx = event.clientX - (rect.left + rect.width / 2);
         const dy = event.clientY - (rect.top + rect.height / 2);
-        element.style.transform = `translate3d(${(dx * .13).toFixed(1)}px, ${(dy * .16).toFixed(1)}px, 0)`;
+        element.style.transform = `translate3d(${(dx * .07).toFixed(1)}px, ${(dy * .08).toFixed(1)}px, 0)`;
       }, { passive: true });
       element.addEventListener("pointerleave", () => { element.style.transform = ""; });
     });
@@ -516,7 +516,7 @@
     if (context) {
       const pointer = { x: -1000, y: -1000, active: false };
       const particles = [];
-      const connectionDistance = 178;
+      const connectionDistance = 150;
       let width = 0;
       let height = 0;
       let frameId = 0;
@@ -530,12 +530,12 @@
         ambientCanvas.width = Math.round(width * dpr);
         ambientCanvas.height = Math.round(height * dpr);
         context.setTransform(dpr, 0, 0, dpr, 0, 0);
-        const targetCount = Math.max(48, Math.min(118, Math.round((width * height) / 10500)));
+        const targetCount = Math.max(34, Math.min(78, Math.round((width * height) / 15500)));
         while (particles.length < targetCount) {
           particles.push({
             x: Math.random() * width, y: Math.random() * height,
             vx: (Math.random() - .5) * .22, vy: (Math.random() - .5) * .22,
-            radius: Math.random() * 1.35 + .75
+            radius: Math.random() * .9 + .55
           });
         }
         if (particles.length > targetCount) particles.length = targetCount;
@@ -549,13 +549,13 @@
         context.clearRect(0, 0, width, height);
 
         if (pointer.active) {
-          const glow = context.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 230);
-          glow.addColorStop(0, "rgba(205, 226, 255, 0.13)");
-          glow.addColorStop(0.42, "rgba(190, 215, 245, 0.055)");
+          const glow = context.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, 170);
+          glow.addColorStop(0, "rgba(205, 226, 255, 0.055)");
+          glow.addColorStop(0.42, "rgba(190, 215, 245, 0.025)");
           glow.addColorStop(1, "rgba(190, 215, 245, 0)");
           context.fillStyle = glow;
           context.beginPath();
-          context.arc(pointer.x, pointer.y, 230, 0, Math.PI * 2);
+          context.arc(pointer.x, pointer.y, 170, 0, Math.PI * 2);
           context.fill();
         }
 
@@ -572,16 +572,16 @@
             const dx = p.x - pointer.x;
             const dy = p.y - pointer.y;
             const distance = Math.hypot(dx, dy);
-            if (distance < 210 && distance > 0) {
-              const force = (210 - distance) / 210 * .48;
-              p.x += (dx / distance) * force * 2.8;
+            if (distance < 160 && distance > 0) {
+              const force = (160 - distance) / 160 * .22;
+              p.x += (dx / distance) * force * 1.8;
               p.y += (dy / distance) * force * 2.8;
             }
           }
 
           context.beginPath();
           context.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-          context.fillStyle = "rgba(220, 232, 248, .72)";
+          context.fillStyle = "rgba(220, 232, 248, .48)";
           context.fill();
 
           for (let j = i + 1; j < particles.length; j++) {
@@ -591,20 +591,20 @@
               context.beginPath();
               context.moveTo(p.x, p.y);
               context.lineTo(q.x, q.y);
-              context.strokeStyle = `rgba(190, 205, 220, ${(1 - distance / connectionDistance) * .28})`;
-              context.lineWidth = .95;
+              context.strokeStyle = `rgba(190, 205, 220, ${(1 - distance / connectionDistance) * .17})`;
+              context.lineWidth = .7;
               context.stroke();
             }
           }
 
           if (pointer.active) {
             const distance = Math.hypot(p.x - pointer.x, p.y - pointer.y);
-            if (distance < 230) {
+            if (distance < 185) {
               context.beginPath();
               context.moveTo(p.x, p.y);
               context.lineTo(pointer.x, pointer.y);
-              context.strokeStyle = `rgba(220, 232, 245, ${(1 - distance / 230) * .48})`;
-              context.lineWidth = 1.15;
+              context.strokeStyle = `rgba(220, 232, 245, ${(1 - distance / 185) * .22})`;
+              context.lineWidth = .75;
               context.stroke();
             }
           }
