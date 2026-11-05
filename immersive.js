@@ -22,6 +22,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   let camera;
   let frame = 0;
   let resizeObserver;
+  const isCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  const pointer = { x: 0, y: 0 };
   const doorMeshes = [];
 
   const makeMaterial = (color, roughness = .78, metalness = .12) =>
@@ -131,6 +133,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
   function animate() {
     frame = requestAnimationFrame(animate);
+    camera.position.x += (pointer.x * .32 - camera.position.x) * .035;
+    camera.position.y += (2.05 - pointer.y * .12 - camera.position.y) * .035;
+    camera.lookAt(0, 1.55, -7);
     renderer.render(scene, camera);
   }
 
@@ -187,6 +192,13 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     buildHallway();
     resize();
     stage.classList.add("is-rendered");
+    stage.addEventListener("pointermove", (event) => {
+      if (isCoarsePointer || reduceMotion) return;
+      const rect = stage.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width - .5) * 2;
+      pointer.y = ((event.clientY - rect.top) / rect.height - .5) * 2;
+    }, { passive: true });
+    stage.addEventListener("pointerleave", () => { pointer.x = 0; pointer.y = 0; });
 
     if ("ResizeObserver" in window) {
       resizeObserver = new ResizeObserver(resize);
@@ -195,7 +207,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       window.addEventListener("resize", resize, { passive: true });
     }
 
-    if (reduceMotion) {
+    if (reduceMotion || isCoarsePointer) {
       renderer.render(scene, camera);
     } else {
       animate();
