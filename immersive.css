@@ -280,3 +280,75 @@ main > section {
 .site-footer {
   border-top: 1px solid rgba(255,255,255,.12);
 }
+
+
+/* Unified Journey-style transparency across every portfolio chapter. */
+main > section,
+main > section.intro,
+main > section.skills-section,
+main > section.education-section,
+main > section.certifications-section,
+main > section.projects-section,
+main > section.journey-section,
+main > section.contact-section,
+.site-footer {
+  background: transparent !important;
+}
+
+/* Structural panels stay clear; borders define the layout instead of dark slabs. */
+.skills-constellation-wrap,
+.skills-visual-frame,
+.skills-visual-tag,
+.education-item,
+.certification-item,
+.projects-grid .project-card,
+.project-preview-frame,
+.contact-visual-card,
+.contact-visual-frame,
+.contact-form-wrap,
+.journey-detail-panel {
+  background: transparent !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.education-item:hover,
+.certification-item:hover,
+.projects-grid .project-card:hover {
+  background: rgba(255,255,255,.025) !important;
+}
+
+.projects-grid .project-card::before {
+  background: radial-gradient(
+    460px circle at var(--pointer-x,50%) var(--pointer-y,50%),
+    rgba(235,238,242,.055),
+    transparent 68%
+  );
+}
+
+.form-control {
+  background: rgba(10,11,13,.42) !important;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+.form-control:focus {
+  background: rgba(18,19,21,.62) !important;
+}
+
+/* Keep the fixed navigation readable while allowing the world to show through. */
+.site-header.is-scrolled {
+  background: rgba(9,9,9,.58) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.main-nav.open {
+  background: rgba(9,9,9,.72) !important;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.world-canvas {
+  opacity: .68;
+}
+@media (max-width: 640px) {
+  .world-canvas { opacity: .52; }
+}
