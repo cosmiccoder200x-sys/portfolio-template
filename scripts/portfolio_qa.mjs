@@ -130,6 +130,9 @@ check("WebGL context loss and restoration are handled", immersive.includes("webg
 check("3D render loop pauses when the page is hidden", immersive.includes("visibilitychange") && immersive.includes("document.hidden"));
 check("Read Mode remains paused after tab resume and WebGL restore", (immersive.match(/!document\.hidden && !animationFrame && !isReadMode/g) || []).length >= 2);
 check("Reduced-motion mode is respected", immersive.includes("prefers-reduced-motion: reduce") && immersiveCss.includes("prefers-reduced-motion"));
+check("Low-power devices receive a capped render pixel ratio", immersive.includes("hardwareCores <= 4") && immersive.includes("deviceMemory <= 4") && immersive.includes("lowPowerDevice ? 1 : 1.25"));
+check("Low-power devices use lighter particle and shard counts", immersive.includes("lowPowerDevice ? 220 : 580") && immersive.includes("lowPowerDevice ? 28 : 72"));
+check("Primary navigation exposes keyboard focus indicators", immersiveCss.includes(".chapter-rail a:focus-visible") && immersiveCss.includes(".read-mode-toggle:focus-visible"));
 check("Read Mode control starts disabled and has a handler", /id=["']read-mode-toggle["'][^>]*aria-pressed=["']false["']/.test(html)
   && script.includes("read-mode-toggle") && immersive.includes("portfolio:readmodechange"));
 check("Contact pullback holds focus on the Contact landmark", immersive.includes("desiredTarget.lerp(path.getPoint(journeyT), contactProgress);"));
