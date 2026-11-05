@@ -49,11 +49,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
   const path = new THREE.CatmullRomCurve3(cameraPoints, false, "centripetal", 0.45);
   const scrollState = { progress: 0 };
-  const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
+  const pointer = { x: 0, targetX: 0 };
   const chapterLandmarks = [];
   const projectGalleryFrames = [];
   const transitionFrames = [];
-  const cameraPosition = new THREE.Vector3();
   const cameraTarget = new THREE.Vector3();
   const desiredPosition = new THREE.Vector3();
   const desiredTarget = new THREE.Vector3();
@@ -736,16 +735,17 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       return;
     }
 
+    // Keep the camera on the scroll path; horizontal pointer movement only steers its view.
+    // At the top-center (horizontal center), the camera looks straight along the route.
     pointer.x += (pointer.targetX - pointer.x) * 0.055;
-    pointer.y += (pointer.targetY - pointer.y) * 0.055;
-    cameraPosition.copy(desiredPosition);
-    cameraPosition.x += pointer.x * 0.24;
-    cameraPosition.y -= pointer.y * 0.16;
-    camera.position.lerp(cameraPosition, 0.2);
+    camera.position.lerp(desiredPosition, 0.2);
+
+    const tangent = path.getTangent(routeT).normalize();
+    const lateral = new THREE.Vector3().crossVectors(tangent, worldUp).normalize();
+    if (lateral.lengthSq() < 0.01) lateral.set(1, 0, 0);
 
     cameraTarget.copy(desiredTarget);
-    cameraTarget.x += pointer.x * 0.34;
-    cameraTarget.y -= pointer.y * 0.22;
+    cameraTarget.addScaledVector(lateral, pointer.x * 3.2);
     const smoothTarget = camera.userData.smoothTarget || (camera.userData.smoothTarget = cameraTarget.clone());
     smoothTarget.lerp(cameraTarget, 0.2);
     camera.lookAt(smoothTarget);
@@ -828,7 +828,6 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     window.addEventListener("portfolio:readmodechange", (event) => {
       isReadMode = Boolean(event.detail && event.detail.enabled);
       pointer.targetX = 0;
-      pointer.targetY = 0;
 
       if (isReadMode) {
         if (animationFrame) cancelAnimationFrame(animationFrame);
@@ -850,11 +849,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     if (coarsePointer || reduceMotion) return;
     window.addEventListener("pointermove", (event) => {
       pointer.targetX = (event.clientX / Math.max(1, window.innerWidth) - 0.5) * 2;
-      pointer.targetY = (event.clientY / Math.max(1, window.innerHeight) - 0.5) * 2;
     }, { passive: true });
     window.addEventListener("pointerleave", () => {
       pointer.targetX = 0;
-      pointer.targetY = 0;
     });
   }
 
