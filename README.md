@@ -8,3 +8,5 @@
    The PR must change exactly that one file. A bot checks it and merges it if everything is correct.
 6. Deadline: 31 Oct, 11:59 PM IST.
 Rules: only true information, your own work, no copying other portfolios.
+
+Cloudflare deployment is managed through the repository's connected Cloudflare Workers Builds configuration.
