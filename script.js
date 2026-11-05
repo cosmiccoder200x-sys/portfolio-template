@@ -11,6 +11,30 @@
   const nav = document.getElementById("main-nav");
   const siteHeader = document.querySelector(".site-header");
 
+  /* Optional reading layout — deliberately off on every fresh visit. */
+  const readModeButton = document.getElementById("read-mode-toggle");
+  const setReadMode = (enabled) => {
+    const active = Boolean(enabled);
+    document.body.classList.toggle("is-read-mode", active);
+    document.documentElement.classList.toggle("read-mode-active", active);
+    if (readModeButton) {
+      readModeButton.setAttribute("aria-pressed", String(active));
+      readModeButton.setAttribute("aria-label", active ? "Disable read mode" : "Enable read mode");
+      readModeButton.title = active ? "Disable read mode" : "Enable read mode";
+      const label = readModeButton.querySelector(".read-mode-label");
+      if (label) label.textContent = active ? "READING" : "READ MODE";
+    }
+    window.dispatchEvent(new CustomEvent("portfolio:readmodechange", {
+      detail: { enabled: active }
+    }));
+  };
+
+  if (readModeButton) {
+    readModeButton.addEventListener("click", () => {
+      setReadMode(!document.body.classList.contains("is-read-mode"));
+    });
+  }
+
   if (menuToggle && nav) {
     menuToggle.addEventListener("click", () => {
       const isOpen = nav.classList.toggle("open");
@@ -63,6 +87,43 @@
   const revealItems = document.querySelectorAll(".reveal");
   const navLinks = document.querySelectorAll("#main-nav a");
   const sections = document.querySelectorAll("main > section[id]");
+
+  const chapterRailLinks = [...document.querySelectorAll(".chapter-rail a[data-chapter]")];
+  const setActiveChapter = (id) => {
+    chapterRailLinks.forEach((link) => {
+      const active = link.dataset.chapter === id;
+      link.classList.toggle("is-active", active);
+      if (active) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  };
+
+  if (chapterRailLinks.length) {
+    if ("IntersectionObserver" in window) {
+      const chapterObserver = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveChapter(visible.target.id);
+      }, {
+        rootMargin: "-42% 0px -42% 0px",
+        threshold: [0, 0.15, 0.35, 0.6]
+      });
+      sections.forEach((section) => chapterObserver.observe(section));
+    } else {
+      const updateChapterFromScroll = () => {
+        const center = window.innerHeight * 0.5;
+        let current = sections[0];
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= center) current = section;
+        });
+        if (current) setActiveChapter(current.id);
+      };
+      window.addEventListener("scroll", updateChapterFromScroll, { passive: true });
+      window.addEventListener("resize", updateChapterFromScroll, { passive: true });
+      updateChapterFromScroll();
+    }
+  }
 
   if (reduceMotion || !("IntersectionObserver" in window)) {
     revealItems.forEach((item) => item.classList.add("is-visible"));
@@ -124,6 +185,7 @@
     let roleIndex = 0;
 
     window.setInterval(() => {
+      if (document.body.classList.contains("is-read-mode")) return;
       roleRotator.classList.add("is-transitioning");
       window.setTimeout(() => {
         roleIndex = (roleIndex + 1) % roles.length;
@@ -280,6 +342,7 @@
 
     // Direct Virtual Joystick Dragging on the Orb
     const handlePointerDown = (e) => {
+      if (document.body.classList.contains("is-read-mode")) return;
       isDragging = true;
       orbWrap.classList.add("is-dragging");
       dragStartPointerX = e.clientX;
@@ -292,7 +355,7 @@
     };
 
     const handlePointerMove = (e) => {
-      if (!isDragging) return;
+      if (document.body.classList.contains("is-read-mode") || !isDragging) return;
       const rect = orbWrap.getBoundingClientRect();
       const sensitivity = (rect.width / 2) || 120;
 
@@ -330,7 +393,7 @@
     // Cursor tracking across Hero section (Handle Source simulation)
     if (heroSection && isFinePointer && !reduceMotion) {
       heroSection.addEventListener("mousemove", (e) => {
-        if (isDragging) return;
+        if (isDragging || document.body.classList.contains("is-read-mode")) return;
         const rect = heroSection.getBoundingClientRect();
         // Calculate offset relative to orb quadrant
         const relX = (e.clientX - (rect.left + rect.width * 0.7)) / (rect.width * 0.4);
@@ -371,6 +434,7 @@
   if (isFinePointer && !reduceMotion) {
     document.querySelectorAll(".project-card").forEach((card) => {
       card.addEventListener("pointermove", (event) => {
+        if (document.body.classList.contains("is-read-mode")) return;
         const rect = card.getBoundingClientRect();
         const x = event.clientX - rect.left, y = event.clientY - rect.top;
         const cx = rect.width / 2, cy = rect.height / 2;
@@ -394,6 +458,7 @@
   if (isFinePointer && !reduceMotion) {
     document.querySelectorAll(".magnetic-btn, .header-contact, .contact-link, .project-actions a").forEach((element) => {
       element.addEventListener("pointermove", (event) => {
+        if (document.body.classList.contains("is-read-mode")) return;
         const rect = element.getBoundingClientRect();
         const dx = event.clientX - (rect.left + rect.width / 2);
         const dy = event.clientY - (rect.top + rect.height / 2);
