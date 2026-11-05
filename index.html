@@ -36,8 +36,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="immersive.css">
   <script src="https://unpkg.com/@rive-app/webgl2@2.49.0/rive.js" defer></script>
   <script src="script.js" defer></script>
+  <script type="module" src="immersive.js"></script>
 </head>
 <body>
   <canvas class="ambient-network" id="ambient-network" aria-hidden="true"></canvas>
@@ -47,7 +49,7 @@
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Sreerang P home">S.P.</a>
     <nav class="main-nav" id="main-nav" aria-label="Main navigation">
-      <a href="#home">Portfolio</a><a href="#about">About</a><a href="#education">Education</a><a href="#certifications">Certifications</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="analytics/">Analytics</a>
+      <a href="#home">Portfolio</a><a href="#about">About</a><a href="#education">Education</a><a href="#certifications">Certifications</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="analytics/">Analytics</a>
     </nav>
     <a class="header-contact" href="#contact">LET'S TALK <span aria-hidden="true">↗</span></a>
     <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
@@ -73,6 +75,28 @@
           <img src="assets/images/hero-orb-fallback.svg?v=3" alt="SP Animated Identity Orb" class="hero-orb-fallback-img">
         </div>
       </div>
+    </section>
+
+    <section class="immersive-section" id="explore" aria-labelledby="explore-title">
+      <div class="immersive-heading">
+        <div>
+          <div class="section-kicker mono"><span>01</span> / EXPLORE THE SPACE</div>
+          <h2 id="explore-title">A little less scrolling.<br><span>A little more exploring.</span></h2>
+        </div>
+        <p class="immersive-heading-copy">Step into the hallway. Each door opens a different part of my work, toolkit, journey, and contact page.</p>
+      </div>
+      <div class="hallway-stage">
+        <div class="hallway-fallback" aria-hidden="true"></div>
+        <canvas class="hallway-canvas" id="hallway-canvas" aria-label="A three-dimensional hallway with four doors" role="img"></canvas>
+        <div class="hallway-topline" aria-hidden="true"><span>SP / INTERACTIVE ARCHIVE</span><span>SELECT A DOOR TO CONTINUE</span></div>
+        <nav class="hallway-controls" aria-label="Explore portfolio sections">
+          <a class="hallway-door-link" href="#projects"><span class="hallway-door-number">01 / WORK</span><span class="hallway-door-name">Selected projects ↗</span></a>
+          <a class="hallway-door-link" href="#skills"><span class="hallway-door-number">02 / TOOLKIT</span><span class="hallway-door-name">Skills &amp; tools ↗</span></a>
+          <a class="hallway-door-link" href="#journey"><span class="hallway-door-number">03 / JOURNEY</span><span class="hallway-door-name">Education &amp; milestones ↗</span></a>
+          <a class="hallway-door-link" href="#contact"><span class="hallway-door-number">04 / CONNECT</span><span class="hallway-door-name">Get in touch ↗</span></a>
+        </nav>
+      </div>
+      <p class="hallway-hint">DESKTOP · MOVE THROUGH THE SPACE WITH YOUR POINTER &nbsp; / &nbsp; MOBILE · TAP A DOOR</p>
     </section>
 
     <section class="intro section-pad" id="about">
@@ -190,6 +214,40 @@
           </div>
         </article>
       </div>
+    </section>
+
+    <section class="journey-section section-pad" id="journey">
+      <div class="section-kicker mono reveal"><span>07</span> / THE JOURNEY SO FAR</div>
+      <div class="journey-heading-row">
+        <h2 class="section-heading reveal">Learning in public.<br><span>Building as I go.</span></h2>
+        <p class="section-note reveal">A few verified milestones from my education and continued learning.</p>
+      </div>
+      <ol class="journey-track">
+        <li class="journey-item reveal">
+          <span class="journey-date">2025 — 2029</span>
+          <h3>B.Tech · Electrical &amp; Computer Engineering</h3>
+          <p>TKM College of Engineering · KTU 2024 Scheme.</p>
+          <span class="journey-type">UNDERGRADUATE STUDY</span>
+        </li>
+        <li class="journey-item reveal">
+          <span class="journey-date">ONGOING</span>
+          <h3>BS · Data Science &amp; Applications</h3>
+          <p>Indian Institute of Technology Madras · Online degree programme.</p>
+          <span class="journey-type">CONTINUED LEARNING</span>
+        </li>
+        <li class="journey-item reveal">
+          <span class="journey-date">APRIL 2026</span>
+          <h3>Gemini Certified University Student</h3>
+          <p>Google for Education · Certification valid through April 2029.</p>
+          <span class="journey-type">CERTIFICATION</span>
+        </li>
+        <li class="journey-item reveal">
+          <span class="journey-date">JUNE 2026</span>
+          <h3>5-Day AI Agents: Intensive Vibe Coding Course</h3>
+          <p>Google · Focused learning in AI agents and rapid prototyping.</p>
+          <span class="journey-type">COURSE</span>
+        </li>
+      </ol>
     </section>
 
     <section class="contact-section section-pad" id="contact">
