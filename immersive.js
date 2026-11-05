@@ -52,6 +52,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
   const chapterLandmarks = [];
   const projectGalleryFrames = [];
+  const transitionFrames = [];
   const cameraPosition = new THREE.Vector3();
   const cameraTarget = new THREE.Vector3();
   const desiredPosition = new THREE.Vector3();
@@ -71,6 +72,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   let isReadMode = false;
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+  const smoothstep = (value) => {
+    const t = clamp(value, 0, 1);
+    return t * t * (3 - 2 * t);
+  };
 
   function refreshScrollStops() {
     const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -491,6 +496,70 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     });
   }
 
+  // A quiet architectural threshold marks the hand-off from the project gallery to Journey.
+  function createJourneyThreshold(t) {
+    const center = path.getPoint(t);
+    const tangent = path.getTangent(t).normalize();
+    const group = new THREE.Group();
+    group.position.copy(center);
+    group.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
+
+    const outerMaterial = new THREE.LineBasicMaterial({
+      color: 0xbfc4cb, transparent: true, opacity: .17, depthWrite: false
+    });
+    const innerMaterial = new THREE.LineBasicMaterial({
+      color: 0x9298a0, transparent: true, opacity: .1, depthWrite: false
+    });
+    const horizonMaterial = new THREE.MeshBasicMaterial({
+      color: 0xc9cdd3, transparent: true, opacity: .075, depthWrite: false
+    });
+
+    const outerFrame = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.BoxGeometry(8.6, 6.8, .08)),
+      outerMaterial
+    );
+    const innerFrame = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.BoxGeometry(7.05, 5.25, .06)),
+      innerMaterial
+    );
+    innerFrame.position.z = .08;
+
+    const horizon = new THREE.Mesh(
+      new THREE.BoxGeometry(5.8, .025, .035),
+      horizonMaterial
+    );
+    horizon.position.set(0, -2.18, .12);
+
+    const marker = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(.14, 1),
+      new THREE.MeshBasicMaterial({
+        color: 0xe1e4e8, transparent: true, opacity: .62, depthWrite: false
+      })
+    );
+    marker.position.set(3.55, 2.65, .12);
+
+    group.add(outerFrame, innerFrame, horizon, marker);
+    floatingWorld.add(group);
+    transitionFrames.push({
+      group,
+      progress: t,
+      materials: [outerMaterial, innerMaterial, horizonMaterial],
+      baseOpacities: [.17, .1, .075]
+    });
+  }
+
+  function updateJourneyThresholdFocus(routeT) {
+    transitionFrames.forEach(({ group, progress, materials, baseOpacities }) => {
+      const distance = Math.abs(routeT - progress);
+      const proximity = 1 - clamp(distance / .065, 0, 1);
+      const focus = proximity * proximity * (3 - 2 * proximity);
+      group.scale.setScalar(.94 + focus * .08);
+      materials.forEach((material, index) => {
+        material.opacity = baseOpacities[index] * (.16 + focus * .84);
+      });
+    });
+  }
+
   function buildFloatingGeometry() {
     floatingWorld = new THREE.Group();
     scene.add(floatingWorld);
@@ -507,6 +576,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     projectWaypointIndices.forEach((waypointIndex, projectIndex) => {
       createProjectGalleryFrame(projectIndex, waypointIndex / (cameraPoints.length - 1));
     });
+
+    createJourneyThreshold(11.5 / (cameraPoints.length - 1));
 
     makeLine(path.getPoints(420), 0xb3b7bd, 0.16, 0.018);
     makeLine(routeRail(-3.5), 0x878c93, 0.11, 0.012);
@@ -610,10 +681,53 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     setChapter(scrollState.progress);
     updateChapterFocus(routeT);
     updateProjectGalleryFocus(routeT);
+    updateJourneyThresholdFocus(routeT);
+
+    const galleryExitT = 11 / (cameraPoints.length - 1);
+    const journeyT = 12 / (cameraPoints.length - 1);
+    const handoffProgress = smoothstep((routeT - galleryExitT) / (journeyT - galleryExitT));
+    const handoffArc = Math.sin(handoffProgress * Math.PI);
+    const contactProgress = smoothstep((routeT - journeyT) / (1 - journeyT));
 
     const lookT = clamp(routeT + (routeT > 0.97 ? -0.025 : 0.025), 0, 1);
     desiredPosition.copy(path.getPoint(routeT));
     desiredTarget.copy(path.getPoint(lookT));
+
+    // A restrained lateral-and-lifted arc carries the camera out of the gallery and into Journey.
+    if (handoffArc > 0.0001) {
+      const tangent = path.getTangent(routeT).normalize();
+      const lateral = new THREE.Vector3().crossVectors(tangent, worldUp).normalize();
+      if (lateral.lengthSq() < 0.01) lateral.set(1, 0, 0);
+      desiredPosition.addScaledVector(lateral, handoffArc * 1.05);
+      desiredPosition.y += handoffArc * .38;
+      desiredTarget.addScaledVector(lateral, handoffArc * .24);
+    }
+
+    // Contact ends with a real dolly-back and a wider lens, holding the portal in frame.
+    if (contactProgress > 0) {
+      const tangent = path.getTangent(routeT).normalize();
+      desiredPosition.addScaledVector(tangent, contactProgress * 5.2);
+      desiredTarget.lerp(path.getPoint(journeyT), contactProgress * .58);
+    }
+
+    const phase = routeT >= .999 ? "beyond"
+      : contactProgress > 0 ? "contact"
+      : handoffProgress > 0 ? "handoff"
+      : routeT >= galleryExitT ? "gallery-exit"
+      : "explore";
+    if (document.body.dataset.cinematicPhase !== phase) {
+      document.body.dataset.cinematicPhase = phase;
+    }
+
+    const baseFov = window.innerWidth < 700 ? 58 : 48;
+    const targetFov = baseFov + (window.innerWidth < 700 ? 7 : 11) * contactProgress;
+    const nextFov = reduceMotion || isReadMode
+      ? targetFov
+      : camera.fov + (targetFov - camera.fov) * .12;
+    if (Math.abs(camera.fov - nextFov) > .001) {
+      camera.fov = nextFov;
+      camera.updateProjectionMatrix();
+    }
 
     if (reduceMotion || isReadMode) {
       camera.position.copy(desiredPosition);
@@ -634,7 +748,10 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     const smoothTarget = camera.userData.smoothTarget || (camera.userData.smoothTarget = cameraTarget.clone());
     smoothTarget.lerp(cameraTarget, 0.2);
     camera.lookAt(smoothTarget);
-    camera.rotateZ(Math.sin(routeT * Math.PI * 2) * 0.035);
+    camera.rotateZ(
+      Math.sin(routeT * Math.PI * 2) * 0.035
+      + handoffArc * 0.012
+    );
   }
 
   function render(time) {
