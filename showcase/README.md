@@ -1,9 +1,5 @@
-Add ONE file here named after your GitHub username, for example `showcase/anu-dev.json`:
+# Archived community showcase
 
-{
-  "name": "Anu K",
-  "github": "anu-dev",
-  "site": "https://anu-dev.github.io/portfolio-template/",
-  "department": "CSE",
-  "year": 2
-}
+This directory contains historical showcase submissions from the repository's earlier FOSS Cell TKMCE community context.
+
+These entries are retained for attribution and repository history. They are not part of Sreerang P's personal portfolio content or a supported portfolio-template feature.
