@@ -159,40 +159,202 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     return gateway;
   }
 
-  function createStation(t, index) {
+  function addChapterLine(group, points, material, radius = 0.012) {
+    const curve = new THREE.CatmullRomCurve3(points);
+    const mesh = new THREE.Mesh(
+      new THREE.TubeGeometry(curve, 64, radius, 5, false),
+      material
+    );
+    group.add(mesh);
+    return mesh;
+  }
+
+  function createChapterLandmark(chapterIndex, t) {
     const center = path.getPoint(t);
     const tangent = path.getTangent(t).normalize();
     let side = new THREE.Vector3().crossVectors(tangent, worldUp).normalize();
     if (side.lengthSq() < 0.01) side = new THREE.Vector3(1, 0, 0);
-    const station = new THREE.Group();
-    station.position.copy(center).addScaledVector(side, index % 2 ? -5.8 : 5.8);
-    station.position.y += index % 2 ? 1.7 : -1.4;
 
-    const size = 0.34 + (index % 3) * 0.1;
-    const crystal = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(size, 1),
-      new THREE.MeshStandardMaterial({
-        color: index % 2 ? 0x72849b : 0xc0cbd7,
-        roughness: 0.28,
-        metalness: 0.72,
-        emissive: 0x172332,
-        emissiveIntensity: 0.45,
-        flatShading: true
-      })
-    );
-    crystal.rotation.set(index * 0.41, index * 0.27, index * 0.19);
-    station.add(crystal);
+    const landmark = new THREE.Group();
+    const sideSign = chapterIndex % 2 ? -1 : 1;
+    landmark.position.copy(center).addScaledVector(side, sideSign * 3.65);
+    landmark.position.y += [0, .8, -1.1, 1.25, -.8, .6, -1.15, .5, 0][chapterIndex] || 0;
+    landmark.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
 
-    const orbit = new THREE.Mesh(
-      new THREE.TorusGeometry(size * 1.8, 0.012, 4, 56),
-      new THREE.MeshBasicMaterial({ color: 0x9aaabd, transparent: true, opacity: 0.42 })
-    );
-    orbit.rotation.set(0.6 + index * 0.16, 0.25, index * 0.22);
-    station.add(orbit);
+    const metal = new THREE.MeshStandardMaterial({
+      color: 0x91a2b8,
+      roughness: .3,
+      metalness: .78,
+      emissive: 0x142132,
+      emissiveIntensity: .32,
+      flatShading: true
+    });
+    const pale = new THREE.MeshStandardMaterial({
+      color: 0xd2dbe5,
+      roughness: .28,
+      metalness: .68,
+      emissive: 0x202d3c,
+      emissiveIntensity: .2
+    });
+    const dark = new THREE.MeshStandardMaterial({
+      color: 0x273342,
+      roughness: .35,
+      metalness: .76,
+      emissive: 0x101d2b,
+      emissiveIntensity: .28
+    });
+    const line = new THREE.LineBasicMaterial({
+      color: 0x9eafc2,
+      transparent: true,
+      opacity: .42
+    });
+    const faintLine = new THREE.LineBasicMaterial({
+      color: 0x8293a8,
+      transparent: true,
+      opacity: .2
+    });
 
-    const tetherPoints = [center, station.position.clone()];
-    makeLine(tetherPoints, 0x7d8da1, 0.2, 0.006);
-    floatingWorld.add(station);
+    const addBox = (width, height, depth, x, y, z, material, rz = 0) => {
+      const geometry = new THREE.BoxGeometry(width, height, depth);
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(x, y, z);
+      mesh.rotation.z = rz;
+      landmark.add(mesh);
+      const outline = new THREE.LineSegments(new THREE.EdgesGeometry(geometry), faintLine);
+      outline.position.copy(mesh.position);
+      outline.rotation.copy(mesh.rotation);
+      landmark.add(outline);
+      return mesh;
+    };
+    const addNode = (x, y, z, radius = .11, material = pale) => {
+      const node = new THREE.Mesh(new THREE.IcosahedronGeometry(radius, 1), material);
+      node.position.set(x, y, z);
+      landmark.add(node);
+      return node;
+    };
+    const addRing = (radius, tube, rotation, material = line) => {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 5, 84), material);
+      ring.rotation.set(...rotation);
+      landmark.add(ring);
+      return ring;
+    };
+
+    switch (chapterIndex) {
+      case 0: { // ORIGIN — an open frame around the starting point
+        addBox(3.5, .08, .08, 0, 1.8, 0, metal);
+        addBox(3.5, .08, .08, 0, -1.8, 0, metal);
+        addBox(.08, 3.6, .08, -1.75, 0, 0, metal);
+        addBox(.08, 3.6, .08, 1.75, 0, 0, metal);
+        addRing(1.15, .018, [.25, .55, .1], pale);
+        addNode(0, 0, .18, .2, pale);
+        break;
+      }
+      case 1: { // ABOUT — a layered identity monolith
+        addBox(.34, 3.2, .22, -.95, 0, 0, metal, -.08);
+        addBox(.92, 2.55, .18, 0, 0, -.12, pale, .045);
+        addBox(.28, 3.55, .2, 1.02, 0, -.2, metal, .08);
+        addRing(1.55, .018, [.32, .55, .15], line);
+        addNode(0, 2, .2, .17);
+        addNode(0, -1.95, -.1, .12, metal);
+        break;
+      }
+      case 2: { // TOOLKIT — connected constellation
+        const coords = [
+          [-1.65, .8, 0], [-.58, 1.48, .14], [.72, 1.1, -.12],
+          [1.62, .25, .12], [.92, -.98, -.08], [-.5, -1.42, .1],
+          [-1.58, -.48, -.14], [0, .02, .3]
+        ];
+        const points = coords.map(([x, y, z]) => new THREE.Vector3(x, y, z));
+        [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,0],[0,7],[2,7],[4,7]].forEach(([a,b]) => {
+          addChapterLine(landmark, [points[a], points[b]], line, .009);
+        });
+        points.forEach((point, index) => addNode(point.x, point.y, point.z, index === 7 ? .2 : .105, index % 2 ? pale : metal));
+        addRing(2.05, .012, [.8, .24, .15], faintLine);
+        break;
+      }
+      case 3: { // EDUCATION — stepped architecture and two pillars
+        addBox(3.2, .22, .75, 0, -1.25, -.1, dark);
+        addBox(2.45, .22, .65, 0, -.78, -.12, metal);
+        addBox(1.7, .22, .58, 0, -.31, -.14, pale);
+        addBox(.28, 2.0, .34, -.75, .82, -.12, metal);
+        addBox(.28, 2.0, .34, .75, .82, -.12, metal);
+        addBox(2.0, .12, .44, 0, 1.88, -.12, pale);
+        addRing(1.65, .014, [.1, .48, 0], faintLine);
+        break;
+      }
+      case 4: { // CERTIFICATIONS — a geometric seal
+        const badgeShape = new THREE.Shape();
+        const sides = 8;
+        const radius = 1.35;
+        for (let i = 0; i < sides; i += 1) {
+          const angle = (i / sides) * Math.PI * 2 + Math.PI / 8;
+          const x = Math.cos(angle) * radius;
+          const y = Math.sin(angle) * radius;
+          if (i === 0) badgeShape.moveTo(x, y);
+          else badgeShape.lineTo(x, y);
+        }
+        badgeShape.closePath();
+        const badge = new THREE.Mesh(
+          new THREE.ExtrudeGeometry(badgeShape, { depth: .16, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: .035, bevelThickness: .035 }),
+          metal
+        );
+        badge.position.z = -.08;
+        landmark.add(badge);
+        addRing(1.68, .022, [.12, .42, .1], pale);
+        addNode(0, 0, .35, .22, pale);
+        addBox(1.4, .055, .08, 0, -.48, .22, dark);
+        addBox(.95, .055, .08, 0, -.68, .22, dark);
+        break;
+      }
+      case 5: { // PROJECTS — a gallery of floating product frames
+        const positions = [
+          [-1.35, .7, -.45], [0, .95, -.1], [1.35, .55, -.35],
+          [-.78, -.75, .05], [.85, -.82, -.2]
+        ];
+        positions.forEach(([x, y, z], index) => {
+          const width = index === 0 ? .9 : .72;
+          const height = index === 0 ? 1.15 : .92;
+          addBox(width, height, .08, x, y, z, index % 2 ? dark : metal, (index - 2) * .06);
+          addBox(width * .72, .045, .035, x, y + height * .18, z + .065, pale);
+          addBox(width * .52, .035, .035, x, y - height * .02, z + .065, metal);
+          addBox(width * .62, .035, .035, x, y - height * .19, z + .065, dark);
+        });
+        addRing(2.2, .012, [.3, .8, .2], faintLine);
+        break;
+      }
+      case 6: { // JOURNEY — a timeline that bends through space
+        const milestones = [
+          new THREE.Vector3(-1.55, -1.1, .05),
+          new THREE.Vector3(-.72, -.35, .15),
+          new THREE.Vector3(.18, .3, -.05),
+          new THREE.Vector3(1.25, 1.05, .12)
+        ];
+        addChapterLine(landmark, milestones, line, .024);
+        milestones.forEach((point, index) => {
+          addNode(point.x, point.y, point.z, .16, index % 2 ? pale : metal);
+          addRing(.27, .012, [.5, .2, index * .3], faintLine).position.copy(point);
+        });
+        break;
+      }
+      case 7: { // CONTACT — an open portal
+        addRing(1.65, .035, [.08, .2, 0], pale);
+        addRing(1.3, .012, [.08, .2, 0], line);
+        addBox(2.6, .08, .12, 0, -1.82, 0, metal);
+        addBox(.08, 3.6, .12, -1.3, 0, 0, metal);
+        addBox(.08, 3.6, .12, 1.3, 0, 0, metal);
+        addNode(0, 0, .2, .16);
+        break;
+      }
+      default: { // BEYOND — a final expanding aperture
+        addRing(2.0, .022, [.15, .42, .1], pale);
+        addRing(1.35, .014, [.6, .1, .2], line);
+        addRing(.7, .012, [.1, .8, .2], faintLine);
+        addNode(0, 0, .1, .13);
+      }
+    }
+
+    floatingWorld.add(landmark);
+    return landmark;
   }
 
   function buildFloatingGeometry() {
@@ -204,8 +366,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       createGateway(0.055 + (i / gatewayCount) * 0.91, i);
     }
 
-    for (let i = 0; i < cameraPoints.length - 1; i += 1) {
-      createStation((i + 0.5) / (cameraPoints.length - 1), i);
+    for (let i = 0; i < cameraPoints.length; i += 1) {
+      createChapterLandmark(i, i / (cameraPoints.length - 1));
     }
 
     makeLine(path.getPoints(420), 0xaab8c8, 0.16, 0.018);
@@ -332,7 +494,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     const smoothTarget = camera.userData.smoothTarget || (camera.userData.smoothTarget = cameraTarget.clone());
     smoothTarget.lerp(cameraTarget, 0.2);
     camera.lookAt(smoothTarget);
-    camera.rotateZ(Math.sin(routeT * Math.PI * 2) * 0.018);
+    camera.rotateZ(Math.sin(routeT * Math.PI * 2) * 0.035);
   }
 
   function render(time) {
