@@ -467,6 +467,9 @@
         galleryVisibility.set(entry.target, entry.isIntersecting ? entry.intersectionRatio : 0);
       });
 
+      const visibleRatio = Math.max(...galleryVisibility.values());
+      if (visibleRatio <= 0) return;
+
       const activeCard = galleryCards.reduce((best, card) => {
         return galleryVisibility.get(card) > galleryVisibility.get(best) ? card : best;
       }, galleryCards[0]);
