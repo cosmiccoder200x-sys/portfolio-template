@@ -1423,9 +1423,6 @@ textarea.form-control {
   .fallback-ring-outer {
     animation: none !important;
   }
-  .cursor-spotlight {
-    display: none !important;
-  }
 }
 
 
