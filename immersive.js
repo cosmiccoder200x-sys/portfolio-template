@@ -57,6 +57,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   let scrollStops = [0, .125, .25, .375, .5, .625, .75, .875, 1];
   let activeChapter = -1;
   let lastTime = 0;
+  let isReadMode = false;
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
@@ -518,7 +519,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     desiredPosition.copy(path.getPoint(routeT));
     desiredTarget.copy(path.getPoint(lookT));
 
-    if (reduceMotion) {
+    if (reduceMotion || isReadMode) {
       camera.position.copy(desiredPosition);
       camera.lookAt(desiredTarget);
       return;
@@ -609,6 +610,28 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     }
   }
 
+  function setupReadModeSync() {
+    window.addEventListener("portfolio:readmodechange", (event) => {
+      isReadMode = Boolean(event.detail && event.detail.enabled);
+      pointer.targetX = 0;
+      pointer.targetY = 0;
+
+      if (isReadMode) {
+        if (animationFrame) cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+        return;
+      }
+
+      if (reduceMotion) {
+        updateCamera();
+        if (renderer && scene && camera) renderer.render(scene, camera);
+      } else if (!document.hidden && !animationFrame) {
+        lastTime = 0;
+        animate(0);
+      }
+    });
+  }
+
   function setupPointer() {
     if (coarsePointer || reduceMotion) return;
     window.addEventListener("pointermove", (event) => {
@@ -679,6 +702,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     buildScene();
     resize();
     setupScrollControl();
+    setupReadModeSync();
     setupPointer();
 
     if ("ResizeObserver" in window) {
