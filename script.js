@@ -77,7 +77,6 @@
       if (!event.matches) closeMobileNav();
     });
   }
-  }
 
   /* ==========================================================================
      2. SCROLL PROGRESS & HEADER STATE
