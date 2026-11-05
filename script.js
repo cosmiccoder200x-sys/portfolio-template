@@ -453,6 +453,61 @@
   }
 
   /* ==========================================================================
+     7B. SCROLL-LINKED PROJECT GALLERY
+     ========================================================================== */
+  const galleryCards = [...document.querySelectorAll("#projects-grid .project-card")];
+  const galleryProgress = document.getElementById("project-gallery-progress");
+  const galleryCount = document.getElementById("project-gallery-count");
+
+  if (galleryCards.length && "IntersectionObserver" in window) {
+    const galleryVisibility = new Map(galleryCards.map((card) => [card, 0]));
+
+    const galleryObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        galleryVisibility.set(entry.target, entry.isIntersecting ? entry.intersectionRatio : 0);
+      });
+
+      const activeCard = galleryCards.reduce((best, card) => {
+        return galleryVisibility.get(card) > galleryVisibility.get(best) ? card : best;
+      }, galleryCards[0]);
+      const activeIndex = galleryCards.indexOf(activeCard);
+
+      galleryCards.forEach((card, index) => {
+        card.classList.toggle("is-gallery-active", index === activeIndex);
+      });
+
+      if (galleryProgress) {
+        galleryProgress.style.width = `${((activeIndex + 1) / galleryCards.length) * 100}%`;
+      }
+      if (galleryCount) {
+        galleryCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(galleryCards.length).padStart(2, "0")}`;
+      }
+    }, {
+      rootMargin: "-20% 0px -20% 0px",
+      threshold: [0, .15, .35, .55, .75, .9]
+    });
+
+    galleryCards.forEach((card) => galleryObserver.observe(card));
+  } else if (galleryCards.length) {
+    const updateGalleryFallback = () => {
+      const center = window.innerHeight * .5;
+      let activeIndex = 0;
+      let nearest = Infinity;
+      galleryCards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const distance = Math.abs((rect.top + rect.height / 2) - center);
+        if (distance < nearest) { nearest = distance; activeIndex = index; }
+      });
+      galleryCards.forEach((card, index) => card.classList.toggle("is-gallery-active", index === activeIndex));
+      if (galleryProgress) galleryProgress.style.width = `${((activeIndex + 1) / galleryCards.length) * 100}%`;
+      if (galleryCount) galleryCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(galleryCards.length).padStart(2, "0")}`;
+    };
+    window.addEventListener("scroll", updateGalleryFallback, { passive: true });
+    window.addEventListener("resize", updateGalleryFallback, { passive: true });
+    updateGalleryFallback();
+  }
+
+  /* ==========================================================================
      7A. MAGNETIC MICRO-INTERACTIONS FOR LINKS
      ========================================================================== */
   if (isFinePointer && !reduceMotion) {
