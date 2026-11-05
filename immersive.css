@@ -726,3 +726,33 @@ body.is-read-mode .journey-select {
   .project-gallery-track > span { transition: none; }
   .projects-grid .project-card { transform: none !important; }
 }
+
+/* The world label follows the gallery hand-off and final contact pullback. */
+.world-meta {
+  transition: opacity .55s ease, transform .7s cubic-bezier(.22,.75,.25,1);
+}
+.world-meta-index,
+.world-meta-caption {
+  transition: opacity .45s ease, letter-spacing .55s ease;
+}
+body[data-cinematic-phase="handoff"] .world-meta {
+  transform: translate3d(0, -4px, 0);
+}
+body[data-cinematic-phase="contact"] .world-meta {
+  transform: translate3d(0, -7px, 0);
+}
+body[data-cinematic-phase="beyond"] .world-meta {
+  opacity: .68;
+  transform: translate3d(0, -10px, 0);
+}
+body[data-cinematic-phase="handoff"] .world-meta-caption {
+  letter-spacing: .19em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .world-meta,
+  .world-meta-index,
+  .world-meta-caption {
+    transition: none !important;
+    transform: none !important;
+  }
+}
