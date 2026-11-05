@@ -171,6 +171,21 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     }
   }
 
+  const journeyButtons = [...document.querySelectorAll(".journey-select")];
+  const journeyTitle = document.getElementById("journey-detail-title");
+  const journeyCopy = document.getElementById("journey-detail-copy");
+  journeyButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      journeyButtons.forEach((item) => {
+        const selected = item === button;
+        item.setAttribute("aria-pressed", String(selected));
+        item.closest(".journey-item")?.classList.toggle("is-selected", selected);
+      });
+      if (journeyTitle) journeyTitle.textContent = button.dataset.title || "Milestone";
+      if (journeyCopy) journeyCopy.textContent = button.dataset.detail || "";
+    });
+  });
+
   links.forEach((link, index) => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
