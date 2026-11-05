@@ -50,6 +50,16 @@
     <span class="world-meta-rule"></span>
     <span class="world-meta-caption">SCROLL TO NAVIGATE THE SPACE</span>
   </div>
+  <nav class="chapter-rail" aria-label="Jump to a portfolio chapter">
+    <a href="#home" data-chapter="home" class="is-active" aria-current="location" aria-label="Go to introduction"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">00 / INTRO</span></a>
+    <a href="#about" data-chapter="about" aria-label="Go to about"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">01 / ABOUT</span></a>
+    <a href="#skills" data-chapter="skills" aria-label="Go to toolkit"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">02 / TOOLKIT</span></a>
+    <a href="#education" data-chapter="education" aria-label="Go to education"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">03 / EDUCATION</span></a>
+    <a href="#certifications" data-chapter="certifications" aria-label="Go to certifications"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">04 / CERTS</span></a>
+    <a href="#projects" data-chapter="projects" aria-label="Go to projects"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">05 / WORK</span></a>
+    <a href="#journey" data-chapter="journey" aria-label="Go to journey"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">06 / JOURNEY</span></a>
+    <a href="#contact" data-chapter="contact" aria-label="Go to contact"><span class="chapter-rail-dot"></span><span class="chapter-rail-label">07 / CONTACT</span></a>
+  </nav>
   <div class="page-frame" aria-hidden="true"></div>
   <div class="scroll-progress-bar" id="scroll-progress" aria-hidden="true"></div>
   <header class="site-header">
@@ -58,6 +68,10 @@
       <a href="#home">Portfolio</a><a href="#about">About</a><a href="#education">Education</a><a href="#certifications">Certifications</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="analytics/">Analytics</a>
     </nav>
     <a class="header-contact" href="#contact">LET'S TALK <span aria-hidden="true">↗</span></a>
+    <button class="read-mode-toggle" id="read-mode-toggle" type="button" aria-pressed="false" aria-label="Enable read mode" title="Enable read mode">
+      <span class="read-mode-symbol" aria-hidden="true">Aa</span>
+      <span class="read-mode-label">READ MODE</span>
+    </button>
     <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
   </header>
 
@@ -99,12 +113,6 @@
     <section class="skills-section section-pad" id="skills">
       <div class="section-kicker mono reveal"><span>02</span> / THE TOOLKIT</div>
       <div class="skills-heading-row"><h2 class="section-heading reveal">Tools I use.<br><span>Things I explore.</span></h2><p class="section-note reveal">A growing toolkit for turning ideas into useful products.</p></div>
-      <div class="skills-constellation-wrap reveal" aria-label="Technical Constellation Map">
-        <div class="skills-visual-frame">
-          <img src="assets/images/skills-visual.svg" alt="Technical Skills Constellation Network" class="skills-visual-img" loading="lazy">
-        </div>
-        <span class="skills-visual-tag mono">TOPOLOGY // 6_NODES_INTERCONNECTED</span>
-      </div>
       <ul class="skills-list reveal" id="skills-list">
         <li>Python</li><li>C &amp; C++</li><li>Data Structures &amp; Algorithms</li><li>JavaScript &amp; TypeScript</li><li>React &amp; Next.js</li><li>Flask</li><li>HTML &amp; CSS</li><li>Git &amp; GitHub</li><li>Data Science</li><li>NumPy &amp; Pandas</li><li>Machine Learning</li><li>Computer Vision</li><li>Supabase</li><li>SQL &amp; PostgreSQL</li><li>REST APIs</li><li>Model Context Protocol</li>
       </ul>
