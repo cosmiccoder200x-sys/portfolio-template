@@ -37,6 +37,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="immersive.css">
+  <link rel="stylesheet" href="mobile.css">
   <script src="https://unpkg.com/@rive-app/webgl2@2.49.0/rive.js" defer></script>
   <script src="script.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
@@ -72,7 +73,7 @@
       <span class="read-mode-symbol" aria-hidden="true">Aa</span>
       <span class="read-mode-label">READ MODE</span>
     </button>
-    <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+    <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation" aria-controls="main-nav" aria-expanded="false">☰</button>
   </header>
 
   <main>
