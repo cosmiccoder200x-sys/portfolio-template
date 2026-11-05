@@ -77,26 +77,40 @@
       </div>
     </section>
 
-    <section class="immersive-section" id="explore" aria-labelledby="explore-title">
+    <section class="immersive-section orbit-section" id="explore" aria-labelledby="explore-title">
       <div class="immersive-heading">
         <div>
-          <div class="section-kicker mono"><span>01</span> / EXPLORE THE SPACE</div>
-          <h2 id="explore-title">A little less scrolling.<br><span>A little more exploring.</span></h2>
+          <div class="section-kicker mono"><span>01</span> / A SYSTEM IN MOTION</div>
+          <h2 id="explore-title">Different interests.<br><span>One orbit.</span></h2>
         </div>
-        <p class="immersive-heading-copy">Step into the hallway. Each door opens a different part of my work, toolkit, journey, and contact page.</p>
+        <p class="immersive-heading-copy">A small map of what I build, what I am learning, and where I want to go. Pick a signal to explore.</p>
       </div>
-      <div class="hallway-stage">
-        <div class="hallway-fallback" aria-hidden="true"></div>
-        <canvas class="hallway-canvas" id="hallway-canvas" aria-label="A three-dimensional hallway with four doors" role="img"></canvas>
-        <div class="hallway-topline" aria-hidden="true"><span>SP / INTERACTIVE ARCHIVE</span><span>SELECT A DOOR TO CONTINUE</span></div>
-        <nav class="hallway-controls" aria-label="Explore portfolio sections">
-          <a class="hallway-door-link" href="#projects"><span class="hallway-door-number">01 / WORK</span><span class="hallway-door-name">Selected projects ↗</span></a>
-          <a class="hallway-door-link" href="#skills"><span class="hallway-door-number">02 / TOOLKIT</span><span class="hallway-door-name">Skills &amp; tools ↗</span></a>
-          <a class="hallway-door-link" href="#journey"><span class="hallway-door-number">03 / JOURNEY</span><span class="hallway-door-name">Education &amp; milestones ↗</span></a>
-          <a class="hallway-door-link" href="#contact"><span class="hallway-door-number">04 / CONNECT</span><span class="hallway-door-name">Get in touch ↗</span></a>
+      <div class="orbit-stage">
+        <canvas class="orbit-canvas" id="orbit-canvas" aria-hidden="true"></canvas>
+        <div class="orbit-vignette" aria-hidden="true"></div>
+        <div class="orbit-core-copy" aria-hidden="true">
+          <span class="orbit-core-kicker">INDEPENDENT BUILDER</span>
+          <span class="orbit-core-name">SREERANG<span>.</span></span>
+          <span class="orbit-core-sub">SOFTWARE · DATA · AI</span>
+        </div>
+        <nav class="orbit-navigation" aria-label="Explore portfolio">
+          <a class="orbit-node" data-node="work" href="#projects">
+            <span class="orbit-node-index">01 / BUILD</span><strong>Selected work</strong><span class="orbit-node-caption">Things made real <i>↗</i></span>
+          </a>
+          <a class="orbit-node" data-node="toolkit" href="#skills">
+            <span class="orbit-node-index">02 / EXPLORE</span><strong>My toolkit</strong><span class="orbit-node-caption">Tools and ideas <i>↗</i></span>
+          </a>
+          <a class="orbit-node" data-node="journey" href="#journey">
+            <span class="orbit-node-index">03 / LEARN</span><strong>The journey</strong><span class="orbit-node-caption">Learning in motion <i>↗</i></span>
+          </a>
+          <a class="orbit-node" data-node="contact" href="#contact">
+            <span class="orbit-node-index">04 / CONNECT</span><strong>Say hello</strong><span class="orbit-node-caption">Start a conversation <i>↗</i></span>
+          </a>
         </nav>
+        <div class="orbit-coordinate orbit-coordinate-left" aria-hidden="true">09° / 2026</div>
+        <div class="orbit-coordinate orbit-coordinate-right" aria-hidden="true">FIELD NOTES · 001</div>
       </div>
-      <p class="hallway-hint">DESKTOP · MOVE THROUGH THE SPACE WITH YOUR POINTER &nbsp; / &nbsp; MOBILE · TAP A DOOR</p>
+      <p class="orbit-hint mono">MOVE TO DISTURB THE FIELD <span>·</span> SELECT A SIGNAL TO EXPLORE</p>
     </section>
 
     <section class="intro section-pad" id="about">
