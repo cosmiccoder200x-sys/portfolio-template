@@ -89,8 +89,6 @@
       }
     }
   </style>
-
-  <rect width="720" height="440" fill="#0b0b0b" rx="4"/>
   <rect x="16" y="16" width="688" height="408" stroke="#1c1c1c" stroke-width="1" fill="none"/>
 
   <!-- Background Coordinate Crosshairs & Reference Grid -->
