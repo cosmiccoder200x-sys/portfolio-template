@@ -39,10 +39,18 @@
   <link rel="stylesheet" href="immersive.css">
   <script src="https://unpkg.com/@rive-app/webgl2@2.49.0/rive.js" defer></script>
   <script src="script.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
   <script type="module" src="immersive.js"></script>
 </head>
 <body>
   <canvas class="ambient-network" id="ambient-network" aria-hidden="true"></canvas>
+  <canvas class="world-canvas" id="world-canvas" aria-hidden="true"></canvas>
+  <div class="world-meta mono" aria-hidden="true">
+    <span class="world-meta-index" id="world-phase">01 / ORIGIN</span>
+    <span class="world-meta-rule"></span>
+    <span class="world-meta-caption">SCROLL TO NAVIGATE THE SPACE</span>
+  </div>
   <div class="page-frame" aria-hidden="true"></div>
   <div class="scroll-progress-bar" id="scroll-progress" aria-hidden="true"></div>
   <div class="cursor-spotlight" id="cursor-spotlight" aria-hidden="true"></div>
@@ -75,42 +83,6 @@
           <img src="assets/images/hero-orb-fallback.svg?v=3" alt="SP Animated Identity Orb" class="hero-orb-fallback-img">
         </div>
       </div>
-    </section>
-
-    <section class="immersive-section orbit-section" id="explore" aria-labelledby="explore-title">
-      <div class="immersive-heading">
-        <div>
-          <div class="section-kicker mono"><span>01</span> / A SYSTEM IN MOTION</div>
-          <h2 id="explore-title">Different interests.<br><span>One orbit.</span></h2>
-        </div>
-        <p class="immersive-heading-copy">A small map of what I build, what I am learning, and where I want to go. Pick a signal to explore.</p>
-      </div>
-      <div class="orbit-stage">
-        <canvas class="orbit-canvas" id="orbit-canvas" aria-hidden="true"></canvas>
-        <div class="orbit-vignette" aria-hidden="true"></div>
-        <div class="orbit-core-copy" aria-hidden="true">
-          <span class="orbit-core-kicker">INDEPENDENT BUILDER</span>
-          <span class="orbit-core-name">SREERANG<span>.</span></span>
-          <span class="orbit-core-sub">SOFTWARE · DATA · AI</span>
-        </div>
-        <nav class="orbit-navigation" aria-label="Explore portfolio">
-          <a class="orbit-node" data-node="work" href="#projects">
-            <span class="orbit-node-index">01 / BUILD</span><strong>Selected work</strong><span class="orbit-node-caption">Things made real <i>↗</i></span>
-          </a>
-          <a class="orbit-node" data-node="toolkit" href="#skills">
-            <span class="orbit-node-index">02 / EXPLORE</span><strong>My toolkit</strong><span class="orbit-node-caption">Tools and ideas <i>↗</i></span>
-          </a>
-          <a class="orbit-node" data-node="journey" href="#journey">
-            <span class="orbit-node-index">03 / LEARN</span><strong>The journey</strong><span class="orbit-node-caption">Learning in motion <i>↗</i></span>
-          </a>
-          <a class="orbit-node" data-node="contact" href="#contact">
-            <span class="orbit-node-index">04 / CONNECT</span><strong>Say hello</strong><span class="orbit-node-caption">Start a conversation <i>↗</i></span>
-          </a>
-        </nav>
-        <div class="orbit-coordinate orbit-coordinate-left" aria-hidden="true">09° / 2026</div>
-        <div class="orbit-coordinate orbit-coordinate-right" aria-hidden="true">FIELD NOTES · 001</div>
-      </div>
-      <p class="orbit-hint mono">MOVE TO DISTURB THE FIELD <span>·</span> SELECT A SIGNAL TO EXPLORE</p>
     </section>
 
     <section class="intro section-pad" id="about">
