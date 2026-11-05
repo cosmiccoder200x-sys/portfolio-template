@@ -8,6 +8,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   const sections = [...document.querySelectorAll("main > section")];
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  const hardwareCores = Number(navigator.hardwareConcurrency || 8);
+  const deviceMemory = Number(navigator.deviceMemory || 8);
+  const lowPowerDevice = coarsePointer || hardwareCores <= 4 || deviceMemory <= 4;
 
   // The camera travels through one continuous world. Each point corresponds to a page chapter.
   const cameraPoints = [
@@ -37,6 +40,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   const path = new THREE.CatmullRomCurve3(cameraPoints, false, "centripetal", 0.45);
   const scrollState = { progress: 0 };
   const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
+  const chapterLandmarks = [];
   const cameraPosition = new THREE.Vector3();
   const cameraTarget = new THREE.Vector3();
   const desiredPosition = new THREE.Vector3();
@@ -125,12 +129,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
     const opacity = 0.12 + (index % 3) * 0.035;
     const ringMaterial = new THREE.MeshBasicMaterial({
-      color: index % 2 ? 0x9eafc2 : 0xd0d8e2,
+      color: index % 2 ? 0xa6aab0 : 0xd8dbe0,
       transparent: true,
       opacity
     });
     const innerMaterial = new THREE.MeshBasicMaterial({
-      color: 0x8296ae,
+      color: 0x888d94,
       transparent: true,
       opacity: opacity * 0.55
     });
@@ -143,18 +147,19 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     const frameGeometry = new THREE.EdgesGeometry(new THREE.BoxGeometry(7.8, 7.8, 0.1));
     const frame = new THREE.LineSegments(
       frameGeometry,
-      new THREE.LineBasicMaterial({ color: 0x8796a8, transparent: true, opacity: opacity * 0.72 })
+      new THREE.LineBasicMaterial({ color: 0x8f949b, transparent: true, opacity: opacity * 0.72 })
     );
     frame.rotation.z = index % 2 ? Math.PI / 4 : 0;
     gateway.add(frame);
 
     const marker = new THREE.Mesh(
       new THREE.IcosahedronGeometry(0.12 + (index % 3) * 0.035, 1),
-      new THREE.MeshBasicMaterial({ color: 0xe0e5eb, transparent: true, opacity: 0.72 })
+      new THREE.MeshBasicMaterial({ color: 0xe1e3e6, transparent: true, opacity: 0.72 })
     );
     marker.position.set(0, 4.35, 0);
     gateway.add(marker);
 
+    gateway.userData.gatewayRotation = index % 2 ? 0.012 : -0.01;
     floatingWorld.add(gateway);
     return gateway;
   }
@@ -182,34 +187,34 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     landmark.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), tangent);
 
     const metal = new THREE.MeshStandardMaterial({
-      color: 0x91a2b8,
+      color: 0x9ca1a8,
       roughness: .3,
       metalness: .78,
-      emissive: 0x142132,
+      emissive: 0x1a1d22,
       emissiveIntensity: .32,
       flatShading: true
     });
     const pale = new THREE.MeshStandardMaterial({
-      color: 0xd2dbe5,
+      color: 0xd8dbe0,
       roughness: .28,
       metalness: .68,
-      emissive: 0x202d3c,
+      emissive: 0x24282e,
       emissiveIntensity: .2
     });
     const dark = new THREE.MeshStandardMaterial({
-      color: 0x273342,
+      color: 0x363a40,
       roughness: .35,
       metalness: .76,
-      emissive: 0x101d2b,
+      emissive: 0x1b1e23,
       emissiveIntensity: .28
     });
     const line = new THREE.LineBasicMaterial({
-      color: 0x9eafc2,
+      color: 0xa6aab0,
       transparent: true,
       opacity: .42
     });
     const faintLine = new THREE.LineBasicMaterial({
-      color: 0x8293a8,
+      color: 0x858a91,
       transparent: true,
       opacity: .2
     });
@@ -353,15 +358,52 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       }
     }
 
+    const materials = new Set();
+    landmark.traverse((object) => {
+      const assigned = Array.isArray(object.material)
+        ? object.material
+        : object.material ? [object.material] : [];
+      assigned.forEach((material) => {
+        if (materials.has(material)) return;
+        materials.add(material);
+        material.userData.scrollBaseOpacity = Number.isFinite(material.opacity) ? material.opacity : 1;
+        material.transparent = true;
+        material.depthWrite = false;
+      });
+    });
+
+    chapterLandmarks.push({
+      group: landmark,
+      progress: t,
+      materials: [...materials].map((material) => ({
+        material,
+        baseOpacity: material.userData.scrollBaseOpacity
+      }))
+    });
+
     floatingWorld.add(landmark);
     return landmark;
+  }
+
+  function updateChapterFocus(routeT) {
+    chapterLandmarks.forEach(({ group, progress, materials }) => {
+      const distance = Math.abs(routeT - progress);
+      const proximity = 1 - clamp(distance / 0.2, 0, 1);
+      const focus = proximity * proximity * (3 - 2 * proximity);
+      const opacityScale = 0.24 + focus * 0.76;
+
+      group.scale.setScalar(0.9 + focus * 0.1);
+      materials.forEach(({ material, baseOpacity }) => {
+        material.opacity = baseOpacity * opacityScale;
+      });
+    });
   }
 
   function buildFloatingGeometry() {
     floatingWorld = new THREE.Group();
     scene.add(floatingWorld);
 
-    const gatewayCount = coarsePointer ? 8 : 12;
+    const gatewayCount = lowPowerDevice ? 7 : 11;
     for (let i = 0; i < gatewayCount; i += 1) {
       createGateway(0.055 + (i / gatewayCount) * 0.91, i);
     }
@@ -370,17 +412,17 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       createChapterLandmark(i, i / (cameraPoints.length - 1));
     }
 
-    makeLine(path.getPoints(420), 0xaab8c8, 0.16, 0.018);
-    makeLine(routeRail(-3.5), 0x7f91a7, 0.11, 0.012);
-    makeLine(routeRail(3.5), 0x7f91a7, 0.11, 0.012);
+    makeLine(path.getPoints(420), 0xb3b7bd, 0.16, 0.018);
+    makeLine(routeRail(-3.5), 0x878c93, 0.11, 0.012);
+    makeLine(routeRail(3.5), 0x878c93, 0.11, 0.012);
 
-    const shardCount = coarsePointer ? 44 : 90;
+    const shardCount = lowPowerDevice ? 28 : 72;
     const shardGeometry = new THREE.OctahedronGeometry(0.13, 0);
     const shardMaterial = new THREE.MeshStandardMaterial({
-      color: 0x71849b,
+      color: 0x858a91,
       roughness: 0.34,
       metalness: 0.68,
-      emissive: 0x1a2736,
+      emissive: 0x1e2228,
       emissiveIntensity: 0.28,
       flatShading: true
     });
@@ -406,7 +448,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   }
 
   function buildStars() {
-    const count = coarsePointer ? 360 : 760;
+    const count = lowPowerDevice ? 220 : 580;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i += 1) {
       const t = Math.random();
@@ -420,8 +462,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     starField = new THREE.Points(
       geometry,
       new THREE.PointsMaterial({
-        color: 0xa7b7c9,
-        size: coarsePointer ? 0.022 : 0.027,
+        color: 0xb5bac1,
+        size: lowPowerDevice ? 0.022 : 0.027,
         transparent: true,
         opacity: 0.5,
         sizeAttenuation: true,
@@ -433,21 +475,21 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
   function buildScene() {
     scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x080a0e, 0.009);
+    scene.fog = new THREE.FogExp2(0x090a0c, 0.009);
 
     camera = new THREE.PerspectiveCamera(48, 1, 0.1, 180);
     camera.position.copy(cameraPoints[0]);
 
-    scene.add(new THREE.AmbientLight(0x8998aa, 1.15));
-    const keyLight = new THREE.DirectionalLight(0xdce5ef, 1.3);
+    scene.add(new THREE.AmbientLight(0x9a9da2, 1.15));
+    const keyLight = new THREE.DirectionalLight(0xe1e3e6, 1.3);
     keyLight.position.set(-7, 10, 12);
     scene.add(keyLight);
 
-    const rimLight = new THREE.PointLight(0x6d819c, 42, 48);
+    const rimLight = new THREE.PointLight(0x8c9199, 42, 48);
     rimLight.position.set(8, 5, -28);
     scene.add(rimLight);
 
-    const farLight = new THREE.PointLight(0xc3cfde, 28, 40);
+    const farLight = new THREE.PointLight(0xc4c7cc, 28, 40);
     farLight.position.set(-8, -5, -50);
     scene.add(farLight);
 
@@ -459,7 +501,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     if (!renderer || !camera) return;
     const width = Math.max(1, window.innerWidth);
     const height = Math.max(1, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, coarsePointer ? 1 : 1.35));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, lowPowerDevice ? 1 : 1.25));
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.fov = width < 700 ? 58 : 48;
@@ -468,8 +510,9 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
   function updateCamera() {
     if (!camera) return;
-    const routeT = mapScrollToPath(reduceMotion ? 0 : scrollState.progress);
+    const routeT = mapScrollToPath(scrollState.progress);
     setChapter(routeT);
+    updateChapterFocus(routeT);
 
     const lookT = clamp(routeT + (routeT > 0.97 ? -0.025 : 0.025), 0, 1);
     desiredPosition.copy(path.getPoint(routeT));
@@ -506,12 +549,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     updateCamera();
 
     if (!reduceMotion && floatingWorld) {
-      floatingWorld.children.forEach((object, index) => {
-        if (object.isGroup && index % 3 === 0) {
-          object.rotation.z += delta * (index % 2 ? 0.012 : -0.01);
+      floatingWorld.children.forEach((object) => {
+        if (object.userData && object.userData.gatewayRotation) {
+          object.rotation.z += delta * object.userData.gatewayRotation;
         }
       });
-      if (starField) starField.rotation.z = Math.sin(seconds * 0.08) * 0.004;
+      if (starField) starField.rotation.z = Math.sin(seconds * 0.08) * 0.003;
     }
 
     renderer.render(scene, camera);
@@ -543,14 +586,25 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => window.ScrollTrigger.refresh()).catch(() => {});
       }
-    } else if (!reduceMotion) {
+    } else {
       const readScroll = () => {
         const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
         scrollState.progress = clamp(window.scrollY / maxScroll, 0, 1);
-        refreshScrollStops();
+        if (reduceMotion) {
+          refreshScrollStops();
+          updateCamera();
+          if (renderer && scene && camera) renderer.render(scene, camera);
+        }
       };
       window.addEventListener("scroll", readScroll, { passive: true });
-      window.addEventListener("resize", readScroll, { passive: true });
+      window.addEventListener("resize", () => {
+        refreshScrollStops();
+        readScroll();
+      }, { passive: true });
+      window.addEventListener("load", () => {
+        refreshScrollStops();
+        readScroll();
+      }, { once: true });
       readScroll();
     }
   }
@@ -604,6 +658,24 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
 
+    canvas.addEventListener("webglcontextlost", (event) => {
+      event.preventDefault();
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      animationFrame = 0;
+      canvas.dataset.contextState = "lost";
+    }, false);
+    canvas.addEventListener("webglcontextrestored", () => {
+      delete canvas.dataset.contextState;
+      resize();
+      if (reduceMotion) {
+        updateCamera();
+        renderer.render(scene, camera);
+      } else if (!document.hidden && !animationFrame) {
+        lastTime = 0;
+        animate(0);
+      }
+    }, false);
+
     buildScene();
     resize();
     setupScrollControl();
@@ -643,7 +715,15 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     if (animationFrame) cancelAnimationFrame(animationFrame);
     if (resizeObserver) resizeObserver.disconnect();
     if (window.ScrollTrigger) window.ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    if (scene) {
+      scene.traverse((object) => {
+        if (object.geometry) object.geometry.dispose();
+        if (object.material) {
+          const materials = Array.isArray(object.material) ? object.material : [object.material];
+          materials.forEach((material) => material.dispose());
+        }
+      });
+    }
     if (renderer) renderer.dispose();
-    if (starField) starField.geometry.dispose();
   }, { once: true });
 })();
