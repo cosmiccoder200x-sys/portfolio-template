@@ -391,8 +391,110 @@ select {
 @media (max-width: 620px) {
   .main-nav .mobile-contact { display: block; }
   .site-header .menu-toggle { min-width: 44px; min-height: 44px; }
-  .hero { min-height: auto; padding-block: 104px 36px; }
-  .hero .hero-orb-wrap { position: absolute; top: 78px; right: 6%; width: 42px; height: 42px; bottom: auto; }
+  .hero {
+    min-height: auto;
+    padding: calc(108px + env(safe-area-inset-top)) 7% 42px;
+    gap: 16px;
+  }
+
+  body:not(.is-read-mode) .hero::before {
+    content: "";
+    position: absolute;
+    inset: 70px 0 0;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 75% 38%, rgb(171 190 218 / 15%), transparent 58%);
+  }
+
+  .hero-index {
+    position: static;
+    font-size: .64rem;
+    color: #a5a5a5;
+    gap: 12px;
+  }
+
+  .hero-index span {
+    max-width: none;
+  }
+
+  .hero-name-wrap {
+    margin: 4px 0 0;
+  }
+
+  .hero-name {
+    font-size: clamp(3.55rem, 17.4vw, 6.8rem);
+    line-height: .9;
+    margin: 0;
+    letter-spacing: -.09em;
+  }
+
+  .hero-name .name-last {
+    align-self: flex-start;
+    margin: .08em 0 0;
+  }
+
+  .hero-role {
+    position: static;
+    margin-top: 22px;
+    max-width: 59%;
+    gap: 10px;
+    font-size: .64rem;
+    line-height: 1.6;
+  }
+
+  .hero-role-rotator {
+    font-size: .68rem;
+  }
+
+  .hero-statement {
+    margin: 0;
+    max-width: 27ch;
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    line-height: 1.5;
+    color: #d1d1d1;
+  }
+
+  .hero .hero-orb-wrap {
+    top: calc(194px + env(safe-area-inset-top) + 2vw);
+    right: 5%;
+    bottom: auto;
+    width: clamp(114px, 39vw, 215px);
+    z-index: 1;
+  }
+
+  .hero-actions {
+    flex-wrap: wrap;
+    margin: 4px 0 0;
+  }
+
+  .hero-actions a {
+    font-size: .875rem;
+    font-weight: 700;
+  }
+
+  #projects-grid .project-card {
+    gap: .75rem;
+    padding: 12px 12px 16px;
+  }
+
+  body:not(.is-read-mode) #projects-grid .project-card {
+    background: linear-gradient(155deg, #17191e, #0e0e10 65%) !important;
+  }
+
+  #projects-grid .project-preview-frame {
+    clip-path: none;
+    aspect-ratio: 16 / 9;
+  }
+
+  #projects-grid .project-preview-img {
+    object-fit: contain;
+  }
+
+  #projects-grid .project-actions a {
+    border: 1px solid var(--line);
+    padding-inline: 14px;
+    font-size: .75rem;
+  }
 }
 @media (max-width: 1400px) { .chapter-rail { display: none; } }
 @media (min-width: 761px) {
