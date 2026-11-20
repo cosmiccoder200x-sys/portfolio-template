@@ -65,21 +65,6 @@
       "desc": "A Chrome productivity extension combining website usage tracking, distraction blocking, Pomodoro sessions, tasks, notes, statistics, and reports.",
       "stack": "JavaScript · HTML · CSS · Chrome Extension APIs",
       "link": "https://github.com/cosmiccoder200x-sys/Focusflow"
-    },
-    {
-      "title": "E-Learning Platform",
-      "type": "FULL-STACK WEB APPLICATION",
-      "desc": "A learning platform with class management, live sessions, course materials, assignments, submissions, and grading, backed by a Flask API and Supabase.",
-      "stack": "React · TypeScript · Vite · Flask · Supabase",
-      "link": "https://github.com/cosmiccoder200x-sys/E--learning"
-    },
-    {
-      "title": "Gullylabs",
-      "type": "E-COMMERCE / FULL-STACK",
-      "desc": "An e-commerce platform for physical and digital products, with storefront discovery, cart, coupons, Razorpay checkout, order tracking, returns, support chat, and admin tools.",
-      "stack": "React · TanStack Start · Tailwind CSS · Supabase · Razorpay",
-      "link": "https://github.com/cosmiccoder200x-sys/Gullylabs",
-      "demo": "https://gullylab.vercel.app"
     }
   ],
   "links": {
@@ -147,16 +132,6 @@
         "name": "FocusFlow",
         "description": "A Chrome productivity extension.",
         "technologies": "JavaScript, HTML, CSS"
-      },
-      {
-        "name": "E-Learning Platform",
-        "description": "A full-stack learning system.",
-        "technologies": "React, Flask, Supabase"
-      },
-      {
-        "name": "Gullylabs",
-        "description": "An e-commerce site with Razorpay checkout.",
-        "technologies": "React, Supabase, Razorpay"
       }
     ],
     "certifications": [

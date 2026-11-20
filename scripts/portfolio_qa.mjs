@@ -136,7 +136,7 @@ check("Low-power devices use lighter particle and shard counts", immersive.inclu
 check("Primary navigation exposes keyboard focus indicators", immersiveCss.includes(".chapter-rail a:focus-visible") && immersiveCss.includes(".read-mode-toggle:focus-visible"));
 check("Read Mode control starts disabled and has a handler", /id=["']read-mode-toggle["'][^>]*aria-pressed=["']false["']/.test(html)
   && script.includes("read-mode-toggle") && immersive.includes("portfolio:readmodechange"));
-check("Contact pullback holds focus on the Contact landmark", immersive.includes("desiredTarget.lerp(path.getPoint(journeyT), contactProgress);"));
+check("Contact pullback holds focus on the Contact landmark", immersive.includes("portalDirection.subVectors(path.getPoint(journeyT), desiredPosition).normalize();") && immersive.includes("forwardYaw + turn * contactProgress"));
 
 check("Native page scrolling is not hijacked", !/addEventListener\(["'](?:wheel|touchmove)["'][\s\S]{0,300}?preventDefault\(/.test(immersive + script));
 
