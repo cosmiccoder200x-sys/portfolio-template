@@ -38,11 +38,19 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="immersive.css">
   <link rel="stylesheet" href="mobile.css">
-  <script src="https://unpkg.com/@rive-app/webgl2@2.49.0/rive.js" defer></script>
+  <script>
+    if (matchMedia("(min-width: 761px) and (pointer: fine) and (prefers-reduced-motion: no-preference)").matches) {
+      const runtime = document.createElement("script");
+      runtime.src = "https://unpkg.com/@rive-app/webgl2@2.49.0/rive.js";
+      document.head.append(runtime);
+    }
+  </script>
   <script src="script.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" defer></script>
-  <script type="module" src="immersive.js"></script>
+  <script type="module">
+    if (matchMedia("(min-width: 761px) and (pointer: fine) and (prefers-reduced-motion: no-preference)").matches) import("./immersive.js");
+  </script>
 </head>
 <body>
   <canvas class="world-canvas" id="world-canvas" aria-hidden="true"></canvas>
@@ -66,7 +74,7 @@
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Sreerang P home">S.P.</a>
     <nav class="main-nav" id="main-nav" aria-label="Main navigation">
-      <a href="#home">Portfolio</a><a href="#about">About</a><a href="#education">Education</a><a href="#certifications">Certifications</a><a href="#skills">Skills</a><a href="#projects">Projects</a><a href="#journey">Journey</a><a href="analytics/">Analytics</a>
+      <a href="#projects">Projects</a><a class="mobile-contact" href="#contact">Contact</a><a href="#home">Portfolio</a><a href="#about">About</a><a href="#education">Education</a><a href="#certifications">Certifications</a><a href="#skills">Skills</a><a href="#journey">Journey</a><a href="analytics/">Analytics</a>
     </nav>
     <a class="header-contact" href="#contact">LET'S TALK <span aria-hidden="true">↗</span></a>
     <button class="read-mode-toggle" id="read-mode-toggle" type="button" aria-pressed="false" aria-label="Enable read mode" title="Enable read mode">
@@ -89,8 +97,8 @@
           </div>
         </div>
       </div>
-      <p class="hero-statement reveal">Building intelligent systems<br>and thoughtful digital experiences.</p>
-      <div class="hero-bottom mono"><a href="#about" class="scroll-cue"><span class="scroll-line"></span> SCROLL TO EXPLORE <span class="down-arrow">↓</span></a><span class="page-count">01 <i>/</i> 04</span></div>
+      <p class="hero-statement reveal">I build software, data tools, and AI applications.</p>
+      <div class="hero-actions"><a href="#projects">View projects</a><a href="#contact">Contact</a></div>
       <div class="hero-orb-wrap reveal" id="hero-orb-wrap" aria-label="Interactive SP Identity Orb" role="region" title="Drag or move cursor to tilt orb">
         <div class="hero-orb-fallback" id="hero-orb-fallback">
           <img src="assets/images/hero-orb-fallback.svg?v=3" alt="SP Animated Identity Orb" class="hero-orb-fallback-img">
@@ -149,12 +157,12 @@
             <img src="assets/images/projects/modulr.svg" alt="Modulr Project Preview" class="project-preview-img" loading="lazy">
             <div class="project-preview-overlay"></div>
           </div>
-          <span class="project-number mono">01 / LEARNING PRODUCT</span>
+          <span class="project-number mono">Featured / Learning product</span>
           <h3>Modulr</h3>
           <p>An adaptive exam-learning platform for KTU students, connecting syllabus topics, previous-year questions, mastery, and mistakes into focused study sessions.</p>
           <div class="project-actions">
-            <a href="https://github.com/cosmiccoder200x-sys/Modulr" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
-            <a href="https://tkm-notes.vercel.app/" target="_blank" rel="noopener noreferrer">LIVE ↗</a>
+            <a href="https://github.com/cosmiccoder200x-sys/Modulr" target="_blank" rel="noopener noreferrer">Code ↗</a>
+            <a href="https://tkm-notes.vercel.app/" target="_blank" rel="noopener noreferrer">Demo ↗</a>
           </div>
         </article>
 
@@ -167,8 +175,8 @@
           <h3>Local Brain MCP</h3>
           <p>A local-first memory layer for AI coding agents, indexing repository history and engineering context into an embedded SQLite vector store.</p>
           <div class="project-actions">
-            <a href="https://github.com/cosmiccoder200x-sys/local-brain-mcp" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
-            <a href="https://local-brain-mcp.vercel.app" target="_blank" rel="noopener noreferrer">LIVE ↗</a>
+            <a href="https://github.com/cosmiccoder200x-sys/local-brain-mcp" target="_blank" rel="noopener noreferrer">Code ↗</a>
+            <a href="https://local-brain-mcp.vercel.app" target="_blank" rel="noopener noreferrer">Demo ↗</a>
           </div>
         </article>
 
@@ -181,7 +189,7 @@
           <h3>FocusFlow</h3>
           <p>A Chrome productivity extension for website tracking, distraction blocking, Pomodoro sessions, tasks, notes, statistics, and reports.</p>
           <div class="project-actions">
-            <a href="https://github.com/cosmiccoder200x-sys/Focusflow" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+            <a href="https://github.com/cosmiccoder200x-sys/Focusflow" target="_blank" rel="noopener noreferrer">Code ↗</a>
           </div>
         </article>
 
@@ -194,7 +202,7 @@
           <h3>E-Learning Platform</h3>
           <p>A learning platform with class management, live sessions, course materials, assignments, submissions, and grading, backed by Flask and Supabase.</p>
           <div class="project-actions">
-            <a href="https://github.com/cosmiccoder200x-sys/E--learning" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
+            <a href="https://github.com/cosmiccoder200x-sys/E--learning" target="_blank" rel="noopener noreferrer">Code ↗</a>
           </div>
         </article>
 
@@ -207,8 +215,8 @@
           <h3>Gullylabs</h3>
           <p>An e-commerce platform with storefront discovery, cart, coupons, Razorpay checkout, order tracking, returns, support chat, and admin tools.</p>
           <div class="project-actions">
-            <a href="https://github.com/cosmiccoder200x-sys/Gullylabs" target="_blank" rel="noopener noreferrer">SOURCE ↗</a>
-            <a href="https://gullylab.vercel.app" target="_blank" rel="noopener noreferrer">LIVE ↗</a>
+            <a href="https://github.com/cosmiccoder200x-sys/Gullylabs" target="_blank" rel="noopener noreferrer">Code ↗</a>
+            <a href="https://gullylab.vercel.app" target="_blank" rel="noopener noreferrer">Demo ↗</a>
           </div>
         </article>
       </div>
