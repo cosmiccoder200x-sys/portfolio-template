@@ -225,7 +225,7 @@
     const roles = [
       "SOFTWARE DEVELOPER",
       "AI BUILDER",
-      "FORWARD-DEPLOYED ENGINEER"
+      "STRATEGY & PROBLEM-SOLVING ENTHUSIAST"
     ];
     let roleIndex = 0;
 
