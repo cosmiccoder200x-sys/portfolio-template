@@ -290,7 +290,7 @@
       }
     };
 
-    initRive();
+    if (matchMedia("(min-width: 761px) and (pointer: fine) and (prefers-reduced-motion: no-preference)").matches) initRive();
 
     // Helper: update visual 3D transforms from currentX and currentY
     const updateTransforms = (x, y) => {
