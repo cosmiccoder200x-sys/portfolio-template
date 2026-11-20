@@ -2,6 +2,26 @@
   "use strict";
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function setupJourney() {
+    const buttons = [...document.querySelectorAll(".journey-select")];
+    const title = document.getElementById("journey-detail-title");
+    const copy = document.getElementById("journey-detail-copy");
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        buttons.forEach((item) => {
+          const selected = item === button;
+          item.setAttribute("aria-pressed", String(selected));
+          item.closest(".journey-item")?.classList.toggle("is-selected", selected);
+        });
+        if (title) title.textContent = button.dataset.title || "Milestone";
+        if (copy) copy.textContent = button.dataset.detail || "";
+      });
+    });
+  }
+
+  setupJourney();
+
   const isFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   /* ==========================================================================
