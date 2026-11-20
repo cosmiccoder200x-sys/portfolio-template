@@ -23,17 +23,15 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     new THREE.Vector3(10, 2, -33),   // 06 / Modulr
     new THREE.Vector3(5, 4, -38),    // 07 / Local Brain MCP
     new THREE.Vector3(-2, 2, -43),   // 08 / FocusFlow
-    new THREE.Vector3(-9, -2, -48),  // 09 / E-Learning
-    new THREE.Vector3(-6, -5, -53),  // 10 / Gullylabs
-    new THREE.Vector3(2, -2, -58),   // 11 / Project gallery exit
-    new THREE.Vector3(-8, -3, -66),  // 12 / Journey
-    new THREE.Vector3(-1, 1, -75)    // 13 / Contact
+    new THREE.Vector3(2, -2, -58),   // 09 / Project gallery exit
+    new THREE.Vector3(-8, -3, -66),  // 10 / Journey
+    new THREE.Vector3(-1, 1, -75)    // 11 / Contact
   ];
 
-  // The project chapter uses six camera segments so each project gets its own pass-through.
-  const routeSegments = [1, 1, 1, 1, 1, 6, 1, 1];
-  const chapterWaypointIndices = [0, 1, 2, 3, 4, 5, 11, 12, 13];
-  const projectWaypointIndices = [6, 7, 8, 9, 10];
+  // The project chapter uses four camera segments so each project gets its own pass-through.
+  const routeSegments = [1, 1, 1, 1, 1, 4, 1, 1];
+  const chapterWaypointIndices = [0, 1, 2, 3, 4, 5, 9, 10, 11];
+  const projectWaypointIndices = [6, 7, 8];
 
   const chapterNames = [
     "01 / ORIGIN",
@@ -584,7 +582,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       createProjectGalleryFrame(projectIndex, waypointIndex / (cameraPoints.length - 1));
     });
 
-    createJourneyThreshold(11.5 / (cameraPoints.length - 1));
+    createJourneyThreshold((chapterWaypointIndices[6] + 0.5) / (cameraPoints.length - 1));
 
     makeLine(path.getPoints(420), 0xb3b7bd, 0.16, 0.018);
     makeLine(routeRail(-3.5), 0x878c93, 0.11, 0.012);
@@ -690,8 +688,8 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     updateProjectGalleryFocus(routeT);
     updateJourneyThresholdFocus(routeT);
 
-    const galleryExitT = 11 / (cameraPoints.length - 1);
-    const journeyT = 12 / (cameraPoints.length - 1);
+    const galleryExitT = mapChapterToPath(6);
+    const journeyT = mapChapterToPath(7);
     const handoffProgress = smoothstep((routeT - galleryExitT) / (journeyT - galleryExitT));
     const handoffArc = Math.sin(handoffProgress * Math.PI);
     const contactProgress = smoothstep((routeT - journeyT) / (1 - journeyT));
