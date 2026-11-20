@@ -57,6 +57,12 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
   const desiredPosition = new THREE.Vector3();
   const cameraPosition = new THREE.Vector3();
   const desiredTarget = new THREE.Vector3();
+  const rollRotation = new THREE.Quaternion();
+  const viewRotation = new THREE.Quaternion();
+  const viewMatrix = new THREE.Matrix4();
+  const forward = new THREE.Vector3();
+  const portalDirection = new THREE.Vector3();
+  const localBack = new THREE.Vector3(0, 0, 1);
   const worldUp = new THREE.Vector3(0, 1, 0);
 
   let renderer = null;
@@ -676,7 +682,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     camera.updateProjectionMatrix();
   }
 
-  function updateCamera() {
+  function updateCamera(delta = 1 / 60) {
     if (!camera) return;
     const routeT = mapScrollToPath(scrollState.progress);
     setChapter(scrollState.progress);
@@ -690,9 +696,14 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     const handoffArc = Math.sin(handoffProgress * Math.PI);
     const contactProgress = smoothstep((routeT - journeyT) / (1 - journeyT));
 
-    const lookT = clamp(routeT + (routeT > 0.97 ? -0.025 : 0.025), 0, 1);
-    desiredPosition.copy(path.getPoint(routeT));
+    const lookAhead = 0.025;
+    const position = path.getPoint(routeT);
+    const lookT = Math.min(routeT + lookAhead, 1);
+    desiredPosition.copy(position);
     desiredTarget.copy(path.getPoint(lookT));
+    if (routeT + lookAhead > 1) {
+      desiredTarget.addScaledVector(path.getTangent(1), (routeT + lookAhead - 1) * 140);
+    }
 
     // A restrained lateral-and-lifted arc carries the camera out of the gallery and into Journey.
     if (handoffArc > 0.0001) {
@@ -706,9 +717,19 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
 
     // Contact ends with a real dolly-back and a wider lens, holding the portal in frame.
     if (contactProgress > 0) {
-      const tangent = path.getTangent(routeT).normalize();
-      desiredPosition.addScaledVector(tangent, contactProgress * 5.2);
-      desiredTarget.lerp(path.getPoint(journeyT), contactProgress);
+      forward.subVectors(desiredTarget, desiredPosition).normalize();
+      desiredPosition.addScaledVector(path.getTangent(routeT), contactProgress * 5.2);
+      portalDirection.subVectors(path.getPoint(journeyT), desiredPosition).normalize();
+
+      // Sweep consistently around the side as the view turns back toward the portal.
+      const forwardYaw = Math.atan2(forward.x, forward.z);
+      const portalYaw = Math.atan2(portalDirection.x, portalDirection.z);
+      const fullTurn = 2 * Math.PI;
+      const turn = -((forwardYaw - portalYaw + fullTurn) % fullTurn);
+      const yaw = forwardYaw + turn * contactProgress;
+      const pitch = THREE.MathUtils.lerp(Math.asin(forward.y), Math.asin(portalDirection.y), contactProgress);
+      forward.set(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch));
+      desiredTarget.copy(desiredPosition).addScaledVector(forward, 4);
     }
 
     const phase = routeT >= .999 ? "beyond"
@@ -744,15 +765,15 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     camera.position.lerp(cameraPosition, 0.2);
 
     cameraTarget.copy(desiredTarget);
-    cameraTarget.x += pointer.x * 0.34;
-    cameraTarget.y -= pointer.y * 0.22;
-    const smoothTarget = camera.userData.smoothTarget || (camera.userData.smoothTarget = cameraTarget.clone());
-    smoothTarget.lerp(cameraTarget, 0.2);
-    camera.lookAt(smoothTarget);
-    camera.rotateZ(
-      Math.sin(routeT * Math.PI * 2) * 0.035
-      + handoffArc * 0.012
-    );
+    cameraTarget.x += pointer.x * 0.1;
+    cameraTarget.y -= pointer.y * 0.06;
+    viewMatrix.lookAt(desiredPosition, cameraTarget, worldUp);
+    viewRotation.setFromRotationMatrix(viewMatrix);
+    viewRotation.multiply(rollRotation.setFromAxisAngle(
+      localBack, Math.sin(routeT * Math.PI * 2) * 0.035 + handoffArc * 0.012
+    ));
+    // Bound the turn per frame so rapid scrolling cannot whip the view.
+    camera.quaternion.rotateTowards(viewRotation, delta * 1.8);
   }
 
   function render(time) {
@@ -761,7 +782,7 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
     const delta = Math.min(0.05, Math.max(0, seconds - lastTime));
     lastTime = seconds;
 
-    updateCamera();
+    updateCamera(delta);
 
     if (!reduceMotion && floatingWorld) {
       floatingWorld.children.forEach((object) => {
@@ -857,26 +878,6 @@ import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.m
       pointer.targetY = 0;
     });
   }
-
-  function setupJourney() {
-    const buttons = [...document.querySelectorAll(".journey-select")];
-    const title = document.getElementById("journey-detail-title");
-    const copy = document.getElementById("journey-detail-copy");
-
-    buttons.forEach((button) => {
-      button.addEventListener("click", () => {
-        buttons.forEach((item) => {
-          const selected = item === button;
-          item.setAttribute("aria-pressed", String(selected));
-          item.closest(".journey-item")?.classList.toggle("is-selected", selected);
-        });
-        if (title) title.textContent = button.dataset.title || "Milestone";
-        if (copy) copy.textContent = button.dataset.detail || "";
-      });
-    });
-  }
-
-  setupJourney();
 
   if (!canvas || !sections.length || sections.length + 1 !== chapterWaypointIndices.length
       || routeSegments.length !== sections.length
