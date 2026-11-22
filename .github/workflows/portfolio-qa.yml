@@ -23,4 +23,6 @@ jobs:
         with:
           node-version: 20
       - name: Run dependency-free QA checks
-        run: node scripts/portfolio_qa.mjs
+        run: |
+          node scripts/portfolio_qa.mjs
+          node --test scripts/monetization.test.mjs
