@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-21T08:18:20+00:00",
+  "updated_at": "2026-11-22T08:00:06+00:00",
   "collection_started_at": "2026-11-01T13:38:11+00:00",
   "note": "GitHub retains repository traffic data for only 14 days. This file accumulates daily snapshots from the first successful collection; the first run can recover only the currently available 14-day window.",
   "repositories": {
@@ -143,6 +143,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -281,17 +285,21 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
         "views": 0,
         "unique_visitors": 0,
-        "clones": 5,
-        "unique_cloners": 4
+        "clones": 6,
+        "unique_cloners": 5
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/mindsprint": {
       "name": "mindsprint",
@@ -571,8 +579,8 @@
         "unique_cloners": 6
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/xboostproductivity": {
       "name": "xboostproductivity",
@@ -709,6 +717,14 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-20": {
+          "count": 0,
+          "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -843,17 +859,25 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-20": {
+          "count": 0,
+          "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
         "views": 0,
         "unique_visitors": 0,
-        "clones": 2,
-        "unique_cloners": 2
+        "clones": 3,
+        "unique_cloners": 3
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/FinSight": {
       "name": "FinSight",
@@ -994,6 +1018,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -1132,17 +1160,21 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
         "views": 0,
         "unique_visitors": 0,
-        "clones": 5,
-        "unique_cloners": 5
+        "clones": 6,
+        "unique_cloners": 6
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/devstarter": {
       "name": "devstarter",
@@ -1283,6 +1315,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -1421,6 +1457,10 @@
         "2026-11-20": {
           "count": 1,
           "uniques": 1
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "last_14_days": {
@@ -1430,8 +1470,8 @@
         "unique_cloners": 2
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/gitfolio": {
       "name": "gitfolio",
@@ -1572,6 +1612,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -1710,17 +1754,21 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
         "views": 0,
         "unique_visitors": 0,
-        "clones": 2,
-        "unique_cloners": 2
+        "clones": 3,
+        "unique_cloners": 3
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/build.portfolio": {
       "name": "build.portfolio",
@@ -1857,6 +1905,14 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-20": {
+          "count": 0,
+          "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -1991,17 +2047,25 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-20": {
+          "count": 0,
+          "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
         "views": 0,
         "unique_visitors": 0,
-        "clones": 6,
-        "unique_cloners": 6
+        "clones": 7,
+        "unique_cloners": 7
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/campus-guardian-ai": {
       "name": "campus-guardian-ai",
@@ -2281,8 +2345,8 @@
         "unique_cloners": 4
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/local-brain-mcp": {
       "name": "local-brain-mcp",
@@ -2423,6 +2487,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -2561,13 +2629,17 @@
         "2026-11-20": {
           "count": 3,
           "uniques": 2
+        },
+        "2026-11-21": {
+          "count": 4,
+          "uniques": 3
         }
       },
       "last_14_days": {
         "views": 2,
         "unique_visitors": 2,
-        "clones": 50,
-        "unique_cloners": 23
+        "clones": 51,
+        "unique_cloners": 24
       },
       "referrers": [
         {
@@ -2576,8 +2648,8 @@
           "uniques": 1
         }
       ],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/vibecoding.notes": {
       "name": "vibecoding.notes",
@@ -2714,6 +2786,14 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-20": {
+          "count": 0,
+          "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -2848,23 +2928,25 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
-        }
-      },
-      "last_14_days": {
-        "views": 4,
-        "unique_visitors": 1,
-        "clones": 3,
-        "unique_cloners": 3
-      },
-      "referrers": [
-        {
-          "referrer": "github.com",
+        },
+        "2026-11-20": {
+          "count": 0,
+          "uniques": 0
+        },
+        "2026-11-21": {
           "count": 1,
           "uniques": 1
         }
-      ],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      },
+      "last_14_days": {
+        "views": 0,
+        "unique_visitors": 0,
+        "clones": 4,
+        "unique_cloners": 4
+      },
+      "referrers": [],
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/wallpaperX": {
       "name": "wallpaperX",
@@ -3005,6 +3087,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -3143,17 +3229,21 @@
         "2026-11-20": {
           "count": 1,
           "uniques": 1
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
         "views": 0,
         "unique_visitors": 0,
-        "clones": 4,
-        "unique_cloners": 4
+        "clones": 5,
+        "unique_cloners": 5
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/Algoverse": {
       "name": "Algoverse",
@@ -3294,6 +3384,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -3432,13 +3526,17 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
         "views": 3,
         "unique_visitors": 1,
-        "clones": 3,
-        "unique_cloners": 3
+        "clones": 4,
+        "unique_cloners": 4
       },
       "referrers": [
         {
@@ -3447,8 +3545,8 @@
           "uniques": 1
         }
       ],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/Focusflow": {
       "name": "Focusflow",
@@ -3585,6 +3683,14 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-20": {
+          "count": 7,
+          "uniques": 1
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -3719,13 +3825,21 @@
         "2026-11-19": {
           "count": 1,
           "uniques": 1
+        },
+        "2026-11-20": {
+          "count": 6,
+          "uniques": 3
+        },
+        "2026-11-21": {
+          "count": 13,
+          "uniques": 9
         }
       },
       "last_14_days": {
-        "views": 29,
+        "views": 32,
         "unique_visitors": 5,
-        "clones": 91,
-        "unique_cloners": 50
+        "clones": 75,
+        "unique_cloners": 40
       },
       "referrers": [
         {
@@ -3734,8 +3848,8 @@
           "uniques": 4
         }
       ],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/portfolio": {
       "name": "portfolio",
@@ -3876,6 +3990,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -4014,6 +4132,10 @@
         "2026-11-20": {
           "count": 1,
           "uniques": 1
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
@@ -4023,8 +4145,8 @@
         "unique_cloners": 9
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/habit-os": {
       "name": "habit-os",
@@ -4165,6 +4287,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -4303,17 +4429,21 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
         "views": 0,
         "unique_visitors": 0,
-        "clones": 3,
-        "unique_cloners": 3
+        "clones": 4,
+        "unique_cloners": 4
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/studyos": {
       "name": "studyos",
@@ -4601,8 +4731,8 @@
         "unique_cloners": 1
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/Gullylabs": {
       "name": "Gullylabs",
@@ -4739,6 +4869,14 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-20": {
+          "count": 0,
+          "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -4873,23 +5011,25 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
-        }
-      },
-      "last_14_days": {
-        "views": 1,
-        "unique_visitors": 1,
-        "clones": 3,
-        "unique_cloners": 3
-      },
-      "referrers": [
-        {
-          "referrer": "github.com",
+        },
+        "2026-11-20": {
+          "count": 0,
+          "uniques": 0
+        },
+        "2026-11-21": {
           "count": 1,
           "uniques": 1
         }
-      ],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      },
+      "last_14_days": {
+        "views": 0,
+        "unique_visitors": 0,
+        "clones": 3,
+        "unique_cloners": 3
+      },
+      "referrers": [],
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/Trekking-Management": {
       "name": "Trekking-Management",
@@ -5177,8 +5317,8 @@
         "unique_cloners": 1
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/portfolio-template": {
       "name": "portfolio-template",
@@ -5319,6 +5459,10 @@
         "2026-11-20": {
           "count": 17,
           "uniques": 1
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -5457,13 +5601,17 @@
         "2026-11-20": {
           "count": 157,
           "uniques": 83
+        },
+        "2026-11-21": {
+          "count": 16,
+          "uniques": 10
         }
       },
       "last_14_days": {
         "views": 17,
         "unique_visitors": 1,
-        "clones": 327,
-        "unique_cloners": 172
+        "clones": 330,
+        "unique_cloners": 170
       },
       "referrers": [
         {
@@ -5472,8 +5620,8 @@
           "uniques": 1
         }
       ],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/Modulr": {
       "name": "Modulr",
@@ -5614,6 +5762,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -5752,13 +5904,17 @@
         "2026-11-20": {
           "count": 1,
           "uniques": 1
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
         "views": 2,
         "unique_visitors": 2,
-        "clones": 12,
-        "unique_cloners": 11
+        "clones": 13,
+        "unique_cloners": 12
       },
       "referrers": [
         {
@@ -5772,8 +5928,8 @@
           "uniques": 1
         }
       ],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/E--learning": {
       "name": "E--learning",
@@ -5914,6 +6070,10 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -6052,13 +6212,17 @@
         "2026-11-20": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 2,
+          "uniques": 2
         }
       },
       "last_14_days": {
         "views": 15,
         "unique_visitors": 1,
-        "clones": 44,
-        "unique_cloners": 23
+        "clones": 46,
+        "unique_cloners": 25
       },
       "referrers": [
         {
@@ -6067,8 +6231,8 @@
           "uniques": 1
         }
       ],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     },
     "cosmiccoder200x-sys/AirTouchAI": {
       "name": "AirTouchAI",
@@ -6205,6 +6369,14 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-20": {
+          "count": 0,
+          "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 0,
+          "uniques": 0
         }
       },
       "clones_daily": {
@@ -6339,17 +6511,25 @@
         "2026-11-19": {
           "count": 0,
           "uniques": 0
+        },
+        "2026-11-20": {
+          "count": 0,
+          "uniques": 0
+        },
+        "2026-11-21": {
+          "count": 1,
+          "uniques": 1
         }
       },
       "last_14_days": {
         "views": 0,
         "unique_visitors": 0,
-        "clones": 2,
-        "unique_cloners": 2
+        "clones": 3,
+        "unique_cloners": 3
       },
       "referrers": [],
-      "referrers_captured_at": "2026-11-21T08:18:20+00:00",
-      "updated_at": "2026-11-21T08:18:20+00:00"
+      "referrers_captured_at": "2026-11-22T08:00:06+00:00",
+      "updated_at": "2026-11-22T08:00:06+00:00"
     }
   }
 }
