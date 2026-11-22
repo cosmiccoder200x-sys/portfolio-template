@@ -6,6 +6,7 @@ globalThis.crypto ||= webcrypto;
 const load = async (file) => import("data:text/javascript;base64," + fs.readFileSync(file).toString("base64"));
 const enquiry = await load("functions/api/enquiry.js");
 const events = await load("functions/api/event.js");
+const metrics = await load("functions/api/admin-metrics.js");
 const origin = "https://portfolio.example";
 const valid = () => ({
   name:"Sample Client",email:"client@example.com",projectType:"portfolio",budget:"5000-10000",
@@ -80,4 +81,34 @@ test("anonymous aggregate events are whitelisted",async()=>{
   assert.deepEqual(calls[0].values.slice(1),["hire_view"]);
   assert.equal((await events.onRequestPost({request:makeEvent("email_dump"),env:{LEADS_DB:database}})).status,400);
   assert.equal((await events.onRequestPost({request:makeEvent("hire_view","https://evil.example"),env:{LEADS_DB:database}})).status,403);
+});
+
+test("untrusted Turnstile hostname is rejected", async()=>{
+  globalThis.fetch=async()=>new Response(JSON.stringify({success:true,hostname:"attacker.example"}),{status:200});
+  try{assert.equal((await enquiry.onRequestPost({request:req(valid()),env})).status,403);}
+  finally{globalThis.fetch=realFetch;}
+});
+test("database persistence is sufficient when the email provider fails",async()=>{
+  let inserted=false;
+  const database={prepare:()=>({bind:()=>({run:async()=>{inserted=true;}})})};
+  globalThis.fetch=async url=>String(url).includes("siteverify")
+    ? new Response(JSON.stringify({success:true,hostname:"portfolio.example"}),{status:200})
+    : new Response(JSON.stringify({error:"email down"}),{status:503});
+  try{
+    const res=await enquiry.onRequestPost({request:req(valid()),env:{...env,LEADS_DB:database}});
+    assert.equal(res.status,202);
+    assert.equal(inserted,true);
+  }finally{globalThis.fetch=realFetch;}
+});
+test("admin metrics rejects absent or incorrect token and returns counts only",async()=>{
+  const database={prepare:(sql)=>({all:async()=>({results:sql.includes("event_counts")
+    ? [{day:"2026-11-22",event:"hire_view",count:5}]
+    : [{status:"new",count:2}]})})};
+  const get=token=>new Request(origin+"/api/admin-metrics",{headers:token?{"Authorization":"Bearer "+token}:{}});
+  assert.equal((await metrics.onRequestGet({request:get("bad"),env:{LEADS_DB:database,ADMIN_METRICS_TOKEN:"super-long-test-token"}})).status,401);
+  const good=await metrics.onRequestGet({request:get("super-long-test-token"),env:{LEADS_DB:database,ADMIN_METRICS_TOKEN:"super-long-test-token"}});
+  assert.equal(good.status,200);
+  const data=await good.json();
+  assert.equal(data.events[0].count,5);
+  assert.equal(JSON.stringify(data).includes("client@example.com"),false);
 });
