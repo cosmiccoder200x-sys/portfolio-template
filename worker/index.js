@@ -1,4 +1,6 @@
 import { onRequestGet, onRequestPost } from "../functions/api/chat.js";
+import { onRequestPost as submitEnquiry } from "../functions/api/enquiry.js";
+import { onRequestPost as trackEvent } from "../functions/api/event.js";
 
 export default {
   async fetch(request, env) {
@@ -20,6 +22,15 @@ export default {
           "Allow": "GET, POST"
         }
       });
+    }
+
+    if (url.pathname === "/api/enquiry" || url.pathname === "/api/event") {
+      if (request.method !== "POST") return new Response(JSON.stringify({error:"Method not allowed."}), {
+        status:405,headers:{"Content-Type":"application/json","Allow":"POST","Cache-Control":"no-store"}
+      });
+      return url.pathname === "/api/enquiry"
+        ? submitEnquiry({ request, env })
+        : trackEvent({ request, env });
     }
 
     // Everything else is served from the existing root-level static site.
