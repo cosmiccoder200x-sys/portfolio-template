@@ -9,6 +9,16 @@ This repository contains the source code for my personal portfolio: a dark, edit
 
 This is my portfolio implementation and its supporting infrastructure—not a generic portfolio starter or a reusable template.
 
+## Collaboration and template previews
+
+The portfolio now includes an optional commercial layer, pending final deployment/configuration:
+
+- [Hire me](https://sreerang.pages.dev/hire/) — scoped web development, developer portfolios, dashboards and workflow automation enquiries.
+- [Template previews](https://sreerang.pages.dev/templates/) — first terminal-inspired responsive portfolio concept (paid checkout is not enabled).
+- Private aggregate conversion insights at `/insights/` (requires secret-token authentication).
+
+The site uses server-validated Cloudflare Turnstile and optional Resend email/D1 storage for project enquiries. The original Google Form stays available independently. See [MONETIZATION_SETUP.md](MONETIZATION_SETUP.md) for launch prerequisites and privacy safeguards. Neither client work nor template purchases are represented as completed sales.
+
 ## What I built
 
 - **Immersive 3D experience** — a Three.js scene tied to the page's scroll-driven narrative.
