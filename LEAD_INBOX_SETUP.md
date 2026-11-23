@@ -8,23 +8,30 @@ The new Hire Me enquiry tracker is implemented on draft PR #26. **It is NOT on t
 
 **New Hire Me form (preview branch):** Successful enquiries are stored in Cloudflare's D1 database under the `enquiries` table (binding `LEADS_DB`). They start with `status = 'new'`.
 
-**Private inbox:** Preview URL: https://feat-portfolio-hire-and-temp.sreerang.pages.dev/leads/ . After configuring the access token, you can see contact details, project budget and description, and change each lead's status:
-- `New`: you have not read it yet.
-- `Seen`: you have read it but still need to respond.
-- `Replied`: you have answered via email.
-- `Closed`: completed, declined, or no further action.
+**Private enquiry review:** The public `/leads/` dashboard was intentionally removed to keep admin pages off the portfolio. The URL returns **404**, even if someone guesses it. Telegram alerts still arrive and all successfully submitted enquiries remain in the private Cloudflare D1 database.
 
-Enquiries older than 24 hours and still `New` or `Seen` are marked as overdue. **The dashboard does not mark a lead as read just because you open the page.** There is a Reply by email link for each lead. The dashboard never stores your access token in localStorage, sessionStorage or cookies.
+## How to review enquiries privately
 
-## One-time Cloudflare setup: private inbox
+1. Sign into your Cloudflare account (never share your Cloudflare login or bot credentials).
+2. Open **Workers & Pages → D1 → `sreerang-portfolio-leads-preview` → Console**.
+3. Run this read-only query to see the newest enquiries:
 
-The preview D1 database `sreerang-portfolio-leads-preview` is already created and bound on the Pages **preview** environment as `LEADS_DB`. Migration 0001 and 0002 have already been applied there.
+```sql
+SELECT created_at, name, email, project_type, budget, details, status
+FROM enquiries
+ORDER BY created_at DESC
+LIMIT 50;
+```
 
-1. Cloudflare Dashboard → Workers & Pages → `sreerang` → Settings → Variables and Secrets → **Preview**.
-2. Add an encrypted secret called `ADMIN_METRICS_TOKEN` with a random 32+ character value. Do not paste or commit the token in source code. Make a secure copy for yourself.
-3. Trigger a new preview build/deployment after changing secrets if required.
-4. Open `/leads/`, type the token, and verify access. The same token authorizes `/insights/` and `/api/admin-metrics`.
-5. For production, create separate production secrets and database bindings before merging. Never point the production site at the preview D1 database.
+4. Reply to the client using their email. If you want to change a record's status, use a carefully scoped update on the correct enquiry ID:
+
+```sql
+UPDATE enquiries SET status = 'replied' WHERE id = 'PASTE_THE_EXACT_ENQUIRY_ID';
+```
+
+To find the ID, include `id` in the SELECT columns. Only use the UPDATE after verifying the ID. Existing protected `/api/admin-leads` endpoints remain for a future **separately access-controlled** admin tool but have no public interface.
+
+**No additional `ADMIN_METRICS_TOKEN` is needed to read D1 directly while signed in to Cloudflare.** The token is used by separate private API/analytics functions if those are enabled.
 
 ## Instant notification: choose Telegram (no custom domain needed) or email
 
@@ -34,9 +41,9 @@ The preview D1 database `sreerang-portfolio-leads-preview` is already created an
 2. Open a chat with your new bot and send `/start`.
 3. Retrieve the bot chat ID through Telegram's official `getUpdates` API. Handle the bot token privately; it is a credential. Never paste the token into a public GitHub issue, browser screenshot or README.
 4. In the same Cloudflare Pages environment, add **encrypted secrets** `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`. Configure separately in Production after launch approval.
-5. Submit a legitimate test enquiry through the preview and confirm a Telegram notification arrives. The push includes **project type and budget only**, with a link to the authenticated inbox; it does not include the customer's email or message body.
+5. Submit a legitimate test enquiry through the preview and confirm a Telegram notification arrives. The push includes **project type and budget only**, plus instructions to review the enquiry in Cloudflare D1; it does not include the customer's email or message body.
 
-The Telegram integration is optional; a failed push will not reject a successfully stored enquiry. Use the private dashboard as your source of truth.
+The Telegram integration is optional; a failed push will not reject a successfully stored enquiry. Use the private D1 database as your source of truth.
 
 **Option B — email alerts**
 
@@ -73,6 +80,6 @@ node scripts/portfolio_qa.mjs
 node --test scripts/monetization.test.mjs
 ```
 
-Smoke test: invalid token refused, new enquiries appear, status changes persist, Reply email opens correctly, filtered counts work, Telegram/email alert arrives when configured, reminder only sends for >24h open leads, original Google Forms contact still works.
+Smoke test: public /leads/ route returns 404, a valid enquiry is recorded in D1, Telegram/email alert arrives when configured, reminder only sends for >24h open leads, the token-protected API rejects anonymous requests, and the original Google Forms contact still works.
 
 Privacy: Treat D1 as personal data storage. Enable security controls on your Cloudflare/GitHub accounts and delete stale enquiries under a reasonable retention policy.
