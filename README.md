@@ -1,6 +1,7 @@
 # Sreerang P — Personal Portfolio
 
-![Portfolio preview](assets/preview.png)
+<img width="1807" height="1007" alt="image" src="https://github.com/user-attachments/assets/9729ac6c-4672-43e9-86e5-59e60c15d9d6" />
+
 
 **Live site:** [itsme.cosmiccoder200x.workers.dev](https://itsme.cosmiccoder200x.workers.dev)  
 **Owner:** [Sreerang P](https://github.com/cosmiccoder200x-sys) · [LinkedIn](https://in.linkedin.com/in/sreerang-p)
