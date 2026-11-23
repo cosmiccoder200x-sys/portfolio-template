@@ -124,7 +124,9 @@ test("exactly three independently styled demos are linked from the storefront",(
     assert.ok(store.includes('href="'+path+'/'));
     const html=fs.readFileSync("templates/"+path+"/index.html","utf8");
     assert.ok(html.includes('name="viewport"'));
-    assert.ok(html.includes('@media'));
+    const stylesheetRef = html.match(/href="([^"]+\\.css)"/);
+    const externalCss = stylesheetRef ? fs.readFileSync("templates/"+path+"/"+stylesheetRef[1], "utf8") : "";
+    assert.ok(html.includes('@media') || externalCss.includes('@media'));
     assert.ok(html.includes('<main'));
   }
   assert.ok(store.includes("not paid downloadable template bundles"));
