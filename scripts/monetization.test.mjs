@@ -64,6 +64,59 @@ test("successful verification delivers sanitized text email",async()=>{
     assert.equal(body.html,undefined);
   }finally{globalThis.fetch=realFetch;}
 });
+test("stored enquiries trigger Telegram notifications with no client PII in the message",async()=>{
+  const notifications=[];
+  const inserted=[];
+  const database={prepare:(sql)=>({
+    bind:(...args)=>({run:async()=>{inserted.push({sql,args});return {success:true};}})
+  })};
+  globalThis.fetch=async(url,options)=>{
+    if(String(url).includes("siteverify"))return new Response(JSON.stringify({success:true,hostname:"portfolio.example"}),{status:200});
+    if(String(url).includes("api.telegram.org")){
+      notifications.push({url:String(url),options});
+      return new Response(JSON.stringify({ok:true,result:{message_id:1}}),{status:200});
+    }
+    throw Error("Unexpected destination: "+url);
+  };
+  try{
+    const response=await enquiry.onRequestPost({request:req(valid()),env:{
+      TURNSTILE_SECRET_KEY:"demo-secret",
+      LEADS_DB:database,
+      TELEGRAM_BOT_TOKEN:"synthetic-test-bot-token",
+      TELEGRAM_CHAT_ID:"123456789"
+    }});
+    assert.equal(response.status,202);
+    assert.equal((await response.json()).ok,true);
+    assert.equal(inserted.length,1);
+    assert.match(inserted[0].sql,/INSERT INTO enquiries/);
+    assert.equal(notifications.length,1);
+    const payload=JSON.parse(notifications[0].options.body);
+    assert.equal(payload.chat_id,"123456789");
+    assert.match(payload.text,/New portfolio enquiry!/);
+    assert.match(payload.text,/portfolio.example\/leads/);
+    assert.equal(payload.disable_web_page_preview,true);
+    assert.ok(!payload.text.includes("client@example.com"));
+    assert.ok(!payload.text.includes("Sample Client"));
+    assert.ok(!payload.text.includes("responsive website"));
+  }finally{globalThis.fetch=realFetch;}
+});
+test("a failed Telegram push cannot erase a successfully saved lead",async()=>{
+  let stored=false;
+  const database={prepare:()=>({bind:()=>({run:async()=>{stored=true;}})})};
+  globalThis.fetch=async(url)=>{
+    if(String(url).includes("siteverify"))return new Response(JSON.stringify({success:true,hostname:"portfolio.example"}),{status:200});
+    return new Response(JSON.stringify({ok:false,description:"Forbidden"}),{status:403});
+  };
+  const originalError=console.error;console.error=()=>{};
+  try{
+    const response=await enquiry.onRequestPost({request:req(valid()),env:{
+      TURNSTILE_SECRET_KEY:"demo-secret",LEADS_DB:database,
+      TELEGRAM_BOT_TOKEN:"synthetic-test-bot-token",TELEGRAM_CHAT_ID:"123456789"
+    }});
+    assert.equal(response.status,202);
+    assert.equal(stored,true);
+  }finally{console.error=originalError;globalThis.fetch=realFetch;}
+});
 test("delivery errors are reported, not silently acknowledged",async()=>{
   globalThis.fetch=async(url)=>String(url).includes("siteverify")
     ? new Response(JSON.stringify({success:true,hostname:"portfolio.example"}),{status:200})
