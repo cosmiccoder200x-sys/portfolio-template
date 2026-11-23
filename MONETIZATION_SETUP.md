@@ -5,7 +5,7 @@ This feature was implemented on a review branch. **Do not merge or deploy until 
 ## What is included
 
 - `/hire/`: responsive pricing, examples and real enquiry UI
-- `/templates/` and `/templates/terminal-starter/`: original lightweight public template demo
+- `/templates/`: premium three-design collection with standalone responsive demos at `/templates/terminal-starter/`, `/templates/editorial-atelier/` and `/templates/launchpad-saas/`
 - `/insights/`: private aggregate analytics with a secret-token gate
 - `POST /api/enquiry`: validates and verifies Turnstile; writes to D1 and/or sends via Resend
 - `POST /api/event`: optional D1 aggregate event counts, no IP/cookies or names saved
