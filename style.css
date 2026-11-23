@@ -1463,3 +1463,19 @@ textarea.form-control {
 @media(prefers-reduced-motion:reduce){.ai-panel{animation:none}.ai-launcher,.ai-suggestions button,.ai-toggle-track,.ai-toggle-track:after{transition:none}.ai-thinking:before{animation:none}}
 
 
+
+/* Navigation polish: concise main menu and organized multi-row footer links. */
+@media (min-width: 621px) {
+  .main-nav { gap: clamp(16px, 2vw, 34px); }
+  .main-nav a { font-size: clamp(.78rem, .85vw, .92rem); white-space: nowrap; }
+  .header-contact { margin-left: clamp(6px, 1.2vw, 24px); }
+}
+.site-footer { justify-content: flex-start; align-items: center; flex-wrap: wrap; column-gap: clamp(12px, 1.8vw, 28px); row-gap: 16px; }
+.site-footer a { display: inline-flex; align-items: center; min-height: 38px; color: #a9a9a9; transition: color .2s ease; }
+.site-footer a:hover, .site-footer a:focus-visible { color: #fff; }
+.site-footer span:nth-child(2) { margin-right: auto; }
+@media (max-width: 620px) {
+  .site-footer { column-gap: 20px; row-gap: 4px; }
+  .site-footer span:first-child { flex-basis: 100%; }
+  .site-footer a { min-height: 44px; }
+}
