@@ -6,7 +6,7 @@ I've added a new way to collaborate through my portfolio.
 
 I'm exploring a small number of projects involving developer portfolios, responsive business websites, and focused dashboards or automations. You can now see what I offer and send a project brief directly.
 
-I also shared a lightweight terminal-style portfolio concept as a public preview. Paid template downloads are not yet live.
+I've also prepared three different template demos: **Terminal Starter** for developers, **Editorial Atelier** for creatives, and **Launchpad SaaS** for product founders. Paid template downloads are not yet live.
 
 Explore: https://sreerang.pages.dev/hire/
 Portfolio: https://sreerang.pages.dev/
