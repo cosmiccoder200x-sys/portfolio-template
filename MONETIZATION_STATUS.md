@@ -16,6 +16,15 @@
 3. Cloudflare Web Analytics site `sreerang.pages.dev` created with public analytics tag `2444b00e8b2b4f3382e2c1c56718e06e`. The pageview beacon is added only to portfolio, hire and template collection pages, only when hostname is **exactly** `sreerang.pages.dev`; it is off on previews and respects DNT/GPC.
 4. `POST /api/event` stores aggregate daily event counts in D1 without visitor identifiers.
 
+## Client enquiry tracking (new)
+
+- Private `/leads/` inbox and authenticated `/api/admin-leads` API added on draft PR #26.
+- Immediate Telegram notifications can be enabled using `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` Cloudflare secrets, avoiding the need for a sending domain.
+- `migrations/0002_lead_reminders.sql` added and applied to preview D1.
+- Protected `/api/lead-reminder` endpoint and an **opt-in** daily 7:10 PM IST GitHub Actions schedule are prepared. These are **not active** until notification credentials, a shared reminder secret and the GitHub enable variable are configured.
+- Enquiries in the existing Google Forms contact remain separate; enable native email notifications in the Google Form Responses menu.
+- Full instructions: `LEAD_INBOX_SETUP.md`.
+
 ## Still requires external account configuration
 
 - **Notifications:** Project enquiries can be saved in preview D1. Email notifications need a verified sender and provider. This Cloudflare account currently has no DNS zones, so native Email Service sender-domain onboarding isn't available. Recommended path: verify an owned domain with your chosen email provider, then set `RESEND_API_KEY`, `LEAD_FROM_EMAIL`, and `LEAD_TO_EMAIL`. Until configured, check D1 via Cloudflare dashboard.
