@@ -112,3 +112,34 @@ test("admin metrics rejects absent or incorrect token and returns counts only",a
   assert.equal(data.events[0].count,5);
   assert.equal(JSON.stringify(data).includes("client@example.com"),false);
 });
+
+test("exactly three independently styled demos are linked from the storefront",()=>{
+  const store=fs.readFileSync("templates/index.html","utf8");
+  const paths=["terminal-starter","editorial-atelier","launchpad-saas"];
+  assert.equal((store.match(/class="design-card /g)||[]).length,3);
+  assert.equal((store.match(/class="design-actions"/g)||[]).length,3);
+  for (const path of paths) {
+    assert.ok(store.includes('src="'+path+'/'));
+    assert.ok(store.includes('href="'+path+'/'));
+    const html=fs.readFileSync("templates/"+path+"/index.html","utf8");
+    assert.ok(html.includes('name="viewport"'));
+    assert.ok(html.includes('@media'));
+    assert.ok(html.includes('<main'));
+  }
+  assert.ok(store.includes("not paid downloadable template bundles"));
+  assert.ok(!store.includes('id="template-checkout"'));
+});
+test("storefront and hire page have navigable cross-links",()=>{
+  const store=fs.readFileSync("templates/index.html","utf8");
+  const hire=fs.readFileSync("hire/index.html","utf8");
+  assert.ok(store.includes('../hire/?project=template'));
+  assert.ok(hire.includes('../templates/'));
+  assert.ok(hire.includes('id="hire-form"'));
+  assert.ok(hire.includes('id="turnstile"'));
+});
+test("public config contains only a Turnstile site key and no secrets",()=>{
+  const config=fs.readFileSync("monetization.config.js","utf8");
+  assert.match(config,/turnstileSiteKey:\s*"0x4/);
+  assert.ok(!config.includes("TURNSTILE_SECRET_KEY"));
+  assert.ok(!config.includes("RESEND_API_KEY"));
+});
