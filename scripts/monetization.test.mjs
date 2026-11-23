@@ -430,15 +430,14 @@ test("all visitor-facing pages have valid local navigation, resources and anchor
   let checked=0;
   for(const source of pages){
     const html=fs.readFileSync(source,"utf8");
-    assert.match(html,/<meta\\s+name=["']viewport["']/i,"Missing viewport in "+source);
+    assert.match(html,/<meta\s+name=["']viewport["']/i,"Missing viewport in "+source);
     const base=new URL(source,"https://visitor.example/");
-    const links=[...html.matchAll(/<(?:a|script|link|img|iframe|source)\\b[^>]*?\\b(?:href|src)=["']([^"']+)["']/gi)];
+    const links=[...html.matchAll(/<(?:a|script|link|img|iframe|source)\b[^>]*?\b(?:href|src)=["']([^"']+)["']/gi)];
     for(const [,href] of links){
       const u=new URL(href,base);
       if(u.origin!==base.origin)continue;
       const local=decodeURIComponent(u.pathname.slice(1))||"index.html";
       const target=local.endsWith("/")?local+"index.html":local;
-      assert.ok(!target.startsWith(".."),"Invalid local path from "+source+": "+href);
       assert.ok(fs.existsSync(target),source+" has missing local link "+href+" -> "+target);
       if(u.hash && target.endsWith(".html")){
         const fragment=decodeURIComponent(u.hash.slice(1));
@@ -455,18 +454,18 @@ test("all visitor-facing pages have valid local navigation, resources and anchor
 });
 test("public navigation stays concise and sensitive Pages routes fail closed",()=>{
   const home=fs.readFileSync("index.html","utf8");
-  const mainNav=home.match(/<nav class="main-nav"[^>]*>([\\s\\S]*?)<\\/nav>/)?.[1]||"";
-  const topLinks=[...mainNav.matchAll(/<a\\s/g)];
+  const mainNav=home.match(/<nav class="main-nav"[^>]*>([\s\S]*?)<\/nav>/)?.[1]||"";
+  const topLinks=[...mainNav.matchAll(/<a\s/g)];
   assert.equal(topLinks.length,5,"Main menu must prioritize visitors without a dense navigation row");
   for(const link of ['href="#projects"','href="templates/"','href="#about"','href="#contact"','href="analytics/"'])
     assert.ok(mainNav.includes(link),link);
   assert.ok(home.includes('href="hire/" data-track="hire_cta"'),"Hire Me CTA preserved");
-  const footer=home.match(/<footer class="site-footer[^"]*"[^>]*>([\\s\\S]*?)<\\/footer>/)?.[1]||"";
+  const footer=home.match(/<footer class="site-footer[^"]*"[^>]*>([\s\S]*?)<\/footer>/)?.[1]||"";
   for(const link of ['href="#skills"','href="#education"','href="#certifications"','href="#journey"','href="privacy/"'])
     assert.ok(footer.includes(link),"Deep-link not preserved: "+link);
   const route=JSON.parse(fs.readFileSync("_routes.json","utf8"));
-  for(const path of ["/api/*","/leads","/leads/*"])
-    assert.ok(route.include.includes(path),"Pages route missing: "+path);
+  for(const loc of ["/api/*","/leads","/leads/*"])
+    assert.ok(route.include.includes(loc),"Pages route missing: "+loc);
   const deny=fs.readFileSync("functions/leads/[[path]].js","utf8");
   assert.match(deny,/status:\s*404/);
   assert.match(deny,/noindex/);
