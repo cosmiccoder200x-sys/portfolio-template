@@ -1,0 +1,405 @@
+/* Shared visual continuity for /hire/ and /templates/.
+   Matches the main portfolio: near-black canvas, 64px architectural grid,
+   inset page frame, DM Mono/Manrope typography, muted chrome and orbital form.
+   This is a lightweight CSS interpretation, not a second WebGL world. */
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --ink: #090909;
+  --panel: rgba(14, 15, 17, .78);
+  --text: #ededed;
+  --muted: #a3a3a3;
+  --line: rgba(255, 255, 255, .14);
+  --acid: #ededed;
+  --satellite-white: #ededed;
+  --satellite-border: rgba(255,255,255,.18);
+  --satellite-mono: "DM Mono", ui-monospace, Menlo, monospace;
+  --satellite-sans: "Manrope", system-ui, -apple-system, sans-serif;
+}
+html { scroll-padding-top: 92px; }
+body.portfolio-satellite {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: #090909;
+  color: var(--satellite-white);
+  font-family: var(--satellite-sans);
+  isolation: isolate;
+}
+body.portfolio-satellite::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+body.portfolio-satellite::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 42% 29% at 83% 15%, rgba(125,142,166,.085),transparent 80%),
+    radial-gradient(ellipse 48% 33% at 14% 75%, rgba(126,133,147,.045),transparent 89%);
+}
+.portfolio-satellite .satellite-frame {
+  position: fixed;
+  inset: 9px;
+  z-index: 60;
+  border: 1px solid rgba(255,255,255,.19);
+  pointer-events: none;
+}
+.portfolio-satellite header,
+.portfolio-satellite main,
+.portfolio-satellite footer {
+  position: relative;
+  z-index: 2;
+}
+.portfolio-satellite > header {
+  top: 9px;
+  margin-inline: 9px;
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  background: rgba(9,9,9,.75);
+  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(15px);
+}
+.portfolio-satellite .nav {
+  max-width: 1240px;
+  padding-inline: clamp(22px, 3.7vw, 55px);
+  min-height: 78px;
+}
+.portfolio-satellite .logo {
+  font-family: var(--satellite-sans);
+  font-size: 1.5rem;
+  letter-spacing: -.065em;
+}
+.portfolio-satellite .nav-links a {
+  font-family: var(--satellite-sans);
+  font-weight: 500;
+  font-size: .85rem;
+  color: #c9c9c9;
+  transition: color .2s ease;
+}
+.portfolio-satellite .nav-links a:hover,
+.portfolio-satellite .nav-links a:focus-visible {
+  color: #fff;
+}
+.portfolio-satellite .nav-links .nav-cta {
+  display: inline-flex;
+  border: 1px solid rgba(255,255,255,.25);
+  padding: 10px 14px;
+  font: 500 .7rem var(--satellite-mono);
+  letter-spacing: .085em;
+  color: #f0f0f0;
+  text-transform: uppercase;
+  min-height: 40px;
+  align-items: center;
+}
+.portfolio-satellite main,
+.portfolio-satellite .foot { max-width: 1240px; }
+.portfolio-satellite main { padding-inline: clamp(28px, 4vw, 60px); }
+.portfolio-satellite .hero {
+  isolation: isolate;
+  position: relative;
+  max-width: none;
+  min-height: 610px;
+  padding-top: clamp(96px, 10vw, 155px);
+  padding-bottom: clamp(95px, 11vw, 165px);
+}
+.portfolio-satellite .hero > :not(.satellite-orbit) {
+  position: relative;
+  z-index: 2;
+}
+.portfolio-satellite .hero h1 {
+  font-weight: 800;
+  font-family: var(--satellite-sans);
+  letter-spacing: -.083em;
+  max-width: 920px;
+  line-height: 1.07;
+}
+.portfolio-satellite .hero h1 em,
+.portfolio-satellite .store-hero h1 em {
+  font-style: normal;
+  color: #a7a7a7;
+}
+.portfolio-satellite .kicker,
+.portfolio-satellite .eyebrow,
+.portfolio-satellite .tag,
+.portfolio-satellite .mono,
+.portfolio-satellite .store-eyebrow {
+  font-family: var(--satellite-mono);
+  color: #b5b5b5;
+}
+.portfolio-satellite .kicker,
+.portfolio-satellite .eyebrow {
+  font-size: .69rem;
+  letter-spacing: .1em;
+}
+.portfolio-satellite .lead {
+  color: #a3a3a3;
+  line-height: 1.8;
+}
+.portfolio-satellite .hero .lead {
+  max-width: 590px;
+}
+.portfolio-satellite .section {
+  border-top: 1px solid var(--satellite-border);
+  background: transparent;
+}
+.portfolio-satellite .section h2 {
+  font-weight: 750;
+  letter-spacing: -.065em;
+  line-height: 1.15;
+}
+.portfolio-satellite .section-head p,
+.portfolio-satellite .card p,
+.portfolio-satellite .hint,
+.portfolio-satellite .inbox-help {
+  color: #a3a3a3;
+}
+.portfolio-satellite .btn {
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(17,18,20,.46);
+  color: #eaeaea;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  font-family: var(--satellite-mono);
+  font-size: .72rem;
+  font-weight: 500;
+  transition: background .2s ease,border-color .2s ease,transform .2s ease;
+}
+.portfolio-satellite .btn:hover {
+  border-color: rgba(255,255,255,.72);
+  background: rgba(255,255,255,.08);
+  transform: translateY(-1px);
+}
+.portfolio-satellite .btn.primary {
+  border-color: #ededed;
+  background: #ededed;
+  color: #101010;
+  box-shadow: none;
+}
+.portfolio-satellite .btn.primary:hover {
+  background: #fff;
+  border-color: #fff;
+}
+.portfolio-satellite .card {
+  border-color: rgba(255,255,255,.18);
+  background: linear-gradient(145deg,rgba(24,25,28,.66),rgba(9,10,12,.66));
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+}
+.portfolio-satellite .card .tag { color: #bdbdbd; }
+.portfolio-satellite .card .price { color: #ededed; }
+.portfolio-satellite .form-shell {
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(15,16,18,.89);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.portfolio-satellite .field input,
+.portfolio-satellite .field select,
+.portfolio-satellite .field textarea {
+  color: #ededed;
+  background: #0e1012;
+  border-color: rgba(255,255,255,.26);
+  font-family: var(--satellite-sans);
+}
+.portfolio-satellite .field input:focus,
+.portfolio-satellite .field select:focus,
+.portfolio-satellite .field textarea:focus {
+  border-color: #fff;
+}
+.portfolio-satellite .field input::placeholder,
+.portfolio-satellite .field textarea::placeholder { color: #888c93; }
+.portfolio-satellite .consent input { accent-color: #ededed; }
+.portfolio-satellite .notice {
+  background: rgba(22,23,27,.75);
+  border-left-color: rgba(255,255,255,.72);
+}
+.portfolio-satellite .proof-item {
+  background: rgba(18,19,22,.75);
+  border-left-color: #b5b5b5;
+}
+.portfolio-satellite .proof-item:hover {
+  background: rgba(28,30,34,.78);
+}
+.portfolio-satellite .foot {
+  border-top: 1px solid rgba(255,255,255,.16);
+  font-family: var(--satellite-mono);
+  margin-bottom: 16px;
+  color: #949494;
+}
+.portfolio-satellite :focus-visible { outline: 2px solid #eee; outline-offset: 4px; }
+
+/* Shared orbital identity echoing the original S.P. scene without a second canvas. */
+.portfolio-satellite .satellite-orbit {
+  position: absolute;
+  z-index: 0;
+  top: clamp(25px, 4vw, 65px);
+  right: clamp(-30px, .5vw, 15px);
+  width: clamp(275px, 34vw, 465px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  opacity: .63;
+  filter: drop-shadow(0 0 30px rgba(210,220,240,.07));
+  transform: rotate(-10deg);
+}
+.portfolio-satellite .satellite-orbit::before {
+  content: "";
+  position: absolute;
+  width: 96%;
+  height: 96%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,207,220,.09) 0, rgba(132,142,163,.045) 33%,transparent 69%);
+  filter: blur(5px);
+}
+.portfolio-satellite .satellite-orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(233,237,244,.40);
+}
+.portfolio-satellite .satellite-orbit-ring-one {
+  width: 89%;
+  height: 39%;
+  transform: rotate(-33deg);
+  animation: satellite-orbit-a 21s linear infinite;
+  border-top-color: rgba(255,255,255,.66);
+  border-bottom-color: rgba(215,225,239,.15);
+}
+.portfolio-satellite .satellite-orbit-ring-two {
+  width: 69%;
+  height: 63%;
+  border-color: rgba(220,225,235,.23);
+  border-right-color: rgba(255,255,255,.63);
+  transform: rotate(55deg);
+  animation: satellite-orbit-b 27s linear infinite;
+}
+.portfolio-satellite .satellite-orbit-ring-three {
+  width: 54%;
+  height: 54%;
+  border-color: rgba(255,255,255,.29);
+  box-shadow: 0 0 40px rgba(250,250,255,.07);
+}
+.portfolio-satellite .satellite-orbit-core {
+  width: 30%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(240,240,245,.5);
+  border-radius: 50%;
+  background: radial-gradient(circle at 37% 29%,rgba(230,235,243,.24),rgba(40,43,53,.26) 50%,rgba(10,11,14,.5) 85%);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 55px rgba(202,213,240,.11),inset 0 0 30px rgba(255,255,255,.07);
+}
+.portfolio-satellite .satellite-orbit-core span {
+  color: rgba(245,247,251,.7);
+  font: 700 .95rem var(--satellite-mono);
+  letter-spacing: -.02em;
+}
+.portfolio-satellite .satellite-orbit-glint {
+  position: absolute;
+  width: 8px;height: 8px;
+  background: #f2f2f2;
+  box-shadow: 0 0 17px rgba(255,255,255,.5);
+  border-radius: 50%;
+  top: 16%;right: 20%;
+}
+.portfolio-satellite .satellite-world-note {
+  position: fixed;
+  left: max(28px, 4vw);
+  bottom: 19px;
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font: 400 9px var(--satellite-mono);
+  letter-spacing: .12em;
+  color: rgba(205,212,220,.55);
+}
+.portfolio-satellite .satellite-world-note::after {
+  content: "";
+  width: 36px;height: 1px;
+  background: rgba(225,231,241,.25);
+}
+@keyframes satellite-orbit-a {
+  from { transform: rotate(-33deg); }
+  to { transform: rotate(327deg); }
+}
+@keyframes satellite-orbit-b {
+  from { transform: rotate(55deg); }
+  to { transform: rotate(-305deg); }
+}
+
+/* Collection cards keep their own unique artwork, while navigation and the
+   surrounding page remain coherent with the parent portfolio. */
+.portfolio-satellite .archive-meta {
+  border-top-color: rgba(255,255,255,.17);
+}
+.portfolio-satellite .archive-meta strong { color: #ededed; }
+.portfolio-satellite .archive-meta span,
+.portfolio-satellite .store-eyebrow>span:last-child { color: #9c9c9c; }
+.portfolio-satellite .design-card { border-color: rgba(255,255,255,.20); }
+.portfolio-satellite .design-card .design-details {
+  background: rgba(15,16,19,.88);
+}
+.portfolio-satellite .design-card .design-kicker { color: #b2b2b2; }
+.portfolio-satellite .design-card .design-attributes span {
+  color: #9ea3ab;
+  border-color: rgba(255,255,255,.17);
+}
+.portfolio-satellite .design-card.saas .design-details {
+  background: radial-gradient(ellipse at 90% 5%,rgba(199,169,185,.08),transparent 55%),rgba(18,17,22,.92);
+}
+.portfolio-satellite .design-card.saas .design-kicker {
+  color: #e4c1b8;
+}
+.portfolio-satellite .design-card.editorial .design-kicker {
+  color: #d8c7b0;
+}
+.portfolio-satellite .design-actions .btn.primary { background:#ededed;border-color:#ededed;color:#101010; }
+.portfolio-satellite .design-actions .btn.primary:hover { background:#fff;border-color:#fff; }
+.portfolio-satellite .store-disclaimer {
+  background: rgba(17,18,21,.88);
+  border-color: rgba(255,255,255,.21);
+}
+.portfolio-satellite .store-disclaimer .kicker { color: #c9c9c9; }
+
+/* Do not obstruct text or input controls on small screens. */
+@media (max-width: 920px) {
+  .portfolio-satellite .hero { min-height: 0; padding-top: 94px;padding-bottom: 80px; }
+  .portfolio-satellite .satellite-orbit {
+    top: 8px;
+    right: -60px;
+    width: 310px;
+    opacity: .23;
+  }
+  .portfolio-satellite .nav { padding-inline: 24px; }
+}
+@media (max-width: 580px) {
+  html { scroll-padding-top: 76px; }
+  .portfolio-satellite .satellite-frame { inset: 6px; }
+  .portfolio-satellite > header { top: 6px; margin-inline: 6px; }
+  .portfolio-satellite .nav { min-height: 68px; padding-inline: 12px; }
+  .portfolio-satellite .nav-links { gap: 10px; }
+  .portfolio-satellite .nav-links a { font-size: .72rem; }
+  .portfolio-satellite .nav-links .nav-cta { font-size: .6rem; padding: 8px; min-height: 38px; }
+  .portfolio-satellite main { padding-inline: 24px; }
+  .portfolio-satellite .hero { padding-top: 76px;padding-bottom: 64px; }
+  .portfolio-satellite .hero h1 { font-size: clamp(3rem, 12vw, 5rem); }
+  .portfolio-satellite .satellite-orbit { width: 230px;top: 0;right: -75px;opacity: .16; }
+  .portfolio-satellite .satellite-world-note { display: none; }
+  .portfolio-satellite .foot { padding-inline: 24px; margin-bottom: 12px; }
+  .portfolio-satellite .store-hero h1 { font-size: clamp(3.15rem, 12vw, 5.4rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-satellite .satellite-orbit-ring { animation: none !important; }
+  .portfolio-satellite .btn { transition: none !important; transform: none !important; }
+}
