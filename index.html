@@ -4,15 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script>
-    const host = location.hostname;
-    if (
-      host === "github.io" ||
-      host.endsWith(".github.io") ||
-      host === "pages.dev" ||
-      host.endsWith(".pages.dev")
-    ) {
-      document.documentElement.classList.add("hide-ai-assistant");
-    }
+    // Show Ask AI only where the backend is intentionally configured.
+    // Cloudflare Pages production is first-party; GitHub Pages and branch
+    // previews must not surface a chat UI without verified API credentials.
+    (() => {
+      const host = location.hostname.toLowerCase();
+      const enabled = new Set([
+        "sreerang.pages.dev",
+        "itsme.cosmiccoder200x.workers.dev",
+        "localhost",
+        "127.0.0.1"
+      ]);
+      if (!enabled.has(host)) document.documentElement.classList.add("hide-ai-assistant");
+    })();
   </script>
   <style>
     html.hide-ai-assistant #portfolio-ai-assistant { display: none !important; }

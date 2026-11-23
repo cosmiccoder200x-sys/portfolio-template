@@ -108,6 +108,58 @@ async function callGroq({ apiKey, model, messages, useWebSearch }) {
   return answer;
 }
 
+// Gemini is an alternative provider when Groq is unavailable or unconfigured.
+// API credentials are kept in server-side Pages secrets, never sent to the browser.
+async function callGemini({apiKey,model,messages,useWebSearch}) {
+  if (!apiKey) throw new Error("GEMINI_API_KEY is not configured");
+  const modelName = typeof model === "string" && /^[a-zA-Z0-9._-]{3,70}$/.test(model)
+    ? model : "gemini-3.5-flash-lite";
+  const systemText = messages.filter(item => item.role === "system")
+    .map(item => item.content).join("\n\n");
+  const contents = messages.filter(item => item.role !== "system")
+    .map(item => ({
+      role: item.role === "assistant" ? "model" : "user",
+      parts: [{text:item.content}]
+    }));
+  const requestBody = {
+    systemInstruction: {parts:[{text:systemText}]},
+    contents,
+    generationConfig: {temperature:0.25,maxOutputTokens:480}
+  };
+  if (useWebSearch) requestBody.tools = [{googleSearch:{}}];
+  const reply = await fetch(
+    "https://generativelanguage.googleapis.com/v1beta/models/" +
+      encodeURIComponent(modelName) + ":generateContent",
+    {
+      method:"POST",
+      headers:{"Content-Type":"application/json","x-goog-api-key":apiKey},
+      body:JSON.stringify(requestBody),
+      signal:AbortSignal.timeout(25_000)
+    }
+  );
+  if (!reply.ok) {
+    console.error("Gemini API request failed", {status:reply.status});
+    throw new Error("Gemini provider request failed");
+  }
+  const data=await reply.json();
+  const candidate=data?.candidates?.[0];
+  const answer=(candidate?.content?.parts||[])
+    .filter(part => part && typeof part.text === "string" && part.thought !== true)
+    .map(part => part.text).join("\n").trim();
+  if (!answer) throw new Error("Gemini returned no usable text");
+  const sources=[];
+  for (const item of candidate?.groundingMetadata?.groundingChunks||[]) {
+    const url=item?.web?.uri;
+    if(typeof url !== "string")continue;
+    try {
+      const parsed=new URL(url);
+      if (!["http:","https:"].includes(parsed.protocol)) continue;
+      sources.push({title:String(item.web.title||parsed.hostname).slice(0,180),url:parsed.href});
+    } catch (_) { /* Invalid provider citation. */ }
+  }
+  return {text:answer,sources:uniqueSources(sources)};
+}
+
 async function loadProfile(request, env) {
   try {
     const response = await env.ASSETS.fetch(new URL("/profile.json", request.url));
@@ -201,32 +253,50 @@ export async function onRequestPost({ request, env }) {
     { role: "user", content: message }
   ];
 
-  try {
-    const answer = await callGroq({
-      apiKey: env.GROQ_API_KEY,
-      model: useWebSearch
+  // Prefer the existing Groq integration. If it is missing or fails, use the
+  // already-configured Gemini key rather than returning an avoidable 503.
+  const choices = [];
+  if (env?.GROQ_API_KEY) choices.push({
+    name:"groq",
+    invoke:() => callGroq({
+      apiKey:env.GROQ_API_KEY,
+      model:useWebSearch
         ? env.GROQ_SEARCH_MODEL || GROQ_SEARCH_MODEL
         : env.GROQ_MODEL || GROQ_MODEL,
       messages,
       useWebSearch
-    });
-
-    return json({
-      answer: answer.text,
-      sources: answer.sources,
-      searched: useWebSearch && answer.sources.length > 0,
-      provider: "groq"
-    });
-  } catch (error) {
-    console.error("Groq provider failed", {
-      message: String(error?.message || error).slice(0, 300)
-    });
-    return json({
-      error: env.GROQ_API_KEY
-        ? "The assistant is temporarily unavailable. Please try again shortly."
-        : "The assistant is not configured. Add GROQ_API_KEY to the Cloudflare Worker secret."
-    }, 503);
+    })
+  });
+  if (env?.GEMINI_API_KEY) choices.push({
+    name:"gemini",
+    invoke:() => callGemini({
+      apiKey:env.GEMINI_API_KEY,
+      model:env.GEMINI_MODEL,
+      messages,
+      useWebSearch
+    })
+  });
+  for(const option of choices) {
+    try {
+      const result=await option.invoke();
+      return json({
+        answer:result.text,
+        sources:result.sources,
+        searched:useWebSearch && result.sources.length>0,
+        provider:option.name
+      });
+    } catch (error) {
+      console.error("Portfolio AI provider failed", {
+        provider:option.name,
+        message:String(error?.message||error).slice(0,180)
+      });
+    }
   }
+  return json({
+    error:choices.length
+      ? "The assistant is temporarily unavailable. Please try again shortly."
+      : "The assistant is not configured. Please contact the site owner."
+  },503);
 }
 
 export async function onRequestGet() {

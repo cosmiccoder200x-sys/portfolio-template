@@ -25,7 +25,7 @@ The preview form uses server-validated Cloudflare Turnstile, private D1 storage,
 - **Immersive 3D experience** — a Three.js scene tied to the page's scroll-driven narrative.
 - **Motion and interaction system** — GSAP, ScrollTrigger, Rive, and custom CSS/JavaScript interactions.
 - **Personal project showcase** — selected projects, technical interests, education, skills, and links presented through a bespoke interface.
-- **Profile-grounded AI assistant** — a Cloudflare Worker endpoint connects the chat interface to Groq without exposing the API key in the browser.
+- **Profile-grounded AI assistant** — a Cloudflare Pages Function connects the chat interface to Groq or Gemini without exposing API keys in the browser.
 - **Responsive interface** — layouts and interactions designed to work across desktop and mobile, with reduced-motion considerations.
 - **GitHub traffic analytics** — a separate dashboard and scheduled collector for repository-level traffic history.
 
@@ -35,7 +35,7 @@ The preview form uses server-validated Cloudflare Turnstile, private D1 storage,
 |---|---|
 | Frontend | HTML, CSS, JavaScript |
 | 3D and motion | Three.js, GSAP, ScrollTrigger, Rive |
-| AI assistant | Cloudflare Workers, Groq API |
+| AI assistant | Cloudflare Pages Functions, Groq API, Gemini API |
 | Analytics | Python, GitHub REST API, GitHub Actions |
 | Responsive layer | Dedicated `mobile.css` for phone, tablet, and landscape layouts |
 | Quality checks | Node.js, custom QA script |
@@ -76,7 +76,7 @@ Use a local server rather than opening `index.html` directly so the browser can 
 
 ## AI assistant
 
-The assistant's browser interface lives in `assistant.js`. Its API handler runs server-side through the Cloudflare Worker and reads the `GROQ_API_KEY` secret from the Worker environment.
+The assistant's browser interface lives in `assistant.js`. Its API handler runs through Cloudflare Pages Functions and uses `GROQ_API_KEY` if present, falling back to `GEMINI_API_KEY`. Secrets belong in the `sreerang` Pages environment, not browser code. See [AI_ASSISTANT_SETUP.md](AI_ASSISTANT_SETUP.md).
 
 For the deployment and local development steps, see [AI_ASSISTANT_SETUP.md](AI_ASSISTANT_SETUP.md).
 
@@ -84,7 +84,7 @@ For the deployment and local development steps, see [AI_ASSISTANT_SETUP.md](AI_A
 
 ## Deployment and quality checks
 
-- **Production portfolio:** served through the Cloudflare Worker configured by `wrangler.jsonc`. Commits to the connected deployment branch can trigger the configured Cloudflare build; even documentation-only commits update the deployment revision.
+- **Production portfolio:** served through Cloudflare Pages project `sreerang`, tracking branch `feature/immersive-3d-portfolio`. The optional `wrangler.jsonc` supports a separate standalone Worker build.
 
 - **GitHub Pages preview:** the `Deploy feature portfolio to GitHub Pages` workflow publishes the feature branch.
 - **Automated checks:** the `Portfolio QA` workflow runs the static portfolio checks, including responsive-layer regression checks.

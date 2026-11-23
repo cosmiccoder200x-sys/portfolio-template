@@ -26,3 +26,4 @@ jobs:
         run: |
           node scripts/portfolio_qa.mjs
           node --test scripts/monetization.test.mjs
+          node --test scripts/assistant.test.mjs
