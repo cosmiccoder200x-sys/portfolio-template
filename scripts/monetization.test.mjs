@@ -93,7 +93,7 @@ test("stored enquiries trigger Telegram notifications with no client PII in the 
     const payload=JSON.parse(notifications[0].options.body);
     assert.equal(payload.chat_id,"123456789");
     assert.match(payload.text,/New portfolio enquiry!/);
-    assert.match(payload.text,/portfolio.example\/leads/);
+    assert.match(payload.text,/Cloudflare D1/);
     assert.equal(payload.disable_web_page_preview,true);
     assert.ok(!payload.text.includes("client@example.com"));
     assert.ok(!payload.text.includes("Sample Client"));
@@ -360,7 +360,7 @@ test("daily reminder sends aggregate overdue counts only and skips same-day repe
    assert.equal(first.status,200);
    assert.equal((await first.json()).sent,true);
    assert.match(notification,/3 client enquiries need attention/);
-   assert.match(notification,/site.example\/leads/);
+   assert.match(notification,/Cloudflare D1/);
    assert.ok(!notification.includes("example@domain.test"));
    const again=await reminders.onRequestPost({request:req,env});
    assert.equal((await again.json()).already_sent,true);
@@ -390,8 +390,8 @@ test("client inbox public page is removed and fails closed",async()=>{
     assert.ok(!contents.includes("/leads/"),source+" must not advertise the old public inbox");
   }
   const worker=fs.readFileSync("worker/index.js","utf8");
-  assert.match(worker,/url\\.pathname === "\/leads"/);
-  assert.match(worker,/url\\.pathname\\.startsWith\\("\/leads\/"\\)/);
+  assert.ok(worker.includes('url.pathname === "/leads"'));
+  assert.ok(worker.includes('url.pathname.startsWith("/leads/")'));
 });
 
 test("Hire Me and Templates share the portfolio background without rewriting the live home",()=>{
