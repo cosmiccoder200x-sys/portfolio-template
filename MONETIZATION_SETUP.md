@@ -7,7 +7,7 @@ This feature was implemented on a review branch. **Do not merge or deploy until 
 - `/hire/`: responsive pricing, examples and real enquiry UI
 - `/templates/`: premium three-design collection with standalone responsive demos at `/templates/terminal-starter/`, `/templates/editorial-atelier/` and `/templates/launchpad-saas/`
 - `/insights/`: private aggregate analytics with a secret-token gate
-- `/leads/`: private client inbox with unread, seen, replied and closed statuses, secure API and overdue indicators. See [`LEAD_INBOX_SETUP.md`](LEAD_INBOX_SETUP.md).
+- Client inbox page removed from public hosting. New enquiries remain in private Cloudflare D1 and can be reviewed through your authenticated Cloudflare account. The old `/leads/` URL returns 404. See [`LEAD_INBOX_SETUP.md`](LEAD_INBOX_SETUP.md).
 - Optional instant Telegram/email notifications and opt-in GitHub Actions daily overdue reminders. The required private credentials are not committed.
 - `POST /api/enquiry`: validates and verifies Turnstile; writes to D1 and/or sends via Resend
 - `POST /api/event`: optional D1 aggregate event counts, no IP/cookies or names saved
