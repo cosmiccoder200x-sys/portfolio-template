@@ -9,6 +9,19 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // No publicly hosted lead dashboard: preserve data and private API.
+    if (url.pathname === "/leads" || url.pathname.startsWith("/leads/")) {
+      return new Response("Not found.", {
+        status: 404,
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Cache-Control": "no-store",
+          "X-Robots-Tag": "noindex, nofollow",
+          "X-Content-Type-Options": "nosniff"
+        }
+      });
+    }
+
     // Route the existing Pages Function through this standalone Worker.
     if (url.pathname === "/api/chat") {
       if (request.method === "POST") {
