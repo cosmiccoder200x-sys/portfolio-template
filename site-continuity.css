@@ -403,3 +403,17 @@ body.portfolio-satellite::after {
   .portfolio-satellite .satellite-orbit-ring { animation: none !important; }
   .portfolio-satellite .btn { transition: none !important; transform: none !important; }
 }
+
+/* Legal and private utility pages use the shared canvas without a giant hero. */
+.portfolio-satellite.satellite-utility .hero {
+  min-height: 0;
+  padding-top: clamp(75px, 8vw, 120px);
+  padding-bottom: clamp(48px, 5vw, 72px);
+}
+.portfolio-satellite.satellite-utility main > .section { max-width: none; }
+@media (max-width: 580px) {
+  .portfolio-satellite .nav-links .nav-optional { display: none; }
+  .portfolio-satellite .nav-links { gap: 9px; }
+  .portfolio-satellite .nav-links .nav-cta { letter-spacing: .02em; }
+  .portfolio-satellite.satellite-utility .hero { padding-top: 60px; padding-bottom: 48px; }
+}
