@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import vm from "node:vm";
 
 const moduleUrl="data:text/javascript;base64,"+
   fs.readFileSync("functions/api/chat.js").toString("base64");
@@ -130,4 +131,24 @@ test("Cross-origin chat requests are denied before contacting providers",async()
     ASSETS:asset,GEMINI_API_KEY:"test-gemini-secret"
   }});
   assert.equal(res.status,403);
+});
+
+test("AI widget is visible only on configured Cloudflare production hosts",()=>{
+  const html=fs.readFileSync("index.html","utf8");
+  const script=html.match(/<script>([\\s\\S]*?)<\\/script>/)?.[1];
+  assert.ok(script,"Early-host visibility guard should remain in the HTML head");
+  const isHidden=hostname=>{
+    const classes=new Set();
+    vm.runInNewContext(script,{
+      location:{hostname},
+      document:{documentElement:{classList:{add:value=>classes.add(value)}}},
+      Set
+    });
+    return classes.has("hide-ai-assistant");
+  };
+  assert.equal(isHidden("sreerang.pages.dev"),false);
+  assert.equal(isHidden("itsme.cosmiccoder200x.workers.dev"),false);
+  assert.equal(isHidden("cosmiccoder200x-sys.github.io"),true);
+  assert.equal(isHidden("feat-portfolio-hire-and-temp.sreerang.pages.dev"),true);
+  assert.equal(isHidden("unconfigured.example"),true);
 });
