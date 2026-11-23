@@ -135,7 +135,7 @@ test("Cross-origin chat requests are denied before contacting providers",async()
 
 test("AI widget is visible only on configured Cloudflare production hosts",()=>{
   const html=fs.readFileSync("index.html","utf8");
-  const script=html.match(/<script>([\\s\\S]*?)<\\/script>/)?.[1];
+  const script=html.split("<script>")[1]?.split("</script>")[0];
   assert.ok(script,"Early-host visibility guard should remain in the HTML head");
   const isHidden=hostname=>{
     const classes=new Set();
