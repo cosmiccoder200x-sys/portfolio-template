@@ -18,7 +18,7 @@
 
 ## Client enquiry tracking (new)
 
-- Private `/leads/` inbox and authenticated `/api/admin-leads` API added on draft PR #26.
+- Public `/leads/` inbox UI removed for privacy; `/leads/` now returns 404. The authenticated `/api/admin-leads` API remains protected and currently has no public UI. Review new leads privately in Cloudflare D1.
 - Immediate Telegram notifications can be enabled using `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` Cloudflare secrets, avoiding the need for a sending domain.
 - `migrations/0002_lead_reminders.sql` added and applied to preview D1.
 - Protected `/api/lead-reminder` endpoint and an **opt-in** daily 7:10 PM IST GitHub Actions schedule are prepared. These are **not active** until notification credentials, a shared reminder secret and the GitHub enable variable are configured.
@@ -28,7 +28,7 @@
 ## Still requires external account configuration
 
 - **Notifications:** Project enquiries can be saved in preview D1. Email notifications need a verified sender and provider. This Cloudflare account currently has no DNS zones, so native Email Service sender-domain onboarding isn't available. Recommended path: verify an owned domain with your chosen email provider, then set `RESEND_API_KEY`, `LEAD_FROM_EMAIL`, and `LEAD_TO_EMAIL`. Until configured, check D1 via Cloudflare dashboard.
-- **Private dashboard login:** To access `/insights/` set a long random `ADMIN_METRICS_TOKEN` secret in Pages preview env. Do not commit it. This key is intentionally not in the repository.
+- **Private analytics login:** To access `/insights/` set a long random `ADMIN_METRICS_TOKEN` secret in Pages preview env. Do not commit it. The public client inbox was removed; Cloudflare D1 remains accessible to the authorized account owner.
 - **Checkout:** Product source bundles, terms/license and automated payment-confirmed fulfillment are not yet configured. The collection has no live payment buttons. Configure a legitimate Gumroad, Razorpay or other provider checkout only when source files and support policy are finalized.
 - **Production activation:** Keep draft PR unmerged until walkthrough/testing is complete. Configure production bindings/secrets during approved production rollout; do not point production to the preview leads database by accident.
 
