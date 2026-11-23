@@ -81,6 +81,22 @@ export async function onRequestPost({request,env}) {
     }catch(_){}
     if(!emailed) console.error("Enquiry email delivery failed");
   }
+  // Optional no-domain push notification. Leads remain private in D1.
+  // This includes only the type and budget, not client contact details.
+  if (stored && env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
+    try {
+      const alert = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          chat_id:env.TELEGRAM_CHAT_ID,
+          text:`New portfolio enquiry!\nProject: ${type}\nBudget: ${budget}\nOpen private inbox: ${url.origin}/leads/`,
+          disable_web_page_preview:true
+        })
+      });
+      if (!alert.ok) console.error("Telegram lead alert rejected");
+    } catch (_) { console.error("Telegram lead alert failed"); }
+  }
   if (!stored && !emailed) return response({error:"Could not deliver the enquiry. Please email me directly."},502);
   return response({ok:true,message:"Enquiry received. I'll reply by email."},202);
 }
