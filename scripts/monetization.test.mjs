@@ -436,7 +436,7 @@ test("all visitor-facing pages have valid local navigation, resources and anchor
     for(const [,href] of links){
       const u=new URL(href,base);
       if(u.origin!==base.origin)continue;
-      const local=decodeURIComponent(u.pathname.replace(/^\\/+/,""))||"index.html";
+      const local=decodeURIComponent(u.pathname.slice(1))||"index.html";
       const target=local.endsWith("/")?local+"index.html":local;
       assert.ok(!target.startsWith(".."),"Invalid local path from "+source+": "+href);
       assert.ok(fs.existsSync(target),source+" has missing local link "+href+" -> "+target);
