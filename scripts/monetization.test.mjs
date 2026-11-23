@@ -375,20 +375,23 @@ test("daily reminder sends nothing when no enquiries are overdue",async()=>{
  assert.equal(result.status,200);
  assert.equal((await result.json()).sent,false);
 });
-test("inbox uses safe text rendering and never persists private access token",()=>{
- const html=fs.readFileSync("leads/index.html","utf8");
- const js=fs.readFileSync("leads/leads.js","utf8");
- const css=fs.readFileSync("leads/leads.css","utf8");
- assert.ok(html.includes('name="robots"'));
- assert.ok(html.includes('id="inbox-login"'));
- assert.ok(html.includes('id="lead-list"'));
- assert.match(css,/@media/);
- assert.ok(!js.includes("innerHTML"));
- assert.ok(!js.includes("localStorage"));
- assert.ok(!js.includes("sessionStorage"));
- assert.ok(js.includes("mailto:"));
- assert.ok(js.includes("PATCH"));
- assert.doesNotThrow(()=>new vm.Script(js));
+test("client inbox public page is removed and fails closed",async()=>{
+  const edge=await load("functions/leads/[[path]].js");
+  const denied=edge.onRequest();
+  assert.equal(denied.status,404);
+  assert.equal(denied.headers.get("X-Robots-Tag"),"noindex, nofollow");
+  assert.equal(denied.headers.get("Cache-Control"),"no-store");
+  for(const asset of ["leads/index.html","leads/leads.css","leads/leads.js"]){
+    assert.equal(fs.existsSync(asset),false,asset+" must not be published");
+  }
+  const sources=["index.html","hire/index.html","templates/index.html","insights/index.html","functions/api/enquiry.js","functions/api/lead-reminder.js"];
+  for(const source of sources){
+    const contents=fs.readFileSync(source,"utf8");
+    assert.ok(!contents.includes("/leads/"),source+" must not advertise the old public inbox");
+  }
+  const worker=fs.readFileSync("worker/index.js","utf8");
+  assert.match(worker,/url\\.pathname === "\/leads"/);
+  assert.match(worker,/url\\.pathname\\.startsWith\\("\/leads\/"\\)/);
 });
 
 test("Hire Me and Templates share the portfolio background without rewriting the live home",()=>{
