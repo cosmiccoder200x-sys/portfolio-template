@@ -31,9 +31,8 @@ export async function onRequestPost({request,env}){
     if(previous)return answer({ok:true,sent:false,already_sent:true,pending:total});
   }catch(_){return answer({error:"Reminder database migration is missing."},503);}
 
-  const link=new URL("/leads/",request.url).href;
   const subject=`Portfolio: ${total} client ${total===1?"enquiry needs":"enquiries need"} attention`;
-  const note=`${subject}\n\nUnread: ${newCount}\nSeen but not replied: ${seenCount}\n\nPrivate inbox: ${link}\n\nYou are receiving this because these enquiries are older than 24 hours.`;
+  const note=`${subject}\n\nUnread: ${newCount}\nSeen but not replied: ${seenCount}\n\nReview pending enquiries privately in Cloudflare D1 (enquiries table).\n\nYou are receiving this because these enquiries are older than 24 hours.`;
   let sent=false;
 
   if(env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID){
