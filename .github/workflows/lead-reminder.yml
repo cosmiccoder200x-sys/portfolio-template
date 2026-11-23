@@ -1,0 +1,38 @@
+name: Daily lead follow-up reminder
+
+on:
+  schedule:
+    # 19:10 IST (13:40 UTC) daily. GitHub schedules are best effort.
+    - cron: "40 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  remind:
+    if: ${{ vars.ENABLE_LEAD_REMINDERS == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Send private overdue-lead reminder
+        env:
+          LEAD_REMINDER_TOKEN: ${{ secrets.LEAD_REMINDER_TOKEN }}
+          LEAD_REMINDER_SITE: ${{ vars.LEAD_REMINDER_SITE }}
+        run: |
+          set -euo pipefail
+          if [ -z "${LEAD_REMINDER_TOKEN}" ]; then
+            echo "Reminder secret is missing; enable only after configuring Cloudflare and GitHub."
+            exit 1
+          fi
+          TARGET="${LEAD_REMINDER_SITE:-https://sreerang.pages.dev}"
+          case "${TARGET}" in
+            https://*.pages.dev|https://*.pages.dev/) ;;
+            *) echo "Unexpected site URL"; exit 1 ;;
+          esac
+          curl --fail-with-body --silent --show-error --max-time 30 --retry 2 --retry-delay 5 \
+            --request POST \
+            --header "Authorization: Bearer ${LEAD_REMINDER_TOKEN}" \
+            --header "Accept: application/json" \
+            "${TARGET%/}/api/lead-reminder" > /dev/null
+          echo "Daily reminder endpoint checked."
