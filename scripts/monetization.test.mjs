@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import vm from "node:vm";
 import {webcrypto} from "node:crypto";
 globalThis.crypto ||= webcrypto;
 const load = async (file) => import("data:text/javascript;base64," + fs.readFileSync(file).toString("base64"));
@@ -142,4 +143,82 @@ test("public config contains only a Turnstile site key and no secrets",()=>{
   assert.match(config,/turnstileSiteKey:\s*"0x4/);
   assert.ok(!config.includes("TURNSTILE_SECRET_KEY"));
   assert.ok(!config.includes("RESEND_API_KEY"));
+});
+
+test("VELA flagship design ships valid local assets and distinct interactive dashboard modes",()=>{
+  const source=fs.readFileSync("templates/launchpad-saas/index.html","utf8");
+  const css=fs.readFileSync("templates/launchpad-saas/style.css","utf8");
+  const js=fs.readFileSync("templates/launchpad-saas/app.js","utf8");
+  const store=fs.readFileSync("templates/index.html","utf8");
+  assert.match(source, /VELA — Work in a new dimension/);
+  assert.match(store, /VELA — Product OS/);
+  assert.ok(source.includes('href="style.css"'));
+  assert.ok(source.includes('src="app.js"'));
+  assert.ok(source.includes('id="workspace"'));
+  assert.ok(source.includes('id="pricing"'));
+  assert.equal((source.match(/data-scene=/g)||[]).length, 3);
+  assert.equal((source.match(/data-billing=/g)||[]).length, 2);
+  assert.match(source, /SAMPLE DATA/);
+  assert.match(source, /No payments, accounts, or subscriptions/);
+  assert.ok(css.includes("@media(max-width:670px)"));
+  assert.ok(css.includes("prefers-reduced-motion:reduce"));
+  let depth=0;
+  for(const char of css.replace(/\/\*[\s\S]*?\*\//g,"")){
+    if(char==="{")depth++;
+    if(char==="}")depth--;
+    assert.ok(depth>=0);
+  }
+  assert.equal(depth,0);
+  assert.doesNotThrow(()=>new vm.Script(js,{filename:"templates/launchpad-saas/app.js"}));
+});
+test("VELA scene tabs update dashboard and billing switch updates sample prices",()=>{
+  const source=fs.readFileSync("templates/launchpad-saas/app.js","utf8");
+  const nodes=new Map();
+  function element(id){
+    if(!nodes.has(id)){
+      const node={
+        id,textContent:"",dataset:{},attributes:{},listeners:{},children:[],
+        classList:{toggle(name,enabled){node.attributes["class:"+name]=Boolean(enabled)}},
+        setAttribute(name,value){node.attributes[name]=value},
+        addEventListener(name,callback){node.listeners[name]=callback},
+        replaceChildren(...items){node.children=items;node.textContent=items.map(i=>typeof i==="string"?i:i.textContent||"").join("")}
+      };
+      nodes.set(id,node);
+    }
+    return nodes.get(id);
+  }
+  const sceneNames=["overview","projects","signals"];
+  const sceneButtons=sceneNames.map(name=>{
+    const node=element("scene-"+name);node.dataset.scene=name;return node;
+  });
+  const billingButtons=["monthly","yearly"].map(name=>{
+    const node=element("billing-"+name);node.dataset.billing=name;return node;
+  });
+  const prices=[["499","399"],["1299","1039"]].map((values,i)=>{
+    const node=element("price-"+i);node.dataset.month=values[0];node.dataset.year=values[1];return node;
+  });
+  const document={
+    getElementById:element,
+    querySelector(selector){return selector===".graph"?element("graph"):null},
+    querySelectorAll(selector){
+      return {"[data-scene]":sceneButtons,"[data-billing]":billingButtons,"[data-month][data-year]":prices}[selector]||[];
+    },
+    createTextNode(value){return {textContent:value}},
+    createElement(tag){return element("new-"+tag+"-"+Math.random())}
+  };
+  vm.runInNewContext(source,{document,console,Number,String,Object,Array,Math},{timeout:3000});
+  sceneButtons[1].listeners.click();
+  assert.match(element("dash-title").textContent,/impact/);
+  assert.equal(element("metric-1-label").textContent,"Projects in flow");
+  assert.equal(element("metric-1-value").textContent,"14");
+  assert.equal(sceneButtons[1].attributes["aria-pressed"],"true");
+  sceneButtons[2].listeners.click();
+  assert.match(element("dash-title").textContent,/on demand/);
+  assert.equal(sceneButtons[1].attributes["aria-pressed"],"false");
+  billingButtons[1].listeners.click();
+  assert.equal(prices[0].textContent,"399");
+  assert.equal(prices[1].textContent,"1,039");
+  assert.equal(billingButtons[1].attributes["aria-pressed"],"true");
+  billingButtons[0].listeners.click();
+  assert.equal(prices[0].textContent,"499");
 });
