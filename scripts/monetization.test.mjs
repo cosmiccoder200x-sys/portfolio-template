@@ -418,3 +418,62 @@ test("Hire Me and Templates share the portfolio background without rewriting the
   assert.ok(home.includes('id="world-canvas"'));
   assert.ok(!home.includes('site-continuity.css'));
 });
+
+test("all visitor-facing pages have valid local navigation, resources and anchor targets",()=>{
+  const pages=[
+    "index.html","hire/index.html","templates/index.html",
+    "templates/terminal-starter/index.html",
+    "templates/editorial-atelier/index.html",
+    "templates/launchpad-saas/index.html",
+    "privacy/index.html","analytics/index.html","insights/index.html"
+  ];
+  let checked=0;
+  for(const source of pages){
+    const html=fs.readFileSync(source,"utf8");
+    assert.match(html,/<meta\\s+name=["']viewport["']/i,"Missing viewport in "+source);
+    const base=new URL(source,"https://visitor.example/");
+    const links=[...html.matchAll(/<(?:a|script|link|img|iframe|source)\\b[^>]*?\\b(?:href|src)=["']([^"']+)["']/gi)];
+    for(const [,href] of links){
+      const u=new URL(href,base);
+      if(u.origin!==base.origin)continue;
+      const local=decodeURIComponent(u.pathname.replace(/^\\/+/,""))||"index.html";
+      const target=local.endsWith("/")?local+"index.html":local;
+      assert.ok(!target.startsWith(".."),"Invalid local path from "+source+": "+href);
+      assert.ok(fs.existsSync(target),source+" has missing local link "+href+" -> "+target);
+      if(u.hash && target.endsWith(".html")){
+        const fragment=decodeURIComponent(u.hash.slice(1));
+        if(fragment){
+          const targetHtml=fs.readFileSync(target,"utf8");
+          assert.ok(targetHtml.includes('id="'+fragment+'"')||targetHtml.includes("id='"+fragment+"'"),
+            source+" points to missing anchor "+href);
+        }
+      }
+      checked++;
+    }
+  }
+  assert.ok(checked>=100,"Expected to check all site and demo assets; got "+checked);
+});
+test("public navigation stays concise and sensitive Pages routes fail closed",()=>{
+  const home=fs.readFileSync("index.html","utf8");
+  const mainNav=home.match(/<nav class="main-nav"[^>]*>([\\s\\S]*?)<\\/nav>/)?.[1]||"";
+  const topLinks=[...mainNav.matchAll(/<a\\s/g)];
+  assert.equal(topLinks.length,5,"Main menu must prioritize visitors without a dense navigation row");
+  for(const link of ['href="#projects"','href="templates/"','href="#about"','href="#contact"','href="analytics/"'])
+    assert.ok(mainNav.includes(link),link);
+  assert.ok(home.includes('href="hire/" data-track="hire_cta"'),"Hire Me CTA preserved");
+  const footer=home.match(/<footer class="site-footer[^"]*"[^>]*>([\\s\\S]*?)<\\/footer>/)?.[1]||"";
+  for(const link of ['href="#skills"','href="#education"','href="#certifications"','href="#journey"','href="privacy/"'])
+    assert.ok(footer.includes(link),"Deep-link not preserved: "+link);
+  const route=JSON.parse(fs.readFileSync("_routes.json","utf8"));
+  for(const path of ["/api/*","/leads","/leads/*"])
+    assert.ok(route.include.includes(path),"Pages route missing: "+path);
+  const deny=fs.readFileSync("functions/leads/[[path]].js","utf8");
+  assert.match(deny,/status:\s*404/);
+  assert.match(deny,/noindex/);
+  for(const asset of ["leads/index.html","leads/leads.js","leads/leads.css"])
+    assert.ok(!fs.existsSync(asset),"Private client dashboard must not be published: "+asset);
+  for(const page of ["hire/index.html","templates/index.html","privacy/index.html","insights/index.html"]){
+    const html=fs.readFileSync(page,"utf8");
+    assert.ok(html.includes('site-continuity.css'),"Unified portfolio styling missing: "+page);
+  }
+});
