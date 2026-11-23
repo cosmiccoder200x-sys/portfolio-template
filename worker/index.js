@@ -2,6 +2,7 @@ import { onRequestGet, onRequestPost } from "../functions/api/chat.js";
 import { onRequestPost as submitEnquiry } from "../functions/api/enquiry.js";
 import { onRequestPost as trackEvent } from "../functions/api/event.js";
 import { onRequestGet as readMetrics } from "../functions/api/admin-metrics.js";
+import { onRequestGet as readLeads, onRequestPatch as changeLeadStatus } from "../functions/api/admin-leads.js";
 
 export default {
   async fetch(request, env) {
@@ -28,6 +29,13 @@ export default {
     if (url.pathname === "/api/admin-metrics") {
       if (request.method !== "GET") return new Response("Method not allowed.", {status:405,headers:{"Allow":"GET"}});
       return readMetrics({request,env});
+    }
+    if (url.pathname === "/api/admin-leads") {
+      if (request.method === "GET") return readLeads({request,env});
+      if (request.method === "PATCH") return changeLeadStatus({request,env});
+      return new Response(JSON.stringify({error:"Method not allowed."}), {
+        status:405,headers:{"Content-Type":"application/json","Allow":"GET, PATCH","Cache-Control":"no-store"}
+      });
     }
     if (url.pathname === "/api/enquiry" || url.pathname === "/api/event") {
       if (request.method !== "POST") return new Response(JSON.stringify({error:"Method not allowed."}), {
