@@ -90,7 +90,7 @@ export async function onRequestPost({request,env}) {
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({
           chat_id:env.TELEGRAM_CHAT_ID,
-          text:`New portfolio enquiry!\nProject: ${type}\nBudget: ${budget}\nOpen private inbox: ${url.origin}/leads/`,
+          text:`New portfolio enquiry!\nProject: ${type}\nBudget: ${budget}\nReview the enquiry privately in Cloudflare D1 (enquiries table).`,
           disable_web_page_preview:true
         })
       });
