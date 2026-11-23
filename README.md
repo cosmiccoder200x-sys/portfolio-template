@@ -2,7 +2,7 @@
 
 ![Portfolio preview](assets/preview.png)
 
-**Live site:** [itsme.cosmiccoder200x.workers.dev](https://itsme.cosmiccoder200x.workers.dev)  
+**Live portfolio:** [sreerang.pages.dev](https://sreerang.pages.dev/)  
 **Owner:** [Sreerang P](https://github.com/cosmiccoder200x-sys) · [LinkedIn](https://in.linkedin.com/in/sreerang-p)
 
 This repository contains the source code for my personal portfolio: a dark, editorial experience built to present my work in software engineering, data, and AI. It brings together a custom visual system, scroll-driven 3D interactions, project case studies, and an AI assistant grounded in my public profile.
@@ -11,13 +11,13 @@ This is my portfolio implementation and its supporting infrastructure—not a ge
 
 ## Collaboration and template previews
 
-The portfolio now includes an optional commercial layer, pending final deployment/configuration:
+The draft PR includes an optional commercial layer. Its preview may require Cloudflare Access authentication; these pages are **not on the live production site until the PR is merged and production services are configured**:
 
-- [Hire me](https://sreerang.pages.dev/hire/) — scoped web development, developer portfolios, dashboards and workflow automation enquiries.
-- [Template previews](https://sreerang.pages.dev/templates/) — **three distinct responsive concepts**: Terminal Starter (developer), Editorial Atelier (creative portfolio), VELA Product OS (product launch). Paid checkout is not enabled.
+- [Hire me (feature preview)](https://feat-portfolio-hire-and-temp.sreerang.pages.dev/hire/) — scoped web development, developer portfolios, dashboards and workflow automation enquiries.
+- [Template collection (feature preview)](https://feat-portfolio-hire-and-temp.sreerang.pages.dev/templates/) — **three distinct responsive concepts**: Terminal Starter (developer), Editorial Atelier (creative portfolio), VELA Product OS (product launch). Paid checkout is not enabled.
 - Private aggregate conversion insights at `/insights/` (requires secret-token authentication).
 
-The site uses server-validated Cloudflare Turnstile and optional Resend email/D1 storage for project enquiries. The original Google Form stays available independently. See [MONETIZATION_SETUP.md](MONETIZATION_SETUP.md) for launch prerequisites and privacy safeguards. Neither client work nor template purchases are represented as completed sales.
+The preview form uses server-validated Cloudflare Turnstile, private D1 storage, and optional Telegram/Resend alerts for project enquiries. The original Google Form stays available independently. See [LAUNCH_READINESS.md](LAUNCH_READINESS.md) and [MONETIZATION_SETUP.md](MONETIZATION_SETUP.md) for launch prerequisites and privacy safeguards. Public client-inbox pages are intentionally removed; enquiries are reviewed securely in Cloudflare D1. Neither client work nor template purchases are represented as completed sales.
 
 ## What I built
 
@@ -38,7 +38,7 @@ The site uses server-validated Cloudflare Turnstile and optional Resend email/D1
 | Analytics | Python, GitHub REST API, GitHub Actions |
 | Responsive layer | Dedicated `mobile.css` for phone, tablet, and landscape layouts |
 | Quality checks | Node.js, custom QA script |
-| Hosting | Cloudflare Workers, GitHub Pages preview |
+| Hosting | Cloudflare Pages (live portfolio and protected PR previews), standalone Cloudflare Worker support |
 
 ## Repository walkthrough
 
