@@ -8,6 +8,8 @@ const load = async (file) => import("data:text/javascript;base64," + fs.readFile
 const enquiry = await load("functions/api/enquiry.js");
 const events = await load("functions/api/event.js");
 const metrics = await load("functions/api/admin-metrics.js");
+const leadInbox = await load("functions/api/admin-leads.js");
+const reminders = await load("functions/api/lead-reminder.js");
 const origin = "https://portfolio.example";
 const valid = () => ({
   name:"Sample Client",email:"client@example.com",projectType:"portfolio",budget:"5000-10000",
@@ -223,4 +225,115 @@ test("VELA scene tabs update dashboard and billing switch updates sample prices"
   assert.equal(billingButtons[1].attributes["aria-pressed"],"true");
   billingButtons[0].listeners.click();
   assert.equal(prices[0].textContent,"499");
+});
+
+test("private lead inbox rejects missing, incorrect, and short admin tokens",async()=>{
+ const secret="secure-test-token-for-private-inbox-2026";
+ const api="https://site.example/api/admin-leads";
+ const read=(authorization)=>new Request(api,{headers:authorization?{"Authorization":"Bearer "+authorization}:{}});
+ assert.equal((await leadInbox.onRequestGet({request:read("wrong"),env:{ADMIN_METRICS_TOKEN:secret,LEADS_DB:{}}})).status,401);
+ assert.equal((await leadInbox.onRequestGet({request:read(secret),env:{ADMIN_METRICS_TOKEN:"short",LEADS_DB:{}}})).status,503);
+ assert.equal((await leadInbox.onRequestGet({request:read(secret),env:{ADMIN_METRICS_TOKEN:secret}})).status,503);
+});
+test("private inbox lists recent enquiries and counts by status",async()=>{
+ const token="secure-test-token-for-private-inbox-2026";
+ const recorded=[];
+ const database={prepare:(sql)=>({
+   bind:(...params)=>{recorded.push({sql,params});return {all:async()=>({results:[]})}},
+   all:async()=>({results:sql.includes("COUNT(*)")?[{status:"new",count:2}]:
+      [{id:"lead",name:"Example Client",email:"example@domain.test",details:"Website needed",status:"new"}]})
+ })};
+ const req=new Request("https://site.example/api/admin-leads",{headers:{"Authorization":"Bearer "+token}});
+ const res=await leadInbox.onRequestGet({request:req,env:{ADMIN_METRICS_TOKEN:token,LEADS_DB:database}});
+ assert.equal(res.status,200);
+ const data=await res.json();
+ assert.equal(data.leads[0].name,"Example Client");
+ assert.equal(data.counts[0].count,2);
+ assert.equal(recorded.length,0);
+ const filter=new Request("https://site.example/api/admin-leads?status=new",{headers:{"Authorization":"Bearer "+token}});
+ assert.equal((await leadInbox.onRequestGet({request:filter,env:{ADMIN_METRICS_TOKEN:token,LEADS_DB:database}})).status,200);
+ assert.equal(recorded[0].params[0],"new");
+ const invalid=new Request("https://site.example/api/admin-leads?status=DROP",{headers:{"Authorization":"Bearer "+token}});
+ assert.equal((await leadInbox.onRequestGet({request:invalid,env:{ADMIN_METRICS_TOKEN:token,LEADS_DB:database}})).status,400);
+});
+test("only authenticated same-origin valid status updates can change leads",async()=>{
+ const token="secure-test-token-for-private-inbox-2026";
+ let updated=0;
+ const id="123e4567-e89b-42d3-a456-426614174000";
+ const database={prepare:(sql)=>({bind:(status,leadId)=>({run:async()=>{
+   assert.match(sql,/UPDATE enquiries/);assert.equal(leadId,id);updated++;return {meta:{changes:1}};
+ }})})};
+ const patch=(status,origin="https://site.example",leadId=id)=>new Request("https://site.example/api/admin-leads",{
+   method:"PATCH",headers:{"Origin":origin,"Content-Type":"application/json","Authorization":"Bearer "+token},
+   body:JSON.stringify({id:leadId,status})
+ });
+ const env={ADMIN_METRICS_TOKEN:token,LEADS_DB:database};
+ assert.equal((await leadInbox.onRequestPatch({request:patch("seen","https://evil.example"),env})).status,403);
+ assert.equal((await leadInbox.onRequestPatch({request:patch("delete"),env})).status,400);
+ assert.equal((await leadInbox.onRequestPatch({request:patch("replied","https://site.example","../../sensitive"),env})).status,400);
+ assert.equal(updated,0);
+ const successful=await leadInbox.onRequestPatch({request:patch("replied"),env});
+ assert.equal(successful.status,200);
+ assert.equal((await successful.json()).status,"replied");
+ assert.equal(updated,1);
+});
+test("lead reminder is gated by a separate secret and notification provider",async()=>{
+ const token="daily-reminder-secret-valid-test-token";
+ const req=t=>new Request("https://site.example/api/lead-reminder",{method:"POST",headers:{Authorization:"Bearer "+t}});
+ const db={};
+ assert.equal((await reminders.onRequestPost({request:req("bad"),env:{LEADS_DB:db,LEAD_REMINDER_TOKEN:token}})).status,401);
+ assert.equal((await reminders.onRequestPost({request:req(token),env:{LEADS_DB:db,LEAD_REMINDER_TOKEN:token}})).status,503);
+});
+test("daily reminder sends aggregate overdue counts only and skips same-day repeats",async()=>{
+ const token="daily-reminder-secret-valid-test-token";
+ const req=new Request("https://site.example/api/lead-reminder",{method:"POST",headers:{Authorization:"Bearer "+token}});
+ let already=false,notification="",sent=0;
+ const database={prepare:sql=>{
+   if(sql.includes("SELECT status"))return {all:async()=>({results:[{status:"new",count:2},{status:"seen",count:1}]})};
+   if(sql.includes("SELECT day"))return {bind:()=>({first:async()=>already?{day:"today"}:null})};
+   if(sql.includes("INSERT OR IGNORE"))return {bind:()=>({run:async()=>{already=true;}})};
+   throw Error("Unexpected SQL: "+sql);
+ }};
+ const original=globalThis.fetch;
+ globalThis.fetch=async(url,options)=>{
+   sent++;
+   assert.ok(String(url).includes("api.telegram.org"));
+   notification=JSON.parse(options.body).text;
+   return new Response(JSON.stringify({ok:true}),{status:200});
+ };
+ const env={LEADS_DB:database,LEAD_REMINDER_TOKEN:token,TELEGRAM_BOT_TOKEN:"fake",TELEGRAM_CHAT_ID:"fake"};
+ try{
+   const first=await reminders.onRequestPost({request:req,env});
+   assert.equal(first.status,200);
+   assert.equal((await first.json()).sent,true);
+   assert.match(notification,/3 client enquiries need attention/);
+   assert.match(notification,/site.example\/leads/);
+   assert.ok(!notification.includes("example@domain.test"));
+   const again=await reminders.onRequestPost({request:req,env});
+   assert.equal((await again.json()).already_sent,true);
+   assert.equal(sent,1);
+ }finally{globalThis.fetch=original;}
+});
+test("daily reminder sends nothing when no enquiries are overdue",async()=>{
+ const token="daily-reminder-secret-valid-test-token";
+ const req=new Request("https://site.example/api/lead-reminder",{method:"POST",headers:{Authorization:"Bearer "+token}});
+ const db={prepare:()=>({all:async()=>({results:[]})})};
+ const result=await reminders.onRequestPost({request:req,env:{LEADS_DB:db,LEAD_REMINDER_TOKEN:token,TELEGRAM_BOT_TOKEN:"fake",TELEGRAM_CHAT_ID:"fake"}});
+ assert.equal(result.status,200);
+ assert.equal((await result.json()).sent,false);
+});
+test("inbox uses safe text rendering and never persists private access token",()=>{
+ const html=fs.readFileSync("leads/index.html","utf8");
+ const js=fs.readFileSync("leads/leads.js","utf8");
+ const css=fs.readFileSync("leads/leads.css","utf8");
+ assert.ok(html.includes('name="robots"'));
+ assert.ok(html.includes('id="inbox-login"'));
+ assert.ok(html.includes('id="lead-list"'));
+ assert.match(css,/@media/);
+ assert.ok(!js.includes("innerHTML"));
+ assert.ok(!js.includes("localStorage"));
+ assert.ok(!js.includes("sessionStorage"));
+ assert.ok(js.includes("mailto:"));
+ assert.ok(js.includes("PATCH"));
+ assert.doesNotThrow(()=>new vm.Script(js));
 });
