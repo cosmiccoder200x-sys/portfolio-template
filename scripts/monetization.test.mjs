@@ -337,3 +337,28 @@ test("inbox uses safe text rendering and never persists private access token",()
  assert.ok(js.includes("PATCH"));
  assert.doesNotThrow(()=>new vm.Script(js));
 });
+
+test("Hire Me and Templates share the portfolio background without rewriting the live home",()=>{
+  const css=fs.readFileSync("site-continuity.css","utf8");
+  assert.match(css,/background:\s*#090909/);
+  assert.match(css,/background-size:\s*64px 64px/);
+  assert.match(css,/\.satellite-frame/);
+  assert.match(css,/\.satellite-orbit-ring/);
+  assert.match(css,/prefers-reduced-motion:\s*reduce/);
+  assert.match(css,/@media\s*\(max-width:\s*580px\)/);
+  assert.match(css,/Manrope/);
+  assert.match(css,/DM Mono/);
+  for(const [path,page] of [["hire/index.html","hire"],["templates/index.html","templates"]]){
+    const html=fs.readFileSync(path,"utf8");
+    assert.match(html,/class="portfolio-satellite"/);
+    assert.ok(html.includes('href="../site-continuity.css"'));
+    assert.ok(html.includes('class="satellite-frame"'));
+    assert.ok(html.includes('class="satellite-orbit"'));
+    assert.ok(html.includes('data-monetization-page="'+page+'"'));
+    assert.ok(html.indexOf('href="../site-continuity.css"')>html.indexOf('href="../business.css"'));
+    assert.ok(html.indexOf('class="satellite-orbit"')<html.indexOf('<h1'));
+  }
+  const home=fs.readFileSync("index.html","utf8");
+  assert.ok(home.includes('id="world-canvas"'));
+  assert.ok(!home.includes('site-continuity.css'));
+});
