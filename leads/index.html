@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#090d0b"><title>Private Client Inbox — Sreerang P</title>
+<link rel="stylesheet" href="../business.css"><link rel="stylesheet" href="leads.css">
+<script src="leads.js" defer></script>
+</head><body class="lead-inbox-body">
+<header><div class="nav"><a class="logo" href="../">S.P.</a><nav class="nav-links"><a href="../hire/">Hire Me</a><a href="../insights/">Insights</a><a href="../">Portfolio</a></nav></div></header>
+<main class="inbox-main">
+<section class="inbox-intro"><span class="kicker">PRIVATE / CLIENT ENQUIRIES</span><h1>Never miss<br><em>an opportunity.</em></h1>
+<p class="lead">Track the people interested in your web-development services. New means unread; Seen means you're reviewing; Replied means you've responded.</p></section>
+<section id="login-area" class="section inbox-auth" aria-labelledby="login-title">
+<h2 id="login-title">Unlock your inbox.</h2><p class="lead">Enter your private analytics access token. It stays in memory for this tab and isn't saved in your browser.</p>
+<form id="inbox-login"><div class="field"><label for="inbox-token">Private access token</label><input id="inbox-token" type="password" autocomplete="off" spellcheck="false" required placeholder="Enter token"></div>
+<button type="submit" class="btn primary">View my enquiries ↗</button></form>
+<p class="status" id="login-status" role="status" aria-live="polite"></p>
+<p class="inbox-help">Your access token is the Cloudflare secret <code>ADMIN_METRICS_TOKEN</code>. See <a href="https://github.com/cosmiccoder200x-sys/portfolio-template/blob/feat/portfolio-hire-and-templates/LEAD_INBOX_SETUP.md" target="_blank" rel="noopener noreferrer">setup instructions</a>.</p>
+</section>
+<section id="inbox-area" hidden>
+<div class="inbox-headline"><h2>Your client pipeline.</h2><div><button class="inbox-button" id="refresh-leads" type="button">↻ Refresh</button> <button class="inbox-button" id="logout-leads" type="button">Lock inbox</button></div></div>
+<p class="inbox-notice">Keep enquiries marked <strong>New</strong> until you've read them. Move them to <strong>Replied</strong> after responding by email. If an enquiry remains New or Seen after 24 hours, it appears as overdue.</p>
+<div class="inbox-stats" aria-live="polite"><div class="inbox-stat"><strong id="count-new">0</strong><span>New / unread</span></div><div class="inbox-stat overdue"><strong id="count-overdue">0</strong><span>Awaiting reply &gt; 24 hours</span></div><div class="inbox-stat"><strong id="count-seen">0</strong><span>Seen / reviewing</span></div><div class="inbox-stat"><strong id="count-replied">0</strong><span>Replied</span></div></div>
+<div class="inbox-toolbar"><div class="inbox-filters" role="group" aria-label="Filter enquiries"><button type="button" data-filter="all" aria-pressed="true">All</button><button type="button" data-filter="new" aria-pressed="false">New</button><button type="button" data-filter="seen" aria-pressed="false">Seen</button><button type="button" data-filter="replied" aria-pressed="false">Replied</button><button type="button" data-filter="closed" aria-pressed="false">Closed</button></div>
+<label class="inbox-help" for="lead-search">Find a client <input id="lead-search" class="inbox-search" type="search" placeholder="Search names or project types"></label></div>
+<div class="inbox-headline"><div class="inbox-help" id="inbox-total">Enquiries are shown newest first within each status. Up to 100 recent records.</div><div id="inbox-status" role="status" aria-live="polite" class="status"></div></div>
+<div id="lead-list" class="proof" aria-live="polite"></div>
+</section>
+</main><footer class="foot"><span>PRIVATE CLIENT INBOX</span><a href="../hire/">Go to Hire Me ↗</a><a href="../privacy/">Privacy ↗</a></footer></body></html>
